@@ -4,6 +4,13 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+## [0.0.3] - Static Site Preliminary
+
+### Added
+
+- Added a dependency-free GitHub Pages onboarding site under [docs/index.html](docs/index.html), with static CSS and JavaScript assets in [docs/assets/](docs/assets/).
+- Added cohort-facing sections for registration, program positioning, selection and onboarding flow, expected outputs, responsible AI use, organizing team, and FAQs.
+
 ## [0.0.2] - Leveraging AI Guide
 
 ### Added
