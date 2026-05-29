@@ -61,3 +61,54 @@ Segment your data by 2–3 dimensions and build comparison views.
 ---
 
 **Estimated time:** 4–5 hours
+
+## Learner Support
+
+### Starter Script / Template
+
+**Path A — Regression baseline**
+
+```md
+## Baseline Regression
+- Target column: <your_target_column>
+- Feature columns: <feature_1>, <feature_2>, <feature_3>
+- Train/test split: <your_split_choice>
+- Metrics to report: RMSE, R^2
+- Plain-language summary: <what the baseline tells you>
+```
+
+**Path B — Segmentation analysis**
+
+```md
+## Segmentation Plan
+| Segment Dimension | Why It Matters | Comparison Metric |
+|------------------|----------------|-------------------|
+| <segment_1> | <reason> | <metric> |
+| <segment_2> | <reason> | <metric> |
+```
+
+### How To Adapt This To Your Project
+
+- Choose Path A only if predicting a numeric outcome supports the original question.
+- Choose Path B if group comparison and descriptive insights are a better fit.
+- Keep the baseline simple enough to explain clearly.
+
+### Definition of Done
+
+- You completed the section for the correct path.
+- Path A names a target, features, and evaluation metrics.
+- Path B compares meaningful segments tied to the project question.
+- A reviewer can see why this week’s work moves you toward Milestone 5.
+
+### Common Mistakes
+
+- Forcing regression when the project is not truly predictive.
+- Using features that leak the answer.
+- Creating segments that do not matter to the audience.
+- Reporting results without explaining what they mean.
+
+### If You’re Stuck After 2 Hours
+
+- Re-read your Week 1 question and ask whether it needs prediction or comparison.
+- Start with a tiny baseline instead of an ambitious model.
+- If Path B fits better, switch early instead of wrestling the wrong method.

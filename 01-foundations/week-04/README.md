@@ -44,3 +44,55 @@ Build `scripts/ingest.py` that:
 **Milestone 2 — First Data Pull** — submit this week.
 
 **Estimated time:** 5 hours
+
+## Learner Support
+
+### Starter Script / Template
+
+Start with a small `scripts/ingest.py` skeleton like this:
+
+```python
+from pathlib import Path
+
+RAW_DIR = Path("data/raw")
+RAW_DIR.mkdir(parents=True, exist_ok=True)
+
+def main():
+    source_name = "<your_source_name>"
+    output_file = RAW_DIR / "<your_file_name>.csv"
+
+    # Replace this block with your actual load or request logic
+    raw_text = "<raw content goes here>"
+
+    output_file.write_text(raw_text, encoding="utf-8")
+    print(f"Saved raw data for {source_name} to {output_file}")
+
+if __name__ == "__main__":
+    main()
+```
+
+### How To Adapt This To Your Project
+
+- Replace the placeholder load logic with either an API call, file read, or manual file-save flow.
+- Use a descriptive filename that makes sense when you collect future raw pulls.
+- Keep the script focused on landing raw data only. Cleaning comes later.
+
+### Definition of Done
+
+- `scripts/ingest.py` exists and runs.
+- A raw file is saved into `/data/raw`.
+- The filename is clear enough that another person can recognize the source.
+- Your repo now has both the script and one real raw data sample.
+
+### Common Mistakes
+
+- Doing cleaning steps inside the ingestion script.
+- Saving the file outside `/data/raw`.
+- Using a vague filename like `data.csv`.
+- Writing code that only works once and cannot be repeated.
+
+### If You’re Stuck After 2 Hours
+
+- First prove you can save any file into `/data/raw`, then connect the real source.
+- Print intermediate values so you can see whether the script reached the save step.
+- If the source is difficult, document the blocker and ask whether a manual raw save is acceptable for now.

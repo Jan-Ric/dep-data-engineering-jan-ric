@@ -61,3 +61,61 @@ Write a 1-page plain-language summary of your findings for a non-technical audie
 ---
 
 **Estimated time:** 4–5 hours
+
+## Learner Support
+
+### Starter Script / Template
+
+**Path A — Improvement comparison**
+
+```md
+| Version | What Changed | Why You Changed It | Result |
+|---------|--------------|--------------------|--------|
+| Baseline | <original setup> | <reason> | <metric result> |
+| Improved | <new feature or preprocessing step> | <reason> | <metric result> |
+```
+
+**Path B — Stakeholder brief**
+
+```md
+## Stakeholder Brief
+
+### Context
+<what issue or question this project addresses>
+
+### Main Finding
+<top insight in plain language>
+
+### Why It Matters
+<impact on the audience>
+
+### Recommended Actions
+1. <action_1>
+2. <action_2>
+```
+
+### How To Adapt This To Your Project
+
+- Path A should improve one thing at a time so the comparison is clear.
+- Path B should sound like it is written for a non-technical reader.
+- Keep all claims grounded in earlier analysis.
+
+### Definition of Done
+
+- Path A explains what changed and whether it helped.
+- Path B delivers a readable one-page summary with actions.
+- The output stays connected to the original project question.
+- A reviewer can see progress beyond the baseline.
+
+### Common Mistakes
+
+- Changing too many model components at once.
+- Claiming improvement without showing the before-and-after result.
+- Writing a stakeholder brief that still reads like notebook notes.
+- Making recommendations that the data did not support.
+
+### If You’re Stuck After 2 Hours
+
+- For Path A, improve one feature set, encoding choice, or missing-value approach only.
+- For Path B, write like you are sending an email to your audience.
+- Cut jargon first, then sharpen the recommendation.

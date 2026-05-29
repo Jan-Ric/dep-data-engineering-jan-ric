@@ -44,3 +44,51 @@ Live project URL + presentation-ready portfolio piece.
 **Milestone 6 — Live Deployment** — submit this week.
 
 **Estimated time:** 5 hours
+
+## Learner Support
+
+### Starter Script / Template
+
+Use a final QA and demo checklist:
+
+```md
+## Final QA
+- Live URL works
+- README links work
+- Dashboard/report loads correctly
+- No missing files
+- Key charts and KPI labels are readable
+
+## Demo Script
+1. Problem and audience
+2. Data source and pipeline
+3. Key findings
+4. Dashboard walkthrough
+5. Limitations and next steps
+```
+
+### How To Adapt This To Your Project
+
+- Test the live project as if you were an outside visitor.
+- Keep the demo focused on the problem, insight, and artifact.
+- Mention one or two future improvements without reopening scope.
+
+### Definition of Done
+
+- The project is live at a public URL.
+- The README includes the live link.
+- Your final artifact is readable and complete.
+- You have a short presentation script ready for Milestone 6.
+
+### Common Mistakes
+
+- Assuming the deployment worked without opening the live link.
+- Forgetting to update the README after publishing.
+- Turning the demo into a code walkthrough instead of a project story.
+- Listing future ideas that make the current project sound unfinished.
+
+### If You’re Stuck After 2 Hours
+
+- Open every important link from the README one by one.
+- Practice the demo once with a timer and trim anything that does not support the main story.
+- Fix broken files and broken links before polishing presentation style.

@@ -46,3 +46,59 @@ Connected analytics pipeline with reusable outputs.
 **Milestone 5 — Public Repository / Predictive Component** — submit this week.
 
 **Estimated time:** 4–5 hours
+
+## Learner Support
+
+### Starter Script / Template
+
+Use a simple run-order outline for either path:
+
+```md
+## Project Flow
+1. `python scripts/ingest.py`
+2. `python scripts/transform.py`
+3. `python <analysis_or_model_script>.py` or run `<notebook_name>.ipynb`
+4. Save outputs to `/output` or `/data/processed`
+```
+
+Path A output checklist:
+
+```md
+- Saved model results or predictions
+- Metrics documented
+- Assumptions and limitations noted
+```
+
+Path B output checklist:
+
+```md
+- Segmentation outputs saved
+- KPI definitions documented
+- Stakeholder brief included
+```
+
+### How To Adapt This To Your Project
+
+- Make the sequence match the real repo, not the ideal repo.
+- Save outputs in predictable locations.
+- Align scripts, notebooks, and README instructions so they tell the same story.
+
+### Definition of Done
+
+- The project has a clean runnable flow.
+- Path-specific outputs are integrated into the broader pipeline.
+- `requirements.txt` is updated.
+- The repo now looks professional enough for Milestone 5 review.
+
+### Common Mistakes
+
+- Leaving results trapped in notebook cells with no saved outputs.
+- Forgetting to document path-specific assumptions or limitations.
+- Updating files but not the README run instructions.
+- Treating integration as only a code task instead of a communication task too.
+
+### If You’re Stuck After 2 Hours
+
+- Write the real execution order on paper first, then make the repo match it.
+- Save one stable output file before polishing everything else.
+- Ask a peer to read your README and tell you where they would get confused.
