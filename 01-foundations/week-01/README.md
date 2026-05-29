@@ -81,6 +81,12 @@ The dashboard should help the audience quickly see <top insight or decision>.
 - Pick one KPI that helps that audience make a decision.
 - Link at least one data source that could reasonably answer the question.
 
+### Sample AI Prompts
+
+- "Turn this broad topic into 3 answerable problem statements: `<topic>`."
+- "Review my draft README and tell me if the audience, KPI, and data source are specific enough for Milestone 0."
+- "Suggest 5 data sources that could answer this question, then rank them by feasibility for a 24-week project."
+
 ### Definition of Done
 
 - Your README includes a specific question in your own words.

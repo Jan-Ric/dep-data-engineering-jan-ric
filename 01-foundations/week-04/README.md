@@ -77,6 +77,12 @@ if __name__ == "__main__":
 - Use a descriptive filename that makes sense when you collect future raw pulls.
 - Keep the script focused on landing raw data only. Cleaning comes later.
 
+### Sample AI Prompts
+
+- "Help me turn this ingestion idea into a simple `scripts/ingest.py` flow that only saves raw data."
+- "I am getting this Python error: `<paste error>`. Explain the likely cause and the smallest fix."
+- "Review this script and tell me whether it mixes raw ingestion with cleaning or transformation."
+
 ### Definition of Done
 
 - `scripts/ingest.py` exists and runs.

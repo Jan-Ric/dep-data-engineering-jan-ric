@@ -17,6 +17,18 @@ By the end of Week 4, you will have:
 
 ---
 
+## AI Support
+
+AI can be helpful in this phase for brainstorming, reviewing drafts, and explaining technical terms, but it should not replace your own thinking.
+
+- Start with the weekly instructions and milestone checklist.
+- Use AI to critique your draft, not to invent your submission from scratch.
+- Verify any source, claim, or technical step before you commit it.
+
+For examples and prompt patterns, see [Using AI in the DEP Open Track](../docs/AI_GUIDE.md).
+
+---
+
 ## Weekly Breakdown
 
 | Week | Focus | Deliverable |
