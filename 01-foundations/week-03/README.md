@@ -77,6 +77,12 @@ git commit -m "Initialize DEP project structure"
 - Start `README.md` and `requirements.txt` now even if they are still small.
 - Make your first commit meaningful enough that a reviewer can see real setup progress.
 
+### Sample AI Prompts
+
+- "Here is my repo tree: `<paste tree>`. Does it match the expected DEP structure, and what should I add or rename?"
+- "Explain the difference between `git init`, `git clone`, `git add`, `git commit`, and `git push` in beginner-friendly language."
+- "Suggest a meaningful first commit message for this setup work."
+
 ### Definition of Done
 
 - The repo is public and visible on GitHub.

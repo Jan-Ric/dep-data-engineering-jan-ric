@@ -43,6 +43,9 @@ Still stuck? Post in Discord with a link to your Actions log.
 **Q: Do I have to use Plotly? Can I use something else?**  
 The starter kit and CI/CD are set up for Plotly/Matplotlib generating a static HTML file. You can use other tools, but you'll need to adapt the deployment script yourself.
 
+**Q: Can I use AI while working on the program?**  
+Yes. Use it as a coach to brainstorm, explain, and review your work. Start with [Using AI in the DEP Open Track](AI_GUIDE.md) for prompt examples and safety guidance. Do not use AI to replace your own understanding or to invent answers, sources, or results.
+
 ---
 
 ## Program

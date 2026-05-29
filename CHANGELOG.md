@@ -4,6 +4,17 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+## [0.0.2] - Leveraging AI Guide
+
+### Added
+
+- Added [docs/AI_GUIDE.md](docs/AI_GUIDE.md) as a cohort-facing reference for responsible AI use, example prompts, and assessment support.
+
+### Changed
+
+- Added AI support notes to [01-foundations/README.md](01-foundations/README.md) and [docs/FAQ.md](docs/FAQ.md).
+- Added week-specific sample AI prompts to [01-foundations/week-01/README.md](01-foundations/week-01/README.md) through [01-foundations/week-04/README.md](01-foundations/week-04/README.md).
+
 ## [0.0.1] - Learner Support / Reference templates
 
 ### Added

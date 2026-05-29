@@ -76,6 +76,12 @@ Document your primary and fallback sources in a format like this:
 - Check whether the source is public, downloadable, and current enough for your question.
 - Keep one backup source in case the primary source is blocked, incomplete, or too messy.
 
+### Sample AI Prompts
+
+- "Compare these two sources for my question on coverage, format, update frequency, and missing values: `<paste source notes>`."
+- "Help me write a concise README data source section using these notes: `<paste notes>`."
+- "What should I verify in this dataset before I commit to it as my primary source?"
+
 ### Definition of Done
 
 - You have one specific primary source and one specific backup source.
