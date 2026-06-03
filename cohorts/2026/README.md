@@ -19,7 +19,8 @@
 
 ## Cohort Links
 
-- Submission Form: [Insert link]
+- Starter Kit: [cohorts/starter-kit/](../starter-kit/)
+- Submission Form: [Open a Milestone Issue](https://github.com/dataengineeringpilipinas/dep-data-engineering-open-track/issues/new/choose)
 - Discord / Community: [Insert link]
 - Builder Tracker: [Insert link]
 
