@@ -4,8 +4,21 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+## [0.0.4] - Submission System Design & Curriculum Restructure
+
+### Added
+
+- Added [CONTEXT.md](CONTEXT.md) defining domain terms and the full participant submission flow: Starter Kit, Milestone Submission (GitHub Issue), Auto-Check (GitHub Action), Milestone Reviewer verdict (`passed` / `needs-improvement`), and Resubmission model.
+
 ### Changed
 
+- Restructured phase layout: Phase 2 trimmed to weeks 5–6; Phase 3 expanded to weeks 7–12 (SQL and data modeling moved from Phase 2).
+- Moved `week-07` and `week-08` from `02-data-collection/` into `03-data-processing/`.
+- Populated all 24 week READMEs with topics, primary and optional resources, build tasks, and deliverables.
+- Rewrote Phase 5 as a conditional dual-path: Path A (predictive/ML) and Path B (advanced EDA and stakeholder track).
+- Updated all phase READMEs with revised milestone timing, pass criteria, and gate enforcement.
+- Updated `docs/MILESTONE_CHECKLIST.md` with hard gate notes on M0 and M1, revised milestone timing, and separate Path A / Path B criteria for M5.
+- Updated tech stack diagram (SVG) with corrected week ranges, SQL added to Phase 3, scikit-learn added to Phase 5.
 - Updated [README.md](README.md) to reflect Program Overview: added Program Design section (duration, weekly rule, design principles, resource rule, tool stack), split Phase 5 into separate Path A and Path B rows in the curriculum table, added analysis notebook to primary outputs, and fixed Starter Kit link to point to [cohorts/starter-kit/](cohorts/starter-kit/).
 - Fixed [06-deployment/week-23/README.md](06-deployment/week-23/README.md) milestone label from `Milestone 5 / 6` to `Milestone 5` — week 24 is the sole M6 deliverable.
 
