@@ -1,64 +1,65 @@
 # Frequently Asked Questions
 
----
+## General Questions
 
-## Getting Started
+**Q: What is the DEP Data Engineering Open Track?**
 
-**Q: Do I need prior experience?**  
-No. You need basic Python familiarity and the willingness to get stuck and push through.
+The DEP Data Engineering Open Track is a six-month, community-powered, project-driven learning journey. It guides aspiring data engineers through building, deploying, and owning a production-grade data pipeline from scratch.
 
-**Q: What tools do I need?**  
-Python 3.10+, Git, a GitHub account, and a code editor (VS Code recommended). All free.
+**Q: Is this a bootcamp or a traditional course?**
 
-**Q: How do I get started?**  
-1. Join the Discord (link in README)
-2. Use the [DEP Starter Kit](https://github.com/dai-dep/dep-starter-kit) to create your project repo
-3. Go to [Phase 1 — Foundations](../01-foundations/) and begin Week 1
+No. It is an anti-course: no traditional lectures, no hand-holding tutorials, and no spoon-fed answers. The program provides milestones, review guardrails, and community support, but you are responsible for researching, debugging, and executing your own project.
 
----
+**Q: Is there a tuition fee? What's the catch?**
 
-## Milestones
+The program is 100% free and community-powered. The only currency expected is your time, grit, and commitment to meeting weekly project milestones.
 
-**Q: What happens if I miss a milestone deadline?**  
-[Insert policy here — e.g., late submissions accepted with a note, or rolling deadlines]
+**Q: Will I get a certificate at the end of the program?**
 
-**Q: Can I choose my own dataset?**  
-Yes — and you should. The program is designed around *your* question and *your* data. You'll learn more from a dataset you care about.
+Finishers earn official recognition as a DEP Certified Builder. The real proof is a live end-to-end data pipeline, a well-documented GitHub repository, and a public dashboard hosted on GitHub Pages.
 
-**Q: What if I can't find a dataset?**  
-Post in the Discord. Community moderators will help point you to sources. The World Bank API, PSA Open Data, and Kaggle are good starting points.
+## Technical Requirements
 
----
+**Q: How much Python and SQL do I need before joining?**
 
-## Technical
+You should already have a solid foundational baseline: basic Python syntax, data types, loops, and fundamental SQL queries such as joins, aggregations, and filtering. The cohort focuses on using those tools in real data pipelines and deployable projects.
 
-**Q: My GitHub Actions deployment is failing. What do I do?**  
-Check the Actions tab in your repo for the error log. The most common causes are:
-- Missing `requirements.txt` entry
-- `scripts/03_analyze.py` not saving to `dashboard/index.html`
-- GitHub Pages not enabled in Settings → Pages → Source → GitHub Actions
+**Q: What are the hardware and system requirements?**
 
-Still stuck? Post in Discord with a link to your Actions log.
+You need access to a functional laptop or desktop computer and a stable internet connection. Your system must support a local Python environment, a code editor such as VS Code, and Git commands.
 
-**Q: Do I have to use Plotly? Can I use something else?**  
-The starter kit and CI/CD are set up for Plotly/Matplotlib generating a static HTML file. You can use other tools, but you'll need to adapt the deployment script yourself.
+**Q: What technologies will we be using?**
 
-**Q: Can I use AI while working on the program?**  
-Yes. Use it as a coach to brainstorm, explain, and review your work. Start with [Using AI in the DEP Open Track](AI_GUIDE.md) for prompt examples and safety guidance. Do not use AI to replace your own understanding or to invent answers, sources, or results.
+The curriculum uses a lean open-source stack: Python, SQL, Git/GitHub, and APIs to ingest, transform, move, and visualize data.
 
----
+## Commitment & Structure
 
-## Program
+**Q: What is the time commitment required for the cohort?**
 
-**Q: Is this free?**  
-Yes. Every tool used in this program is free and open-source.
+You should commit at least 5 hours per week for 6 months, or roughly 120 hours total. The rhythm is self-paced through the week, but milestone deadlines are strictly enforced.
 
-**Q: Will I get a certificate?**  
-Builders who complete M6 receive the DEP Certified Builder recognition. [Insert details]
+**Q: I have a full-time job or a heavy school load. Can I still join?**
 
-**Q: Can I join mid-program?**  
-[Insert policy here]
+Yes. The pacing is meant to work for students and working professionals, but you still need to protect those 5 hours each week. If you cannot commit to the finish line, do not take a slot from someone who can.
 
----
+**Q: What happens if I miss a milestone deadline?**
 
-*Question not answered here? Ask in the community Discord.*
+Milestones are non-negotiable. Missing deadlines without prior alignment with the organizing team can result in being off-boarded from the official code-review track.
+
+**Q: I don't know what project to build. What do I do?**
+
+Start with a question you genuinely want answered. Good public-data topics include traffic and transport, crop prices and agriculture, health facility access, flood and typhoon patterns, and education statistics. Your project does not need to be groundbreaking. It needs to be answerable with real data.
+
+## Application & Selection
+
+**Q: Why is the cohort limited to only 50 participants?**
+
+We limit the inaugural cohort to 50 builders so the team can provide meaningful code reviews, mentorship, and community accountability.
+
+**Q: How does the Selection Committee evaluate applications?**
+
+Applications are reviewed for foundations, resources, intent, and grit: Python and SQL familiarity, the hardware and internet needed to participate, clear motivation to learn and execute, and visible commitment to finishing the six-month journey.
+
+**Q: If I don't get selected, what are my options?**
+
+Not being selected does not end your journey. You can continue building your skills through free resources from our official partners, DataCamp and WorldQuant University. You can also explore [learning materials](https://dataengineering.ph/resources.html), [past sessions](https://www.youtube.com/@DataEngineeringPilipinas), and [community activities](https://www.meetup.com/data-engineering-pilipinas/) available through the [Data Engineering Pilipinas](https://dataengineering.ph) website. Stay engaged, keep learning, and feel free to apply again in the next cohort cycle.

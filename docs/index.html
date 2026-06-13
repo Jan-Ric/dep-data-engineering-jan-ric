@@ -386,44 +386,90 @@
           <p class="section-label">FAQ</p>
           <h2 class="section-h2" id="faq-title">Questions builders usually <em>ask.</em></h2>
           <p class="section-sub">
-            Kept concise and operational so builders can find the answer quickly without digging through
-            the rest of the repo.
+            Grouped by topic so builders can move straight to the kind of question they have in mind.
           </p>
         </div>
 
-        <div class="faq-list">
-          <details class="reveal">
-            <summary>Do I need prior experience?</summary>
-            <p>No. You need basic Python familiarity, a willingness to work through blockers, and the discipline to keep your repo updated.</p>
-          </details>
-          <details class="reveal">
-            <summary>What tools do I need?</summary>
-            <p>Python 3.10 or newer, Git, a GitHub account, and a code editor such as VS Code. The program uses free and open-source tools.</p>
-          </details>
-          <details class="reveal">
-            <summary>Is this free?</summary>
-            <p>Yes. The cohort and public curriculum are free. The program is supported by the Data Engineering Pilipinas community.</p>
-          </details>
-          <details class="reveal">
-            <summary>How does selection work?</summary>
-            <p>The admissions panel reviews applications, announces selected builders, and provides onboarding instructions before the program starts.</p>
-          </details>
-          <details class="reveal">
-            <summary>What if I miss a milestone?</summary>
-            <p>Milestones are reviewed against the published checklist. If you are blocked, follow the stuck protocol and ask for help early in the cohort channel.</p>
-          </details>
-          <details class="reveal">
-            <summary>Can I use my own dataset?</summary>
-            <p>Yes. The program is designed around your question, your audience, and your dataset, as long as the scope is feasible for the 24-week build sprint.</p>
-          </details>
-          <details class="reveal">
-            <summary>Can I use AI while working on the program?</summary>
-            <p>Yes. Use AI as a coach for brainstorming, explanation, debugging, and review. Do not use it to invent results or replace your own understanding.</p>
-          </details>
-          <details class="reveal">
-            <summary>What if I am not selected?</summary>
-            <p>You can still follow the public GitHub curriculum independently. Direct team support is reserved for selected builders in the supported cohort.</p>
-          </details>
+        <div class="faq-categories">
+          <article class="faq-category reveal">
+            <p class="faq-category-label">General Questions</p>
+            <div class="faq-list">
+              <details class="reveal">
+                <summary>What is the DEP Data Engineering Open Track?</summary>
+                <p>The DEP Data Engineering Open Track is a six-month, community-powered, project-driven learning journey. It guides aspiring data engineers through building, deploying, and owning a production-grade data pipeline from scratch.</p>
+              </details>
+              <details class="reveal">
+                <summary>Is this a bootcamp or a traditional course?</summary>
+                <p>No. We treat it as an anti-course: no traditional lectures, no hand-holding tutorials, and no spoon-fed answers. The program provides milestones, review guardrails, and community support, but you are responsible for researching, debugging, and executing your own project.</p>
+              </details>
+              <details class="reveal">
+                <summary>Is there a tuition fee? What's the catch?</summary>
+                <p>The program is 100% free and community-powered. The only currency expected is your time, grit, and commitment to meeting weekly project milestones.</p>
+              </details>
+              <details class="reveal">
+                <summary>Will I get a certificate at the end of the program?</summary>
+                <p>Instead of a paper certificate, finishers earn official recognition as a DEP Certified Builder. The real proof is a live end-to-end data pipeline, a well-documented GitHub repository, and a public dashboard hosted on GitHub Pages.</p>
+              </details>
+            </div>
+          </article>
+
+          <article class="faq-category reveal reveal-delay-1">
+            <p class="faq-category-label">Technical Requirements</p>
+            <div class="faq-list">
+              <details class="reveal">
+                <summary>How much Python and SQL do I need before joining?</summary>
+                <p>You should already have a solid foundational baseline: basic Python syntax, data types, loops, and fundamental SQL queries like joins, aggregations, and filtering. The cohort focuses on using those tools in real data pipelines and deployable projects.</p>
+              </details>
+              <details class="reveal">
+                <summary>What are the hardware and system requirements?</summary>
+                <p>You need access to a functional laptop or desktop computer and a stable internet connection. Your system must support a local Python environment, a code editor such as VS Code, and Git commands.</p>
+              </details>
+              <details class="reveal">
+                <summary>What technologies will we be using?</summary>
+                <p>The curriculum uses a lean open-source stack: Python, SQL, Git/GitHub, and APIs to ingest, transform, move, and visualize data.</p>
+              </details>
+            </div>
+          </article>
+
+          <article class="faq-category reveal">
+            <p class="faq-category-label">Commitment & Structure</p>
+            <div class="faq-list">
+              <details class="reveal">
+                <summary>What is the time commitment required for the cohort?</summary>
+                <p>You should commit at least 5 hours per week for 6 months, or roughly 120 hours total. The rhythm is self-paced through the week, but milestone deadlines are strictly enforced.</p>
+              </details>
+              <details class="reveal">
+                <summary>I have a full-time job or a heavy school load. Can I still join?</summary>
+                <p>Yes. The pacing is meant to work for students and working professionals, but you still need to protect those 5 hours each week. If you cannot commit to the finish line, do not take a slot from someone who can.</p>
+              </details>
+              <details class="reveal">
+                <summary>What happens if I miss a milestone deadline?</summary>
+                <p>Milestones are non-negotiable. Missing deadlines without prior alignment with the organizing team can result in being off-boarded from the official code-review track.</p>
+              </details>
+              <details class="reveal">
+                <summary>I don't know what project to build. What do I do?</summary>
+                <p>Start with a question you genuinely want answered. Good public-data topics include traffic and transport, crop prices and agriculture, health facility access, flood and typhoon patterns, and education statistics. Your project does not need to be groundbreaking; it needs to be answerable with real data.</p>
+              </details>
+            </div>
+          </article>
+
+          <article class="faq-category reveal reveal-delay-1">
+            <p class="faq-category-label">Application & Selection</p>
+            <div class="faq-list">
+              <details class="reveal">
+                <summary>Why is the cohort limited to only 50 participants?</summary>
+                <p>We limit the inaugural cohort to 50 builders so the team can provide meaningful code reviews, mentorship, and community accountability.</p>
+              </details>
+              <details class="reveal">
+                <summary>How does the Selection Committee evaluate applications?</summary>
+                <p>Applications are reviewed for foundations, resources, intent, and grit: Python and SQL familiarity, the hardware and internet needed to participate, clear motivation to learn and execute, and visible commitment to finishing the six-month journey.</p>
+              </details>
+              <details class="reveal">
+                <summary>If I don't get selected, what are my options?</summary>
+                <p>Not being selected does not end your journey. You can continue building your skills through free resources from our official partners, DataCamp and WorldQuant University. You can also explore <a href="https://dataengineering.ph/resources.html" target="_blank" rel="noopener noreferrer">learning materials</a>, <a href="https://www.youtube.com/@DataEngineeringPilipinas" target="_blank" rel="noopener noreferrer">past sessions</a>, and <a href="https://www.meetup.com/data-engineering-pilipinas/" target="_blank" rel="noopener noreferrer">community activities</a> available through the <a href="https://dataengineering.ph" target="_blank" rel="noopener noreferrer">Data Engineering Pilipinas</a> website. Stay engaged, keep learning, and feel free to apply again in the next cohort cycle.</p>
+              </details>
+            </div>
+          </article>
         </div>
       </section>
     </main>
