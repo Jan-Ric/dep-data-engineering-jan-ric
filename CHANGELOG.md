@@ -4,6 +4,8 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+## [0.0.5] - Site General Improvements
+
 ### Changed
 
 - Refreshed the GitHub Pages onboarding site styling in [docs/](docs/): stronger editorial hierarchy, subtler canvas texture, layered card shadows, branded hero panel treatment, and DEP logo usage in the header.
