@@ -4,6 +4,14 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+## [0.0.5] - Site General Improvements
+
+### Changed
+
+- Refreshed the GitHub Pages onboarding site styling in [docs/](docs/): stronger editorial hierarchy, subtler canvas texture, layered card shadows, branded hero panel treatment, and DEP logo usage in the header.
+- Expanded the visual language further with a dark hero, gold/navy accents, animated glow layers, and scroll-reveal cards across the onboarding page.
+- Replaced the redundant hero fact panel with cohort-focused notes, improved output-card contrast, and widened the FAQ so questions no longer feel clipped.
+
 ## [0.0.4] - Submission System Design & Curriculum Restructure
 
 ### Added
