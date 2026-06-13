@@ -7,7 +7,7 @@
       name="description"
       content="Onboarding site for the DEP Engineering Foundations (Open Track) 2026 Cohort, a community-powered build sprint by Data Engineering Pilipinas."
     >
-    <title>DEP Engineering Foundations (Open Track) - 2026 Cohort</title>
+    <title>DEP Engineering Foundations</title>
     <link rel="stylesheet" href="assets/site.css">
   </head>
   <body>
@@ -42,12 +42,27 @@
     </header>
 
     <main id="main">
+      <div class="announcement-bar" role="note" aria-label="Cohort announcement">
+        <div class="announcement-inner">
+          <p class="announcement-text">2026 Cohort · Open Track · Free community-powered build sprint</p>
+          <div class="announcement-links">
+            <a href="#register">Register now</a>
+            <a href="#process">See onboarding flow</a>
+          </div>
+        </div>
+      </div>
+
       <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-grid-bg" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-gold" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-blue" aria-hidden="true"></div>
         <div class="hero-copy">
-          <p class="eyebrow">2026 Cohort / June to November</p>
-          <h1 id="hero-title">DEP Engineering Foundations (Open Track) - 2026 Cohort</h1>
+          <p class="hero-eyebrow">2026 Cohort / June to November</p>
+          <p class="hero-tagline">Community-powered, not classroom-shaped.</p>
+          <h1 id="hero-title">DEP Engineering Foundations</h1>
           <p class="hero-lede">
-            A 6-month, community-powered build sprint for aspiring data builders.
+            A six-month build sprint where selected builders ship a public GitHub project,
+            a real data pipeline, and a deployable dashboard.
           </p>
           <div class="hero-actions" id="register">
             <a
@@ -67,50 +82,76 @@
               View curriculum repo
             </a>
           </div>
+          <div class="hero-stats" aria-label="Cohort highlights">
+            <div>
+              <span class="hero-stat-num">24</span>
+              <span class="hero-stat-label">Weeks of building</span>
+            </div>
+            <div>
+              <span class="hero-stat-num">7</span>
+              <span class="hero-stat-label">Milestone outputs</span>
+            </div>
+            <div>
+              <span class="hero-stat-num">5</span>
+              <span class="hero-stat-label">Hours per week</span>
+            </div>
+            <div>
+              <span class="hero-stat-num">Free</span>
+              <span class="hero-stat-label">Community-led access</span>
+            </div>
+          </div>
         </div>
 
-        <aside class="hero-panel" aria-label="Cohort facts">
-          <div class="metric">
-            <span class="metric-value">700+</span>
-            <span class="metric-label">Applicants</span>
+        <aside class="hero-panel" aria-label="Cohort notes">
+          <div class="panel-note panel-note-highlight">
+            <span class="panel-kicker">Build like Cohort 1</span>
+            <h3>Clear milestones, visible support, public proof of work.</h3>
+            <p>
+              The right-hand panel is now a compact reference surface: a reminder that the cohort is
+              about making and shipping, not just reading a syllabus.
+            </p>
           </div>
-          <div class="metric">
-            <span class="metric-value">24</span>
-            <span class="metric-label">Weeks</span>
+          <div class="panel-note">
+            <span class="panel-kicker">Open track</span>
+            <p>Selected builders get guided support. Everyone can still use the public curriculum.</p>
           </div>
-          <div class="metric">
-            <span class="metric-value">5 hrs</span>
-            <span class="metric-label">Weekly pace</span>
+          <div class="panel-note">
+            <span class="panel-kicker">Expected flow</span>
+            <p>Apply, onboard, submit milestones, and finish with a live GitHub Pages deployment.</p>
           </div>
-          <div class="metric">
-            <span class="metric-value">Free</span>
-            <span class="metric-label">Community-led</span>
+          <div class="panel-note">
+            <span class="panel-kicker">Program rhythm</span>
+            <p>Weekly work, cohort support, and a steady delivery cadence across the 24-week sprint.</p>
           </div>
         </aside>
       </section>
 
       <section class="content-band" id="about" aria-labelledby="about-title">
         <div class="section-heading">
-          <p class="eyebrow">What this is</p>
-          <h2 id="about-title">Not a bootcamp. A build sprint.</h2>
+          <p class="section-label">What this is</p>
+          <h2 class="section-h2" id="about-title">Not a bootcamp. <em>A build sprint.</em></h2>
+          <p class="section-sub">
+            The site is intentionally simple, but the experience should feel like a serious program
+            launch: a bold open track, real support, and a clear path from application to deployment.
+          </p>
         </div>
 
         <div class="feature-grid">
-          <article class="feature-card feature-card-dark">
+          <article class="feature-card feature-card-dark reveal">
             <h3>Community-powered</h3>
             <p>
               Builders work through an open curriculum with milestone support from volunteers,
               reviewers, moderators, squad guides, and project mentors.
             </p>
           </article>
-          <article class="feature-card">
+          <article class="feature-card reveal reveal-delay-1">
             <h3>Project-driven</h3>
             <p>
               Each participant builds a public GitHub project, an end-to-end data pipeline,
               and a deployed dashboard that can be shown beyond the cohort.
             </p>
           </article>
-          <article class="feature-card">
+          <article class="feature-card reveal reveal-delay-2">
             <h3>Led by DEP</h3>
             <p>
               This initiative is led by the leadership team of
@@ -125,37 +166,41 @@
 
       <section class="content-band" id="process" aria-labelledby="process-title">
         <div class="section-heading">
-          <p class="eyebrow">How the cohort works</p>
-          <h2 id="process-title">From application to program launch</h2>
+          <p class="section-label">How the cohort works</p>
+          <h2 class="section-h2" id="process-title">From application to <em>program launch.</em></h2>
+          <p class="section-sub">
+            The flow is designed to feel like onboarding into a real cohort: selection, announcement,
+            setup, support channels, and a clean start to the build sprint.
+          </p>
         </div>
 
         <div class="timeline" aria-label="Cohort onboarding flow">
-          <article class="timeline-item">
+          <article class="timeline-item reveal">
             <span class="step-number">01</span>
             <h3>Selection</h3>
             <p>Applications are reviewed by the admissions panel against cohort fit and readiness.</p>
           </article>
-          <article class="timeline-item">
+          <article class="timeline-item reveal reveal-delay-1">
             <span class="step-number">02</span>
             <h3>Selection announcement</h3>
             <p>Selected builders receive cohort instructions, next steps, and onboarding details.</p>
           </article>
-          <article class="timeline-item">
+          <article class="timeline-item reveal reveal-delay-2">
             <span class="step-number">03</span>
             <h3>Meetup and onboarding</h3>
             <p>The cohort meets the organizing team, support team, operating rhythm, and curriculum flow.</p>
           </article>
-          <article class="timeline-item">
+          <article class="timeline-item reveal">
             <span class="step-number">04</span>
             <h3>GitHub onboarding</h3>
             <p>Builders set up GitHub, fork or create their project repo, and submit the required repo link.</p>
           </article>
-          <article class="timeline-item">
+          <article class="timeline-item reveal reveal-delay-1">
             <span class="step-number">05</span>
             <h3>Cohort channel and check-ins</h3>
             <p>A dedicated channel anchors questions, updates, and regular check-ins led by James.</p>
           </article>
-          <article class="timeline-item">
+          <article class="timeline-item reveal reveal-delay-2">
             <span class="step-number">06</span>
             <h3>Program start declaration</h3>
             <p>The team confirms support coverage, reviews expected outputs, and officially starts the build sprint.</p>
@@ -173,28 +218,32 @@
 
       <section class="content-band" id="outputs" aria-labelledby="outputs-title">
         <div class="section-heading">
-          <p class="eyebrow">Expected outputs</p>
-          <h2 id="outputs-title">What builders will produce</h2>
+          <p class="section-label">Expected outputs</p>
+          <h2 class="section-h2" id="outputs-title">What builders will <em>produce.</em></h2>
+          <p class="section-sub">
+            The emphasis is on public proof of work: something reviewers can inspect, cohorts can discuss,
+            and future builders can learn from.
+          </p>
         </div>
 
         <div class="category-grid">
-          <article class="category-card purple">
+          <article class="category-card purple reveal">
             <h3>Public GitHub repo</h3>
             <p>A clean, documented project repository with setup notes, source code, and project context.</p>
           </article>
-          <article class="category-card pink">
+          <article class="category-card pink reveal reveal-delay-1">
             <h3>Data pipeline</h3>
             <p>An ingestion, cleaning, analysis, and validation flow using free and open-source tools.</p>
           </article>
-          <article class="category-card blue">
+          <article class="category-card blue reveal reveal-delay-2">
             <h3>Milestone submissions</h3>
             <p>Seven milestone outputs from problem framing through final deployment.</p>
           </article>
-          <article class="category-card orange">
+          <article class="category-card orange reveal reveal-delay-1">
             <h3>Launching meet readiness</h3>
             <p>Clear expectations for the infrastructure, GitHub workflow, and project tech stack.</p>
           </article>
-          <article class="category-card green">
+          <article class="category-card green reveal reveal-delay-2">
             <h3>Live dashboard</h3>
             <p>A GitHub Pages deployment that turns the final analysis into a shareable project artifact.</p>
           </article>
@@ -203,12 +252,16 @@
 
       <section class="content-band ai-band" id="ai" aria-labelledby="ai-title">
         <div class="section-heading">
-          <p class="eyebrow">Responsible AI</p>
-          <h2 id="ai-title">Use AI as a coach, not a substitute.</h2>
+          <p class="section-label">Responsible AI</p>
+          <h2 class="section-h2" id="ai-title">Use AI as a coach, <em>not a substitute.</em></h2>
+          <p class="section-sub">
+            The guidance stays practical: brainstorm, explain, debug, and review with AI, but keep the
+            thinking, decisions, and final submission yours.
+          </p>
         </div>
 
         <div class="ai-grid">
-          <article class="feature-card">
+          <article class="feature-card reveal">
             <h3>Good uses</h3>
             <ul class="check-list">
               <li>Brainstorm project questions and data sources.</li>
@@ -217,7 +270,7 @@
               <li>Improve clarity after you have written your own attempt.</li>
             </ul>
           </article>
-          <article class="feature-card">
+          <article class="feature-card reveal reveal-delay-1">
             <h3>Boundaries</h3>
             <ul class="check-list">
               <li>Do not invent sources, metrics, results, or conclusions.</li>
@@ -233,67 +286,71 @@
 
       <section class="content-band" id="team" aria-labelledby="team-title">
         <div class="section-heading">
-          <p class="eyebrow">Organizing team</p>
-          <h2 id="team-title">The people supporting the 2026 cohort</h2>
+          <p class="section-label">Organizing team</p>
+          <h2 class="section-h2" id="team-title">The people supporting the <em>2026 cohort.</em></h2>
+          <p class="section-sub">
+            Names are grouped by function, like the reference cohort site, so builders can quickly see who
+            handles admissions, systems, curriculum, moderation, and project support.
+          </p>
         </div>
 
         <div class="team-grid">
-          <article class="team-group">
+          <article class="team-group reveal">
             <h3>Program</h3>
             <ul>
               <li><span>Katherine Bulac</span><small>Program Lead / Admission Panel</small></li>
               <li><span>Bea Lambitco</span><small>Program Lead Support</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-1">
             <h3>Ops</h3>
             <ul>
               <li><span>James David Bradly Carballo</span><small>Ops Lead</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-2">
             <h3>Systems</h3>
             <ul>
               <li><span>Raymond Cancino</span><small>Systems Lead</small></li>
               <li><span>JC Diamante</span><small>Systems Lead Support</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal">
             <h3>Curriculum</h3>
             <ul>
               <li><span>Nina Comia</span><small>Curriculum Lead</small></li>
               <li><span>CJ Maminta</span><small>Curriculum Lead Support</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-1">
             <h3>Communications</h3>
             <ul>
               <li><span>Anam Iqbal</span><small>Comms Lead / Admission Panel</small></li>
               <li><span>Keith Tidon</span><small>Comms Lead Support</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-2">
             <h3>Milestone Review</h3>
             <ul>
               <li><span>Jomai Hizon</span><small>Milestone Reviewer Lead</small></li>
               <li><span>Kim Audrey Magan</span><small>Milestone Reviewer</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal">
             <h3>Community</h3>
             <ul>
               <li><span>Marc Sandrino</span><small>Community Moderator Lead</small></li>
               <li><span>Nick Estole</span><small>Community Moderator</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-1">
             <h3>Content</h3>
             <ul>
               <li><span>Zierd Ethan</span><small>Content Curator Lead / Squad Guide</small></li>
               <li><span>Andrei Marcus</span><small>Content Curator</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-2">
             <h3>Squad Guides</h3>
             <ul>
               <li><span>Yui Otsuka</span><small>Squad Guide Lead / Project Mentor</small></li>
@@ -302,7 +359,7 @@
               <li><span>Zierd Ethan</span><small>Squad Guide</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal">
             <h3>Project Mentors</h3>
             <ul>
               <li><span>Macky Sunga</span><small>Project Mentor Lead</small></li>
@@ -312,7 +369,7 @@
               <li><span>Marco Francisco</span><small>Project Mentor</small></li>
             </ul>
           </article>
-          <article class="team-group">
+          <article class="team-group reveal reveal-delay-1">
             <h3>Admissions</h3>
             <ul>
               <li><span>Katherine Bulac</span><small>Admission Panel</small></li>
@@ -326,40 +383,44 @@
 
       <section class="content-band" id="faq" aria-labelledby="faq-title">
         <div class="section-heading">
-          <p class="eyebrow">FAQ</p>
-          <h2 id="faq-title">Questions builders usually ask</h2>
+          <p class="section-label">FAQ</p>
+          <h2 class="section-h2" id="faq-title">Questions builders usually <em>ask.</em></h2>
+          <p class="section-sub">
+            Kept concise and operational so builders can find the answer quickly without digging through
+            the rest of the repo.
+          </p>
         </div>
 
         <div class="faq-list">
-          <details>
+          <details class="reveal">
             <summary>Do I need prior experience?</summary>
             <p>No. You need basic Python familiarity, a willingness to work through blockers, and the discipline to keep your repo updated.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>What tools do I need?</summary>
             <p>Python 3.10 or newer, Git, a GitHub account, and a code editor such as VS Code. The program uses free and open-source tools.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>Is this free?</summary>
             <p>Yes. The cohort and public curriculum are free. The program is supported by the Data Engineering Pilipinas community.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>How does selection work?</summary>
             <p>The admissions panel reviews applications, announces selected builders, and provides onboarding instructions before the program starts.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>What if I miss a milestone?</summary>
             <p>Milestones are reviewed against the published checklist. If you are blocked, follow the stuck protocol and ask for help early in the cohort channel.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>Can I use my own dataset?</summary>
             <p>Yes. The program is designed around your question, your audience, and your dataset, as long as the scope is feasible for the 24-week build sprint.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>Can I use AI while working on the program?</summary>
             <p>Yes. Use AI as a coach for brainstorming, explanation, debugging, and review. Do not use it to invent results or replace your own understanding.</p>
           </details>
-          <details>
+          <details class="reveal">
             <summary>What if I am not selected?</summary>
             <p>You can still follow the public GitHub curriculum independently. Direct team support is reserved for selected builders in the supported cohort.</p>
           </details>
