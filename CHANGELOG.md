@@ -4,6 +4,10 @@ All notable curriculum-documentation changes in this repo should be recorded her
 
 ## Unreleased
 
+### Changed
+
+- Updated the onboarding site registration CTAs to reflect that registration is closed, including the navbar button and hero button, plus a disabled/closed visual treatment in [docs/index.html](docs/index.html) and [docs/assets/site.css](docs/assets/site.css).
+
 ## [0.0.5] - Site General Improvements
 
 ### Changed
