@@ -60,12 +60,19 @@ I will explore the following public data sources:
 
 **Note:** Currently evaluating the datasets available so most of the components are draft but the problem being solved is defined.
 
-1. **IEMOP Wholesale Electricity Spot Market (WESM) Historical Data Portal** (-) — primary source for Luzon grid yellow and red alert records, system demand, and dispatch intervals.
-2. **DOE Open Data Portal / Philippine Power Situation Reports** (https://www.doe.gov.ph) — annual installed capacity and peak demand figures for reserve margin context.
-3. **ERC Generation and Compliance Reports** (https://www.erc.gov.ph) — plant-level generation data for cross-validation of alert events and outage causes.
-4. **PAGASA Climate Data — El Niño and Rainfall Records** (https://www.pagasa.dost.gov.ph) — monthly rainfall and El Niño event timelines for dry-season correlation analysis.
-5. **Our World in Data — Energy & Electricity Dataset** (https://ourworldindata.org/energy) — regional benchmarking of Philippine grid stress against comparable Southeast Asian markets.
+1. **[NGCP Grid Advisory Archives](https://www.ngcp.ph)**
 
+NGCP is the system operator and declares yellow and red alerts directly. They publish public advisories per alert event with declaration timestamps. This is the closest to a pre-labeled alert log. The gap is format inconsistency — advisories are narrative PDFs and web posts, not structured CSVs — requiring scraping and parsing. However, for 2019-2024, the alert timestamps are traceable here even when IEMOP dispatch data has gaps.
+2. **[DOE Daily Power Situation Reports](https://www.doe.gov.ph)**
+
+DOE publishes daily power situation reports during grid stress periods that explicitly label yellow and red alert declarations per grid with dates and durations. These are PDFs but follow a consistent enough template that a Python PDF parser (pdfplumber or camelot) can extract structured tables. Coverage is strongest during high-stress dry seasons — exactly your target period.
+3. **Philippine News Agency / Official Press Releases**
+
+PNA and DOE press releases archive alert declarations with dates and affected grids. Lower structured data value but useful as a cross-validation layer and gap-filler for specific missing months. Not suitable as a primary source but reliable as a secondary timestamp validator.
+
+4. **[IEMOP Daily Operations Reports](https://www.iemop.ph/the-market/daily-operations-reports/)**
+
+IEMOP publishes Daily Operations Reports that summarize grid conditions including reserve margin status per dispatch interval. These are more readable than raw RTD data and may contain alert classifications explicitly. Check this before attempting to derive alerts from raw RTD reserve figures — it may save significant pipeline complexity.
 
  
 ## Possible Final Dashboard
@@ -88,6 +95,6 @@ Tier III Threshold Line: Reference marker at 1.577 cumulative annual red alert-h
 
 **Risk Rating Panel:** Plain-language siting risk rating of Low, Moderate, or High per year derived from KPI 4, displayed as a color-coded summary card row (green / amber / red) pinned above the heat map and visible without scrolling
 
-**Scope Label:** Annotated header stating "Luzon Grid | 2019–2024 | Reference: Proposed Pax Silica Complex, New Clark City, Pampanga | Source: IEMOP WESM"
+**Scope Label:** Annotated header stating "Luzon Grid | 2019–2024 | Reference: Proposed Pax Silica Complex, New Clark City, Pampanga"
 
 **Public Data Access:** Downloadable aggregated dataset button on the dashboard exposing a clean CSV containing month, year, alert type, and total alert-hours per cell — derived from raw IEMOP WESM records, with no raw proprietary dispatch data included — hosted on the same GitHub Pages deployment and linked from the repository README for public transparency and reproducibility
