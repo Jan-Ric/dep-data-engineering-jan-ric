@@ -17,20 +17,27 @@ The main metric I want to track is **Monthly Alert-Hours by Severity**
 1. **Yellow Alert-Hours per Month**
 
 **What it measures:** Total hours the Luzon grid operated under yellow alert status within a calendar month
+
 **Formula:** Σ (Yellow Alert End Timestamp − Yellow Alert Start Timestamp) for all yellow alert events within the month
+
 **Unit:** Hours per month
 
 2. **Red Alert-Hours per Month**
 
 **What it measures:** Total hours the Luzon grid operated under red alert status within a calendar month
+
 **Formula:** Σ (Red Alert End Timestamp − Red Alert Start Timestamp) for all red alert events within the month
+
 **Unit:** Hours per month
 
 3. **Cumulative Annual Red Alert-Hours**
 
 **What it measures:** Running total of red alert-hours across all months within a calendar year, used as the primary Tier III compatibility check
+
 **Formula:** Σ (Monthly Red Alert-Hours) across January to December of each year
+
 **Unit:** Hours per year
+
 **Benchmark:** ≤ 1.577 hours per year (Tier III 99.982% uptime standard)
 
 4. **Monthly Risk Rating**
