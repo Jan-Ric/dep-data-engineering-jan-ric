@@ -38,7 +38,7 @@ The main metric I want to track is **Monthly Alert-Hours by Severity**
 
 **Unit:** Hours per year
 
-**Benchmark:** ≤ 1.577 hours per year (Tier III 99.982% uptime standard)
+**Benchmark:** ≤ 1.577 hours per year (Tier III Data Center 99.982% uptime standard)
 
 4. **Monthly Risk Rating**
 
