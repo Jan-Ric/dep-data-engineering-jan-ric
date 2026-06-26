@@ -6,46 +6,45 @@ I want to answer: "Do historical yellow and red alert events in the Luzon grid f
 
 ## Audience
 
-- Who: Foreign investors and infrastructure developers
-- Decision: Evaluating Luzon, Philippines as a data center siting location, specifically the Pax Silica complex in New Clark City, Pampanga
-- Need: Data-driven grid reliability baseline to inform investment commitment
-- Urgency: Decision window ahead of the projected 2028 groundbreaking
+- **Who:** Foreign investors and infrastructure developers
+- **Decision:** Evaluating Luzon, Philippines as a data center siting location, specifically the Pax Silica complex in New Clark City, Pampanga
+- **Need:** Data-driven grid reliability baseline to inform investment commitment
+- **Urgency:** Decision window ahead of the projected 2028 groundbreaking
 
 ## KPI or Key Metric
 
 The main metric I want to track is **Monthly Alert-Hours by Severity**
 1. **Yellow Alert-Hours per Month**
 
-What it measures: Total hours the Luzon grid operated under yellow alert status within a calendar month
-Formula: Σ (Yellow Alert End Timestamp − Yellow Alert Start Timestamp) for all yellow alert events within the month
-Unit: Hours per month
-Source field: IEMOP WESM alert type, start timestamp, end timestamp
+**What it measures:** Total hours the Luzon grid operated under yellow alert status within a calendar month
+**Formula:** Σ (Yellow Alert End Timestamp − Yellow Alert Start Timestamp) for all yellow alert events within the month
+**Unit:** Hours per month
 
 2. **Red Alert-Hours per Month**
 
-What it measures: Total hours the Luzon grid operated under red alert status within a calendar month
-Formula: Σ (Red Alert End Timestamp − Red Alert Start Timestamp) for all red alert events within the month
-Unit: Hours per month
-Source field: IEMOP WESM alert type, start timestamp, end timestamp
+**What it measures:** Total hours the Luzon grid operated under red alert status within a calendar month
+**Formula:** Σ (Red Alert End Timestamp − Red Alert Start Timestamp) for all red alert events within the month
+**Unit:** Hours per month
 
 3. **Cumulative Annual Red Alert-Hours**
 
-What it measures: Running total of red alert-hours across all months within a calendar year, used as the primary Tier III compatibility check
-Formula: Σ (Monthly Red Alert-Hours) across January to December of each year
-Unit: Hours per year
-Benchmark: ≤ 1.577 hours per year (Tier III 99.982% uptime standard)
+**What it measures:** Running total of red alert-hours across all months within a calendar year, used as the primary Tier III compatibility check
+**Formula:** Σ (Monthly Red Alert-Hours) across January to December of each year
+**Unit:** Hours per year
+**Benchmark:** ≤ 1.577 hours per year (Tier III 99.982% uptime standard)
 
 4. **Monthly Risk Rating**
 
 What it measures: Plain-language siting risk signal derived from red alert-hours relative to the Tier III annual budget
-Formula:
+**Formula:**
 
 - **Low** → Monthly red alert-hours = 0
 - **Moderate** → Monthly red alert-hours > 0 but cumulative annual total ≤ 1.577 hours
 - **High** → Cumulative annual red alert-hours > 1.577 hours
 
-Unit: Categorical (Low / Moderate / High)
-Output: Primary decision signal on the dashboard for the investor audience
+**Unit:** Categorical (Low / Moderate / High)
+
+**Output:** Primary decision signal on the dashboard for the investor audience
 
 
 ## Likely Data Source
