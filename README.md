@@ -70,6 +70,7 @@ I will explore the following public data sources:
 - Legend: Sequential color scale from white (0 alert-hours) to dark red (maximum alert-hours recorded), with labeled intervals at 0, 25%, 50%, 75%, and 100% of the observed maximum
 
 **Alert Tracks:** Two heat map layers — yellow alert-hours and red alert-hours — displayed separately via a toggle button, defaulting to red alert-hours on load since it is the primary Tier III risk signal
+
 **Dry-Season Highlight:** December to May rows visually banded with a light background shade or left-border accent to surface seasonal stress patterns without obscuring cell color values
 Tier III Threshold Line: Reference marker at 1.577 cumulative annual red alert-hours overlaid as a horizontal dashed line on a companion bar chart
 
@@ -78,5 +79,7 @@ Tier III Threshold Line: Reference marker at 1.577 cumulative annual red alert-h
 - Legend: Two series — "Cumulative Red Alert-Hours" (solid bar) and "Tier III Maximum Allowable Downtime — 1.577 hrs/year" (dashed red line)
 
 **Risk Rating Panel:** Plain-language siting risk rating of Low, Moderate, or High per year derived from KPI 4, displayed as a color-coded summary card row (green / amber / red) pinned above the heat map and visible without scrolling
+
 **Scope Label:** Annotated header stating "Luzon Grid | 2019–2024 | Reference: Proposed Pax Silica Complex, New Clark City, Pampanga | Source: IEMOP WESM"
+
 **Public Data Access:** Downloadable aggregated dataset button on the dashboard exposing a clean CSV containing month, year, alert type, and total alert-hours per cell — derived from raw IEMOP WESM records, with no raw proprietary dispatch data included — hosted on the same GitHub Pages deployment and linked from the repository README for public transparency and reproducibility
