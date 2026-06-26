@@ -38,7 +38,7 @@ The main metric I want to track is **Monthly Alert-Hours by Severity**
 
 **Unit:** Hours per year
 
-**Benchmark:** ≤ 1.577 hours per year (Tier III Data Center 99.982% uptime standard)
+**Benchmark:** ≤ ~1.6 hours per year (Tier III Data Center 99.982% uptime standard)
 
 4. **Monthly Risk Rating**
 
@@ -46,8 +46,8 @@ What it measures: Plain-language siting risk signal derived from red alert-hours
 **Formula:**
 
 - **Low** → Monthly red alert-hours = 0
-- **Moderate** → Monthly red alert-hours > 0 but cumulative annual total ≤ 1.577 hours
-- **High** → Cumulative annual red alert-hours > 1.577 hours
+- **Moderate** → Monthly red alert-hours > 0 but cumulative annual total ≤ 1.6 hours
+- **High** → Cumulative annual red alert-hours > 1.6 hours
 
 **Unit:** Categorical (Low / Moderate / High)
 
