@@ -52,13 +52,15 @@ Output: Primary decision signal on the dashboard for the investor audience
 
 I will explore the following public data sources:
 
-1. **IEMOP Wholesale Electricity Spot Market (WESM) Historical Data Portal** (https://www.iemop.ph/market-data/) — primary source for Luzon grid yellow and red alert records, system demand, and dispatch intervals.
+**Note:** Currently evaluating the datasets available so most of the components are draft but the problem being solved is defined.
+
+1. **IEMOP Wholesale Electricity Spot Market (WESM) Historical Data Portal** (-) — primary source for Luzon grid yellow and red alert records, system demand, and dispatch intervals.
 2. **DOE Open Data Portal / Philippine Power Situation Reports** (https://www.doe.gov.ph) — annual installed capacity and peak demand figures for reserve margin context.
 3. **ERC Generation and Compliance Reports** (https://www.erc.gov.ph) — plant-level generation data for cross-validation of alert events and outage causes.
 4. **PAGASA Climate Data — El Niño and Rainfall Records** (https://www.pagasa.dost.gov.ph) — monthly rainfall and El Niño event timelines for dry-season correlation analysis.
 5. **Our World in Data — Energy & Electricity Dataset** (https://ourworldindata.org/energy) — regional benchmarking of Philippine grid stress against comparable Southeast Asian markets.
 
-**Note:** Currently evaluating the datasets available so most of the components are draft but the problem being solved is defined.
+
  
 ## Possible Final Dashboard
 
