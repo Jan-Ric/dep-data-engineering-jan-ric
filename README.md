@@ -33,7 +33,7 @@
 **Thershold Intervention:**
 
 **A. Flag Conditions**
-| Condition | Threshold 
+| Condition | Threshold |
 |---|---|
 | PR Gap | > 0.05 (5 percentage points) |
 | Duration | ≥ 3 consecutive 15-min intervals |
