@@ -1,8 +1,8 @@
-# Solar Power Plant Inverter Analysis: A 12-month span AC output quantification of inverters with negative gap based on Actual Vs. Predictive Yield
+# Solar Power Plant Inverter Analysis: A 12-month AC output quantification of inverters with a negative gap between actual and predictive yield.
 
 ## Problem Statement
 
-**I want to answer:** "When and where are those inverters that have negative gaps in terms of their performance ratio in a Solar Power Plant?"
+**I want to answer:** "When and where are those inverters that have negative performance ratio gaps in a solar power plant?"
 
 **NOTE (optional):** Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
 
