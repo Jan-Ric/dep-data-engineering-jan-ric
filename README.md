@@ -4,7 +4,7 @@
 
 **I want to answer:** "When and where are those inverters that have negative gaps in terms of their performance ratio in a Solar Power Plant?"
 
-**NOTE**(optional): Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
+**NOTE(optional):** Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
 
 ## Audience
 
