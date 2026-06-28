@@ -1,85 +1,71 @@
-# Luzon Grid Stress Analysis: Quantifying Dry-Season Power Continuity Risk for the Proposed Pax Silica Data Center Complex in New Clark City, Pampanga
+# Solar Power Plant Inverter Analysis: A 12-month span AC output quantification of inverters with negative gap based on Actual Vs. Predictive Yield
 
 ## Problem Statement
 
-I want to answer: "Do historical yellow and red alert events in the Luzon grid from 2019-2024 reveal dry-season power continuity patterns that present a risk to large-load infrastructure such as the proposed Pax Silica data center complex in New Clark City, Pampanga, which projects a 5 GW electricity requirement?"
+**I want to answer:** "When and where are those inverters that have negative gaps in terms of their performance ratio in a Solar Power Plant?"
+
+**NOTE**(optional): Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
 
 ## Audience
 
-This project is for stakeholders evaluating the Pax Silica complex developed by the Bases Conversion and Development Authority (BCDA).
-
-- **Who:** Foreign investors and infrastructure developers
-- **Decision:** Evaluating Luzon, Philippines as a data center siting location, specifically the Pax Silica complex in New Clark City, Pampanga
-- **Need:** Data-driven grid reliability baseline to inform investment commitment
-- **Urgency:** Decision window ahead of the projected 2028 groundbreaking
+**Primary Audience:** Operation and Maintenance Engineer
+**Secondary Audience:** Solar Energy Power Plant Supervisor
 
 ## KPI or Key Metric
 
-The main metric I want to track is **Monthly Alert-Hours by Severity**
-1. **Yellow Alert-Hours per Month**
+**Main Key Performance Indicator (KPI):** Performance Ratio (PR) of each inveter per 15-minute interval
 
-**What it measures:** Total hours the Luzon grid operated under yellow alert status within a calendar month
+**Key Formula:**
+  _PR = AC Energy Output (kW) / Irradiance (kWh/m²)  × Installed DC Capacity (kWp)_
+  
+**Inverter Parameters - Unit**
+1. DATE_TIME           — 15-minute timestamp
+2. PLANT_ID            — plant identifier
+3. SOURCE_KEY          — inverter identifier (34 unique inverters)
+4. DC_POWER            — kWp (p - Peak)
+5. AC_POWER            — kW
+6. DAILY_YIELD         — kWh accumulated today
+7. TOTAL_YIELD         — kWh lifetime
+8. AMBIENT_TEMPERATURE — °C (from weather sensor file)
+9. MODULE_TEMPERATURE  — °C
+10. IRRADIATION         — W/m² (POA)
 
-**Formula:** Σ (Yellow Alert End Timestamp − Yellow Alert Start Timestamp) for all yellow alert events within the month
+**Thershold Intervention:**
+**A. Flag Conditions**
+| Condition | Threshold 
+|---|---|
+| PR Gap | > 0.05 (5 percentage points) |
+| Duration | ≥ 3 consecutive 15-min intervals |
+| Irradiance | > 200 W/m² at time of gap |
 
-**Unit:** Hours per month
+**B. Severity Tiers**
+| Severity | PR Gap | Suggested O&M Action |
+|---|---|---|
+|  Watch | 0.05 – 0.10 | Remote checking only to log and monitor for the next 24 hours |
+|  Alert | 0.10 – 0.20 | Attempt a remote reset and schedule site visit within 72 hours |
+|  Critical | > 0.20 | Likely a hardware fault that requires immediate dispatch |
 
-2. **Red Alert-Hours per Month**
-
-**What it measures:** Total hours the Luzon grid operated under red alert status within a calendar month
-
-**Formula:** Σ (Red Alert End Timestamp − Red Alert Start Timestamp) for all red alert events within the month
-
-**Unit:** Hours per month
-
-3. **Cumulative Annual Red Alert-Hours**
-
-**What it measures:** Running total of red alert-hours across all months within a calendar year, used as the primary Tier III compatibility check
-
-**Formula:** Σ (Monthly Red Alert-Hours) across January to December of each year
-
-**Unit:** Hours per year
-
-**Benchmark:** ≤ ~1.6 hours per year (Tier III Data Center 99.982% uptime standard)
-
-4. **Monthly Risk Rating**
-
-What it measures: Plain-language siting risk signal derived from red alert-hours relative to the Tier III annual budget
-**Formula:**
-
-- **Low** → Monthly red alert-hours = 0
-- **Moderate** → Monthly red alert-hours > 0 but cumulative annual total ≤ 1.6 hours
-- **High** → Cumulative annual red alert-hours > 1.6 hours
-
-**Unit:** Categorical (Low / Moderate / High)
-
-**Output:** Primary decision signal on the dashboard for the investor audience
-
+**Technical Terminologies**
+- Play of Array (POA) - amount of solar energy striking the surface of a tilted solar panel.  
+- Photovoltaic (PV) - convert "light" to "electricity"
+- Standard Temperature Condition (STC) - typical temperature condition of an operating inverter
+- Fleet - Multiple Distributed Energy
 
 ## Likely Data Source
 
 I will explore the following public data sources:
 
-**Note:** Currently evaluating the datasets available so most of the components are draft but the problem being solved is defined.
+**Primary Data Source:** [NREL PVDAQ (PV Data Acquisition Database)](https://dx.doi.org/10.25984/1846021)
 
-1. **[NGCP Grid Advisory Archives](https://www.ngcp.ph)**
+**Secondary Data Source:** [Kaggle — Solar Power Generation Data](https://www.kaggle.com/datasets/anikannal/solar-power-generation-data)
 
-2. **[DOE Daily Power Situation Reports](https://www.doe.gov.ph)**
-
-3. **Philippine News Agency / Official Press Releases**
-
-4. **[IEMOP Daily Operations Reports](https://www.iemop.ph/the-market/daily-operations-reports/)**
+**NOTE:** Currently using the pre-cleaned dataset from Kaggle for simplification of completing a data pipeline, then will go for NREL PVDAQ dataset (unclean data) for more complex modelling and cleaning of data.
 
 ## Possible Final Dashboard
-
-**Primary Visual:** Year-over-year heat map of monthly alert-hours
-
-**Alert Tracks:** Two heat map layers: Yellow alert-hours and Red alert-hours _(default risk signal)_ which displayed separately via a toggle button.
-
-**Dry-Season Highlight:** Visualize the December–May dry season using appropriate background shading to highlight stress patterns.
-
-**Risk Rating Panel:** Plain-language siting risk rating of Low, Moderate, or High per year derived from KPI 4, displayed as a color-coded summary card row (green / amber / red) pinned above the heat map and visible without scrolling
-
-**Scope Label:** Annotated header stating "Luzon Grid | 2019–2024 | Reference: Proposed Pax Silica Complex, New Clark City, Pampanga"
-
-**Public Data Access:** Downloadable aggregated dataset option on the dashboard derived from raw public data records with no raw proprietary dispatch data included.
+The dashboard should help the audience quickly see three components:
+1. Fleet Status Data:
+   -Displays threshold intervention results wherein it reveals which investors are flagged and not flagged.
+2. Inverter Ranking Panel:
+   - Ranked the all inverters in terms of their inefficiencies (AC Output Power/DC Input Power)
+4. Invertigation Panel
+   - Click on each inverter to show a 15-minute Actual VS. Predicted AC Energy Yield 
