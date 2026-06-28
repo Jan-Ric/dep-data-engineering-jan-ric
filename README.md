@@ -4,7 +4,7 @@
 
 **I want to answer:** "When and where are those inverters that have negative gaps in terms of their performance ratio in a Solar Power Plant?"
 
-**NOTE(optional):** Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
+**NOTE (optional):** Will further upgrade or add feature if possible like explaining why is there a faulty inverter gap and providing a revenue impact for each interver AC output negative gap.
 
 ## Audience
 
@@ -64,8 +64,8 @@ I will explore the following public data sources:
 ## Possible Final Dashboard
 The dashboard should help the audience quickly see three components:
 1. Fleet Status Data:
-   -Displays threshold intervention results wherein it reveals which investors are flagged and not flagged.
-2. Inverter Ranking Panel:
+   - Displays threshold intervention results wherein it reveals which investors are flagged and not flagged.
+3. Inverter Ranking Panel:
    - Ranked the all inverters in terms of their inefficiencies (AC Output Power/DC Input Power)
 4. Invertigation Panel
    - Click on each inverter to show a 15-minute Actual VS. Predicted AC Energy Yield 
