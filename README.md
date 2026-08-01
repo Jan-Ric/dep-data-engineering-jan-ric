@@ -1,4 +1,4 @@
-# Solar Power Plant Inverter Analysis: A 12-month AC output quantification of inverters with a negative performance ratio gap
+# Solar Power Plant Inverter Analysis: A 12-month AC output quantification of inverters with a negative performance ratio gap.
 
 ---
 
@@ -51,7 +51,7 @@ $$
 _where:_
 
 - _**PR** = Performance Ratio (Unitless) — this is the final output, the number Phase 1 is trying to flag anomalies on_
-- _**AC** = AC Energy Output (kWh) — comes from field 5, AC_POWER_
+- _**AC** = AC Energy Output (kWh) — comes from field 5, AC_POWER (kW). At the 1-hour interval this project uses, power (kW) and energy (kWh) are numerically the same, so AC_POWER is used directly without a separate integration step — same logic already applied to the irradiance conversion below._
 - _**I** = Irradiance (kWh/m²), based on a reference of 1 kW/m² — comes from field 12, IRRADIATION_
 - _**DC** = Installed DC Capacity (kWp) — this doesn't change over time; it's calculated once in Formula A and reused for every inverter_
 
@@ -61,31 +61,112 @@ _where:_
 
 ### **Preliminary Formulas:**
 
-None of the fields below come straight from a data source — Open-Meteo only gives weather data, and there's no live inverter telemetry available (see Problem Statement). Formulas A–F are how the rest of the fields get built, using the weather data plus the fixed datasheet numbers as inputs. Each one below is written as: what goes in, what comes out, and what uses that output next.
+Formulas A–F build every field not pulled directly from a source (see Data Source Notes). Each entry: formula (where the math isn't obvious from the inputs alone), inputs with where each comes from, and the output.
 
-### A. Plant Sizing Derivation — fixed values, calculated once
+**Formula Flow:**
 
-**In:** the plant's total DC capacity, number of inverters, and module rated power (all fixed numbers from the datasheets). **Out:** two constants — `N_module` (modules per inverter) and `DC_inv,plant-derived` (DC capacity per inverter) — calculated once and reused for every inverter and every hour, not recalculated per row. Checked against the plant's published panel count to make sure the math lines up. `N_module` is used in Formula C. `DC_inv,plant-derived` is used in the PR formula — this is a different number from the SMA nameplate DC rating (which only shows up in Formula E), so they shouldn't be mixed up.
+```
+Main flow:   A + B → C → D → KPI
 
-### B. Module Temperature — Faiman Model (checked against the datasheet)
+Side branch: B → E  (thermal stress flag, not part of KPI)
+             E → F  (test-only fault injection, never in real calculation)
+```
 
-**In:** ambient temperature, irradiance, and wind speed — all from Open-Meteo. **Out:** `MODULE_TEMPERATURE`, used in Formulas C and E. This is the first calculation after pulling the raw weather data, and it's also where most of the hour-to-hour change comes from, since wind speed moves somewhat independently of temperature and irradiance. The formula's constants are standard published values, not something fitted to this project's data, and they were checked once against the module datasheet's NOCT rating to confirm they're reasonable.
+### A. Plant Sizing Derivation (feeds Formula C and the Key Formula's `DC` term)
 
-### C. Module DC Power (adjusted for temperature)
+$$
+N_{module} = \dfrac{DC_{plant} / N_{inv}}{P_{STC}} \qquad DC_{inv,plant\text{-}derived} = \dfrac{DC_{plant}}{N_{inv}}
+$$
 
-**In:** module temperature (Formula B), irradiance, and modules per inverter (Formula A). **Out:** `DC_POWER`, calculated by scaling the module's rated power by irradiance and by how much heat reduces its output, then multiplying by the number of modules.
+_where:_
 
-### D. Inverter AC Output
+- _**N_module** = Modules per inverter (Unitless) — output → Formula C_
+- _**DC_plant** = Total plant DC capacity (Wp) = 63,300,000 — Plant Profile_
+- _**N_inv** = Number of inverters (Unitless) = 830 — Plant Profile_
+- _**P_STC** = Module rated power at STC (Wp) = 315 — Module Datasheet_
+- _**DC_inv,plant-derived** = DC capacity per inverter (W) = 76,265 — output, converted to 76.265 kWp before feeding the Key Formula's `DC` term_
 
-**In:** DC power (Formula C), plus the inverter's fixed efficiency and rated capacity from the datasheet. **Out:** `AC_POWER`. The output is capped at the inverter's rated 60 kW, so on high-irradiance hours some power gets "clipped" off — this is expected given the plant's 1.27 DC/AC ratio (from Formula A), not a sign of anything wrong.
+**Note:** N_module ≈ 242 (validated: 830 × 242 ≈ 200,860 modules, matching the plant's quoted 200,928-panel count). DC_inv,plant-derived is distinct from the SMA nameplate DC rating (61,240 W), which feeds Formula D's `pdc0` instead. Ratio_DC/AC = DC_inv,plant-derived / P_AC,rated = 76,265 / 60,000 ≈ 1.27, referenced in Formula D's clipping note.
 
-### E. Ambient-envelope stress proxy
+### B. Module Temperature — Faiman Model (feeds field 3, MODULE_TEMPERATURE)
 
-**In:** ambient temperature plus the heating effect from Formula B, compared against the inverter's rated operating limit of 60°C. **Out:** `THERMAL_STRESS_FLAG`, a simple yes/no check. Every number here comes straight from the datasheet, nothing is estimated.
+$$
+T_{module} = T_{amb} + \dfrac{G_{POA}}{u_0 + u_1 \times WS}
+$$
 
-### F. Fault Injection (used only for testing, not the real pipeline)
+_where:_
 
-**In:** the baseline from Formula E, plus a manually chosen offset and severity level, applied only to specific inverters/time windows I pick for testing. **Out:** `DELTA_T_FAULT` (0 everywhere else) and a reduced efficiency value. This isn't part of the actual data pipeline — it's how I create fake, labeled "faults" (Watch 2–4°C / Alert 4–8°C / Critical 8–15°C) so I can check whether my Phase 1 anomaly detector actually catches them before trusting it on real data.
+- _**T_module** = Module temperature (°C) — output → Formulas C, E_
+- _**T_amb** = Ambient temperature (°C) — Open-Meteo, field 11_
+- _**G_POA** = Plane-of-array irradiance (W/m²) — Open-Meteo, field 12_
+- _**WS** = Wind speed at 10 m (m/s) — Open-Meteo, field 13_
+- _**u₀** = Faiman constant loss coefficient (W/m²·°C) = 25.0 — `pvlib.temperature.faiman` default_
+- _**u₁** = Faiman wind loss coefficient (W/m²·°C per m/s) = 6.84 — `pvlib.temperature.faiman` default_
+
+**Note:** Constants checked against the Trina NOCT rating (44°C ±2°C at 800 W/m², 20°C, 1 m/s) — model gives ≈25.1°C rise vs. the datasheet's 24°C, within tolerance.
+
+### C. Module DC Power (feeds field 4, DC_POWER)
+
+$$
+P_{dc} = P_{module,STC\_total} \times \dfrac{G_{POA}}{1000} \times \left[1 + \dfrac{\gamma_p}{100} \times (T_{module} - 25)\right]
+$$
+
+_where:_
+
+- _**P_dc** = Module DC power output per inverter (W) — output, divided by 1000 → DC_POWER (kW), feeds Formula D_
+- _**P_module,STC_total** = P_STC × N_module (W) — Formula A output + Module Datasheet_
+- _**G_POA** = Plane-of-array irradiance (W/m²) — Open-Meteo, field 12_
+- _**γ_p** = Temperature coefficient of Pmax (%/°C) = −0.41 — Module Datasheet; the `/100` converts it to a unitless per-°C fraction_
+- _**T_module** = Module temperature (°C) — Formula B_
+
+**Note:** Model source: `pvlib.pvsystem.pvwatts_dc`.
+
+### D. Inverter AC Output (feeds field 5, AC_POWER)
+
+$$
+P_{AC} = \min\left(P_{dc} \times \eta_{inv},\; P_{AC,rated}\right)
+$$
+
+_where:_
+
+- _**P_AC** = Inverter AC power output (kW) — output → Key Formula (as AC, see note above)_
+- _**P_dc** = DC power input (kW) — Formula C_
+- _**η_inv** = Inverter efficiency (Unitless) = 0.983 (Euro-eta) — Inverter Datasheet_
+- _**P_AC,rated** = Rated AC output power (kW) = 60 — Inverter Datasheet_
+
+**Note:** The clip is expected on high-irradiance hours given the 1.27 DC/AC ratio (Formula A) — this is clipping loss, not a fault. Model source: `pvlib.pvsystem.PVSystem.get_ac`. This step's `pdc0` (inverter DC input limit, ≈61,043 W — close to the 61,240 W nameplate rating) is a separate value from Formula C's `P_module,STC_total`; don't swap them.
+
+### E. Thermal Stress Flag (feeds field 8, THERMAL_STRESS_FLAG)
+
+$$
+Flag_{thermal} = \left(T_{amb} + T_{module\_rise}\right) \geq 60°C
+$$
+
+_where:_
+
+- _**Flag_thermal** = Thermal stress flag (Boolean) — output_
+- _**T_amb** = Ambient temperature (°C) — Open-Meteo, field 11_
+- _**T_module_rise** = Irradiance-driven module heating (°C) — Formula B_
+- _**60°C** = Datasheet-rated upper ambient operating limit — Inverter Datasheet (operating temp range, not DC power)_
+
+**Note:** Independent of the PR calculation — feeds only field 8, not the Key Formula.
+
+### F. Fault Injection — test data only, not the real pipeline (feeds field 9, DELTA_T_FAULT)
+
+$$
+T_{internal,fault}(t) = T_{internal}(t) + \Delta T_{fault} \qquad \eta_{inv,degraded} = \eta_{inv} \times \left[1 - \beta \times \max(0,\; T_{internal} - T_{threshold})\right]
+$$
+
+_where:_
+
+- _**T_internal,fault(t)** = Simulated faulted internal temperature at time t (°C) — output_
+- _**T_internal(t)** = Baseline internal temperature (°C) — Formula E_
+- _**ΔT_fault** = Injected fault offset (°C) — manually chosen, tiered Watch 2–4 / Alert 4–8 / Critical 8–15_
+- _**η_inv,degraded** = Degraded inverter efficiency (Unitless) — output_
+- _**β** = Degradation coefficient (%/°C above threshold) — assumption, tune 0.5–1_
+- _**T_threshold** = Temperature threshold above which degradation begins (°C) — assumption_
+
+**Note:** Applied only to selected inverter_id/time windows for testing, never fleet-wide. Used to generate labeled anomalies for validating the Phase 1 detector before trusting it on real data.
 
 ---
 
@@ -98,13 +179,13 @@ _Format: FIELD (Unit) - Data Type -> Description_
 1. DATE_TIME (1-hour timestamp) — TIMESTAMP
 2. INVERTER*ID (Unitless) - INTEGER -> \_inverter identifier (830 unique inverters)*
 3. MODULE*TEMPERATURE (°C) - DECIMAL -> \_from Faiman model (Formula B): T_ambient + G_POA / (u₀ + u₁ × WS); checked against Trina datasheet*
-4. DC*POWER (kW) - DECIMAL -> \_from Formula C: P_STC × (G_POA/1000) × [1 + (γ_p/100) × (T_module − 25)] × 242 modules*
+4. DC*POWER (kW) - DECIMAL -> \_from Formula C: (P_STC × 242 modules) × (G_POA/1000) × [1 + (γ_p/100) × (T_module − 25)], divided by 1000 (W → kW)*
 5. AC*POWER (kW) - DECIMAL -> \_from Formula D: min(DC_POWER × η_inv, 60 kW rated); instantaneous power, not accumulated energy*
 6. DAILY*YIELD (kWh) - DECIMAL -> \_accumulated today, added up from AC_POWER*
 7. TOTAL*YIELD (kWh) - DECIMAL -> \_lifetime total, same install date assumed for all inverters*
 8. THERMAL*STRESS_FLAG (Boolean) - INTEGER -> \_from Formula E: flags when (ambient temp + module heating) gets close to the datasheet's +60°C limit*
 9. DELTA*T_FAULT (°C) - DECIMAL -> \_injected fault offset (Formula F), only applied to selected inverter_id/time windows for testing; 0 everywhere else*
-10. PERFORMANCE*RATIO (Unitless) - DECIMAL -> \_the KPI: AC_POWER / (IRRADIATION_kWh_m2 × DC_inv,plant-derived); see Field 12 and Formula A*
+10. PERFORMANCE*RATIO (Unitless) - DECIMAL -> \_the KPI: AC_POWER / (IRRADIATION_kWh_m2 × DC_inv,plant-derived_kWp); see Field 12 and Formula A for the unit conversions each term needs before this division*
 
 ### **_B. From open-source weather API (Open-Meteo — ECMWF IFS, hourly, Jan–Dec 2025)_**
 
@@ -176,6 +257,18 @@ _There are two different kinds of data being pulled into this project, and they'
 | **Coverage**                | - Single plant<br>- Capacity: 63.3 MW<br>- Inverters: 830 × SMA Sunny Tripower 60TL-10<br>- Solar panels: 200,928<br>- Module: Trina Tallmax TSM-PC14 (polycrystalline)                                    | - Type: STP 60-JP-10<br>- Rated DC power: 61,240 W / Max PV array power: 90,000 Wp (this is the nameplate rating — not the number used for PR, see Formula A)<br>- Max DC input voltage: 1000 V<br>- Rated AC power: 60,000 W<br>- Max efficiency: 98.8% / Euro-eta: 98.3%<br>- Cooling: active (fan) / Operating temp: −25°C to +60°C<br>- Weight: 75 kg | - Type: TSM-PC14, 72-cell multicrystalline<br>- Power range: 305–315 Wp<br>- Module efficiency: 15.7%–16.2%<br>- Temp. coefficient of Pmax: −0.41%/°C<br>- NOCT: 44°C ±2°C (800 W/m², 20°C, 1 m/s wind)<br>- Dimensions: 1956 × 992 × 40 mm / Weight: 22.5 kg |
 | **Why it fits the problem** | - Gives a real basis for the plant sizing calculation<br>- Anchors the fault-injection simulation to a real plant's numbers, combined with real weather data, so the synthetic AC/DC values aren't made up | - Gives the inverter's real operating numbers (rated power, efficiency, thermal limits) used in the AC output and thermal-stress formulas                                                                                                                                                                                                                 | - Gives the module's real operating numbers (power rating, temperature coefficient, NOCT) used in the DC power and module-temperature formulas                                                                                                                |
 | **Known limitations**       | - Reference/spec info only, no time-series data<br>- Only covers inverter performance + weather; inverter/module temperature comes from the simulated fault-injection instead of a real sensor             | - Reference/spec info only, no time-series data<br>- No published curve showing how efficiency drops with internal temperature for this model                                                                                                                                                                                                             | - Reference/spec info only, no time-series data                                                                                                                                                                                                               |
+
+**Note:** the datasheets above give the _numbers_ used in the formulas (γ*p, NOCT, rated power). They don't cover \_why the equations themselves are shaped the way they are* — that comes from the published models below, which pvlib implements directly.
+
+**Model Sources (Component C — published model references, not project-specific data)**
+
+|                             | Formula B — Module Temperature                                                                                                                                                                         | Formula C — Module DC Power                                                                                                                                | Formula D — Inverter AC Output                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**                    | Faiman module temperature model, as implemented in pvlib                                                                                                                                               | NREL PVWatts DC power model, as implemented in pvlib                                                                                                       | pvlib's inverter AC conversion wrapper (routes to the PVWatts inverter model)                                                           |
+| **URL**                     | [pvlib.temperature.faiman](https://pvlib-python.readthedocs.io/en/stable/reference/generated/pvlib.temperature.faiman.html)                                                                            | [pvlib.pvsystem.pvwatts_dc](https://pvlib-python.readthedocs.io/en/stable/reference/generated/pvlib.pvsystem.pvwatts_dc.html)                              | [pvlib.pvsystem.PVSystem.get_ac](https://pvlib-python.readthedocs.io/en/stable/reference/generated/pvlib.pvsystem.PVSystem.get_ac.html) |
+| **Format**                  | Documentation page (function reference, free to access)                                                                                                                                                | Documentation page (function reference, free to access)                                                                                                    | Documentation page (function reference, free to access)                                                                                 |
+| **Why it fits the problem** | Confirms Formula B is the same model, with the same default constants (u0=25.0, u1=6.84), not a custom approximation                                                                                   | Confirms Formula C's structure — scale by irradiance, derate by temperature offset from 25°C reference — matches a published, peer-reviewed model          | Confirms Formula D's clip-at-rated-capacity behavior matches a standard, documented inverter conversion approach                        |
+| **Known limitations**       | Documentation page, not the original 2008 paper — the original (Faiman, D., _Progress in Photovoltaics_ 16(4), 2008, DOI: 10.1002/pip.813) is paywalled, so it's cited by reference rather than linked | None — this is a free, public NREL technical report underneath (Dobos, A.P., _PVWatts Version 5 Manual_, NREL/TP-6A20-62641, 2014), also linkable directly | Underlying model is `pvlib.inverter.pvwatts`; this page documents the higher-level wrapper actually called in a pvlib pipeline          |
 
 ### Fallback Source
 
