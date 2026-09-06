@@ -176,26 +176,28 @@ _Format: FIELD (Unit) - Data Type -> Description_
 
 ### **_A. From simulation methodology — 830 SMA Sunny Tripower 60TL-10 inverters, Calatagan Solar Farm_**
 
-1. DATE_TIME (1-hour timestamp) — TIMESTAMP
-2. INVERTER*ID (Unitless) - INTEGER -> \_inverter identifier (830 unique inverters)*
-3. MODULE*TEMPERATURE (°C) - DECIMAL -> \_from Faiman model (Formula B): T_ambient + G_POA / (u₀ + u₁ × WS); checked against Trina datasheet*
-4. DC*POWER (kW) - DECIMAL -> \_from Formula C: (P_STC × 242 modules) × (G_POA/1000) × [1 + (γ_p/100) × (T_module − 25)], divided by 1000 (W → kW)*
-5. AC*POWER (kW) - DECIMAL -> \_from Formula D: min(DC_POWER × η_inv, 60 kW rated); instantaneous power, not accumulated energy*
-6. DAILY*YIELD (kWh) - DECIMAL -> \_accumulated today, added up from AC_POWER*
-7. TOTAL*YIELD (kWh) - DECIMAL -> \_lifetime total, same install date assumed for all inverters*
-8. THERMAL*STRESS_FLAG (Boolean) - INTEGER -> \_from Formula E: flags when (ambient temp + module heating) gets close to the datasheet's +60°C limit*
-9. DELTA*T_FAULT (°C) - DECIMAL -> \_injected fault offset (Formula F), only applied to selected inverter_id/time windows for testing; 0 everywhere else*
-10. PERFORMANCE*RATIO (Unitless) - DECIMAL -> \_the KPI: AC_POWER / (IRRADIATION_kWh_m2 × DC_inv,plant-derived_kWp); see Field 12 and Formula A for the unit conversions each term needs before this division*
+1. **DATE_TIME** _(1-hour timestamp) — TIMESTAMP_
+2. **INVERTER_ID** _(Unitless) - INTEGER -> inverter identifier (830 unique inverters)_
+3. **MODULE_TEMPERATURE** _(°C) - DECIMAL -> from Faiman model (Formula B): T_ambient + G_POA / (u₀ + u₁ × WS); checked against Trina datasheet_
+4. **DC_POWER** _(kW) - DECIMAL -> from Formula C: (P_STC × 242 modules) × (G_POA/1000) × [1 + (γ_p/100) × (T_module − 25)], divided by 1000 (W → kW)_
+5. **AC_POWER** _(kW) - DECIMAL -> from Formula D: min(DC_POWER × η_inv, 60 kW rated); instantaneous power, not accumulated energy_
+6. **DAILY_YIELD** _(kWh) - DECIMAL -> accumulated today, added up from AC_POWER_
+7. **TOTAL_YIELD** _(kWh) - DECIMAL -> lifetime total, same install date assumed for all inverters_
+8. **THERMAL_STRESS_FLAG** _(Boolean) - INTEGER -> from Formula E: flags when (ambient temp + module heating) gets close to the datasheet's +60°C limit_
+9. **DELTA_T_FAULT** _(°C) - DECIMAL -> injected fault offset (Formula F), only applied to selected inverter_id/time windows for testing; 0 everywhere else_
+10. **PERFORMANCE_RATIO** _(Unitless) - DECIMAL -> the KPI: AC_POWER / (IRRADIATION_kWh_m2 × DC_inv,plant-derived_kWp); see Field 12 and Formula A for the unit conversions each term needs before this division_
 
 ### **_B. From open-source weather API (Open-Meteo — ECMWF IFS, hourly, Jan–Dec 2025)_**
 
-11. AMBIENT*TEMPERATURE (°C) - DECIMAL -> *`temperature_2m`, hourly reading\_
-12. IRRADIATION (W/m² - GTI/POA) - DECIMAL -> _`global_tilted_irradiance`, preceding-hour mean; tilt 11°, azimuth 0° (south). Comes in as W/m²; converted to kWh/m² (`× 1h / 1000`) before it's used in the PR formula, since that's a straight unit conversion at hourly intervals, not something that needs to be added up over time._
-13. WIND*SPEED (m/s) - DECIMAL -> *`wind_speed_10m`, hourly reading; needed for Formula B. This field wasn't in my original plan, but I added it once I found the module temperature formula needed wind speed as an input.\_
+11. **AMBIENT_TEMPERATURE** _(°C) - DECIMAL -> `temperature_2m`, hourly reading_
+12. **IRRADIATION** _(W/m² - GTI/POA) - DECIMAL -> `global_tilted_irradiance`, preceding-hour mean; tilt 11°, azimuth 0° (south). Comes in as W/m²; converted to kWh/m² (`× 1h / 1000`) before it's used in the PR formula, since that's a straight unit conversion at hourly intervals, not something that needs to be added up over time._
+13. **WIND_SPEED** _(m/s) - DECIMAL -> `wind_speed_10m`, hourly reading; needed for Formula B. This field wasn't in my original plan, but I added it once I found the module temperature formula needed wind speed as an input._
 
 ---
 
 ### **Threshold Intervention:**
+
+**Note:** These baseline assumptions (Table A & Table B) are established for pipeline validation and simulation purposes only.
 
 **A. Flag Conditions**
 | Condition | Threshold |
