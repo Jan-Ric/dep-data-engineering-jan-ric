@@ -305,6 +305,34 @@ _There are two different kinds of data being pulled into this project, and they'
 
 ---
 
+## Processed Data Plan
+
+### Main Table or File
+
+- Name: `processed_inv_metrics`
+- Grain: one row = one hour per inverter
+- Primary key: Composite Key (`INVERTER_ID` + `DATE_TIME`)
+
+### Important Columns
+
+| Column              | Meaning                                               | Expected Type    |
+| ------------------- | ----------------------------------------------------- | ---------------- |
+| `INVERTER_ID`       | Unique identifier for each physical inverter          | `INTEGER`        |
+| `DATE_TIME`         | The specific date and hour of the reading             | `TIMESTAMP`      |
+| `AC_POWER`          | The generated alternating current power for that hour | `DECIMAL(10, 3)` |
+| `IRRADIANCE`        | The solar irradiance measured for that hour           | `DECIMAL(10, 3)` |
+| `PERFORMANCE_RATIO` | The calculated efficiency ratio for that hour         | `DECIMAL(5, 4)`  |
+
+### Related Tables or Files
+
+- `hardware_dimension`: joins on `INVERTER_ID`, adding effective start and end date columns.
+
+**NOTE:** The `DATE_TIME` should be in the windows from start date and end date _(uses long future date if still active)_ of the inverter's lifetime.
+
+- `daily_inv_summary`: aggregates from the main table, grouping by `INVERTER_ID` and a `DATE` extracted from `DATE_TIME`. The pipeline is scheduled daily at 12:30 AM.
+
+---
+
 ## Possible Final Dashboard
 
 The dashboard should help the audience quickly see three components:
