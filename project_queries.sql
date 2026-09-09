@@ -1,9 +1,7 @@
-/*
- Phase 1 Goal: Identifying which inverter/s are underperforming from Historical Weather API and AC Yield (Anomaly Detection)               
-*/
+-- Phase 1 Goal: Identifying which inverter/s are underperforming from Historical Weather API and AC Yield (Anomaly Detection)               
 
 /*
--- Question 1: Which of the following inverters has the most total underperforming hours?
+Question 1: Which of the following inverters has the most total underperforming hours?
 
 NOTE: This query counts the total number of underperforming hours for each inverter based on the performance ratio and irradiance conditions.
 */
