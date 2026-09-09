@@ -1,24 +1,49 @@
-"""
-Phase 3 — Data Transformation
-Replace this template with your own transformation logic.
-"""
+from pathlib import Path
+import json
 
-import os
-
-RAW_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
-PROCESSED_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
+import pandas as pd
 
 
-def transform():
-    # TODO: replace with your transformation logic
-    # Examples:
-    #   - Load raw CSV, clean column names, drop nulls, save to processed/
-    #   - Run SQL queries against a local SQLite database
-    #   - Merge multiple raw files into one clean dataset
-    raise NotImplementedError("Add your transformation logic here.")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_FILE = PROJECT_ROOT / "data/raw/open_meteo_raw.json"
+OUTPUT_FILE = PROJECT_ROOT / "data/processed/open_meteo_cleaned.csv"
 
+
+def load_raw_data() -> pd.DataFrame:
+    with RAW_FILE.open(encoding="utf-8") as file:
+        payload = json.load(file)
+
+    hourly = payload["hourly"]
+    df = pd.DataFrame(hourly)
+    df = df.rename(
+        columns={
+            "time": "date_time",
+            "temperature_2m": "ambient_temperature_c",
+            "wind_speed_10m": "wind_speed_10m_ms",
+            "global_tilted_irradiance": "irradiation_w_m2",
+        }
+    )
+    df["date_time"] = pd.to_datetime(df["date_time"])
+    return df.sort_values("date_time").reset_index(drop=True)
+
+
+def main() -> None:
+    df = load_raw_data()
+
+    print("First five rows:")
+    print(df.head())
+    print("\nDataFrame info:")
+    df.info()
+    print("\nDescriptive statistics:")
+    print(df.describe())
+    print("\nRows by date:")
+    print(df["date_time"].dt.date.value_counts().sort_index().head())
+    print("\nMissing values:")
+    print(df.isnull().sum())
+
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUTPUT_FILE, index=False)
+    print(f"\nSaved cleaned dataset to {OUTPUT_FILE}")
 
 if __name__ == "__main__":
-    os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
-    transform()
-    print("Transformation complete. Check data/processed/ for output.")
+    main()
