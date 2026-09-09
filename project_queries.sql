@@ -11,7 +11,7 @@ SELECT INVERTER_ID,
 FROM processed_inv_metrics
 WHERE 1 - PERFORMANCE_RATIO >= 0.05 AND IRRADIANCE > 200
 GROUP BY INVERTER_ID
-ORDER BY total_underperform_hrs DESC
+ORDER BY total_underperform_hrs DESC;
 
 /* 
 Question 2: Which are the inverters that are underperforming with greater than 200 W/m² irradiance for 3 consecutive hours?
