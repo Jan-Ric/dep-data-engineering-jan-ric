@@ -333,6 +333,12 @@ _There are two different kinds of data being pulled into this project, and they'
 
 ---
 
+### Data Quality Cleaning Log
+
+Performance ratio will only be validated when irradiance > 0 to prevent division-by-zero errors (from KPI formula) while dynamically capturing all periods of light rather than relying on hardcoded separation of daytime and nighttime timestamps (since nighttime usually has 0 irradiance).
+
+---
+
 ## Possible Final Dashboard
 
 The dashboard should help the audience quickly see three components:

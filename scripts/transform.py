@@ -89,7 +89,20 @@ def main() -> None:
     print("\nMissing values:")
     print(df_features.isnull().sum())
 
-    # 4. Save the outputs
+    # 4. Validation Profile: Check for anomalies and outliers in the data
+    # Check physical limits of raw weather data
+    assert df_features["irradiation_w_m2"].min() >= 0, "Unexpected negative irradiance value found"
+    assert df_features["ambient_temperature_c"].min() >= 10, "Low Ambient temperature - Out of range"
+    assert df_features["ambient_temperature_c"].max() <= 50, "High Ambient temperature - Out of range"
+    
+    # Check calculated Performance Ratio (irradiance > 0 only)
+    daytime_data = df_features[df_features["irradiation_w_m2"] > 0]
+    assert daytime_data["performance_ratio"].min() >= 0, "Unexpected Zero or Near-zero PR - Out of range"
+    assert daytime_data["performance_ratio"].max() <= 1.5, "Too high PR - Out of range"
+
+    print("Validation done: All checks passed successfully.")
+    
+    # 5. Save the outputs
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     
     # Save base cleaned dataset
