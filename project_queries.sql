@@ -14,21 +14,21 @@ GROUP BY INVERTER_ID
 ORDER BY total_underperform_hrs DESC;
 
 /* 
-Question 2: Which are the inverters that are underperforming with greater than 200 W/m² irradiance for 3 consecutive hours?
+Question 2: Which are the inverters that are underperforming with greater than 200 W/m² irradiance for 3-hour blocks?
 
-NOTE: I used to average first the ac yield and irradiance then calculate performance ratio for each inverter in 3 consecutive hours and 
+NOTE: I used to average first the ac yield and irradiance then calculate performance ratio for each inverter in 3-hour blocks and 
         then filter the inverters that are underperforming with greater than 200 W/m² irradiance.
 */
 
 SELECT 
     INVERTER_ID,
-    AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265) AS performance_ratio,
+    AVG(PERFORMANCE_RATIO) AS performance_ratio,
     DATE(DATE_TIME) AS date_only,
-    EXTRACT(HOUR FROM DATE_TIME) / 3 AS three_hour_block
+    FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3) AS three_hour_block
 FROM processed_inv_metrics
-GROUP BY INVERTER_ID, DATE(DATE_TIME), EXTRACT(HOUR FROM DATE_TIME) / 3
-HAVING 1 - AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265) >= 0.05 AND AVG(IRRADIANCE) > 200 -- 76.265 kWp for DC capacity of each inverter
-ORDER by performance_ratio DESC;
+GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
+HAVING 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND AVG(IRRADIANCE) > 200 -- IRRADIANCE remains in W/m² for this threshold
+ORDER by performance_ratio ASC;
 
 /* 
 Question 3: How are the underperforming inverters classified based on their severity?
@@ -37,18 +37,18 @@ NOTE: I used the aggregated 3-hour block data from the previous query to classif
 */
 SELECT 
     INVERTER_ID,
-    AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265) AS performance_ratio,
-    1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) AS severity_gap,
+    AVG(PERFORMANCE_RATIO) AS performance_ratio,
+    1 - AVG(PERFORMANCE_RATIO) AS severity_gap,
     DATE(DATE_TIME) AS date_only,
-    EXTRACT(HOUR FROM DATE_TIME) / 3 AS three_hour_block,
+    FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3) AS three_hour_block,
     CASE 
-        WHEN 1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) >= 0.05 AND 1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) < 0.10 THEN 'Watch'
-        WHEN 1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) >= 0.10 AND 1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) < 0.20 THEN 'Alert'
-        WHEN 1 - (AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265)) >= 0.20 THEN 'Critical'
+        WHEN 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND 1 - AVG(PERFORMANCE_RATIO) < 0.10 THEN 'Watch'
+        WHEN 1 - AVG(PERFORMANCE_RATIO) >= 0.10 AND 1 - AVG(PERFORMANCE_RATIO) < 0.20 THEN 'Alert'
+        WHEN 1 - AVG(PERFORMANCE_RATIO) >= 0.20 THEN 'Critical'
     ELSE 'Normal'
 END AS severity_label
 FROM processed_inv_metrics
-GROUP BY INVERTER_ID, DATE(DATE_TIME), EXTRACT(HOUR FROM DATE_TIME) / 3
-HAVING 1 - AVG(AC_POWER) / (AVG(IRRADIANCE) * 76.265) >= 0.05 AND AVG(IRRADIANCE) > 200 -- 76.265 kWp for DC capacity of each inverter
+GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
+HAVING 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND AVG(IRRADIANCE) > 200 -- IRRADIANCE remains in W/m² for this threshold
 ORDER by severity_gap DESC;
 

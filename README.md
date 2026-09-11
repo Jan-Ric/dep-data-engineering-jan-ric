@@ -68,7 +68,7 @@ Formulas A–F build every field not pulled directly from a source (see Data Sou
 ```
 Main flow:   A + B → C → D → KPI
 
-Side branch: B → E  (thermal stress flag, not part of KPI)
+Side branch: B → E  (baseline internal temperature, not part of KPI)
              E → F  (test-only fault injection, never in real calculation)
 ```
 
@@ -136,37 +136,40 @@ _where:_
 
 **Note:** The clip is expected on high-irradiance hours given the 1.27 DC/AC ratio (Formula A) — this is clipping loss, not a fault. Model source: `pvlib.pvsystem.PVSystem.get_ac`. This step's `pdc0` (inverter DC input limit, ≈61,043 W — close to the 61,240 W nameplate rating) is a separate value from Formula C's `P_module,STC_total`; don't swap them.
 
-### E. Thermal Stress Flag (feeds field 8, THERMAL_STRESS_FLAG)
+### E. Baseline Internal Temperature (feeds Formula F and field 8, INTERNAL_TEMPERATURE)
 
 $$
-Flag_{thermal} = \left(T_{amb} + T_{module\_rise}\right) \geq 60°C
+T_{internal} = T_{amb} + T_{module\_rise}
 $$
 
 _where:_
 
-- _**Flag_thermal** = Thermal stress flag (Boolean) — output_
+- _**T_internal** = Baseline internal-temperature proxy (°C) — numeric output used by Formula F_
 - _**T_amb** = Ambient temperature (°C) — Open-Meteo, field 11_
 - _**T_module_rise** = Irradiance-driven module heating (°C) — Formula B_
-- _**60°C** = Datasheet-rated upper ambient operating limit — Inverter Datasheet (operating temp range, not DC power)_
 
-**Note:** Independent of the PR calculation — feeds only field 8, not the Key Formula.
+**Note:** This is a simulated internal-temperature proxy because internal inverter telemetry is unavailable. It is numeric, so Formula F can use it as its baseline. It is not a direct measurement of inverter internal temperature. The inverter datasheet's +60°C value may be used only as a documented comparison threshold for a separate stress interpretation; it is not part of this temperature calculation.
 
 ### F. Fault Injection — test data only, not the real pipeline (feeds field 9, DELTA_T_FAULT)
 
 $$
-T_{internal,fault}(t) = T_{internal}(t) + \Delta T_{fault} \qquad \eta_{inv,degraded} = \eta_{inv} \times \left[1 - \beta \times \max(0,\; T_{internal} - T_{threshold})\right]
+T_{internal,fault,i}(t) = T_{internal}(t) + \Delta T_{fault,i}(t)
+$$
+
+$$
+\eta_{inv,degraded,i}(t) = \eta_{inv} \times \left[1 - \beta \times \max(0,\; T_{internal,fault,i}(t) - T_{threshold})\right]
 $$
 
 _where:_
 
-- _**T_internal,fault(t)** = Simulated faulted internal temperature at time t (°C) — output_
-- _**T_internal(t)** = Baseline internal temperature (°C) — Formula E_
-- _**ΔT_fault** = Injected fault offset (°C) — manually chosen, tiered Watch 2–4 / Alert 4–8 / Critical 8–15_
-- _**η_inv,degraded** = Degraded inverter efficiency (Unitless) — output_
-- _**β** = Degradation coefficient (%/°C above threshold) — assumption, tune 0.5–1_
+- _**T_internal,fault,i(t)** = Simulated faulted internal temperature for inverter \_i_ at time _t_ (°C) — output\_
+- _**T_internal(t)** = Numeric baseline internal-temperature proxy (°C) — Formula E_
+- _**ΔT_fault,i(t)** = Injected fault offset (°C), equal to 0 for normal rows and manually chosen for selected inverter/time windows; suggested tiers are Watch 2–4, Alert 4–8, and Critical 8–15_
+- _**η_inv,degraded,i(t)** = Degraded inverter efficiency (Unitless) — output used to recalculate AC power in Formula D for affected rows_
+- _**β** = Degradation coefficient as a decimal fraction per °C above threshold — a documented simulation assumption_
 - _**T_threshold** = Temperature threshold above which degradation begins (°C) — assumption_
 
-**Note:** Applied only to selected inverter_id/time windows for testing, never fleet-wide. Used to generate labeled anomalies for validating the Phase 1 detector before trusting it on real data.
+**Note:** Applied only to selected `INVERTER_ID`/time windows for testing, never fleet-wide. For normal rows, `ΔT_fault = 0` and baseline efficiency is used. For faulty rows, the transformed efficiency is used to recalculate `AC_POWER`, and then `PERFORMANCE_RATIO` changes through the Key Formula. This creates reproducible inverter-level variations for validating the Phase 1 detector.
 
 ---
 
@@ -183,7 +186,7 @@ _Format: FIELD (Unit) - Data Type -> Description_
 5. **AC_POWER** _(kW) - DECIMAL -> from Formula D: min(DC_POWER × η_inv, 60 kW rated); instantaneous power, not accumulated energy_
 6. **DAILY_YIELD** _(kWh) - DECIMAL -> accumulated today, added up from AC_POWER_
 7. **TOTAL_YIELD** _(kWh) - DECIMAL -> lifetime total, same install date assumed for all inverters_
-8. **THERMAL_STRESS_FLAG** _(Boolean) - INTEGER -> from Formula E: flags when (ambient temp + module heating) gets close to the datasheet's +60°C limit_
+8. **INTERNAL_TEMPERATURE** _(°C) - DECIMAL -> numeric baseline internal-temperature proxy from Formula E; used as the input to Formula F. Any comparison with the inverter's +60°C operating limit is an interpretation or separate derived flag, not the temperature calculation itself_
 9. **DELTA_T_FAULT** _(°C) - DECIMAL -> injected fault offset (Formula F), only applied to selected inverter_id/time windows for testing; 0 everywhere else_
 10. **PERFORMANCE_RATIO** _(Unitless) - DECIMAL -> the KPI: AC_POWER / (IRRADIATION_kWh_m2 × DC_inv,plant-derived_kWp); see Field 12 and Formula A for the unit conversions each term needs before this division_
 
@@ -202,8 +205,8 @@ _Format: FIELD (Unit) - Data Type -> Description_
 **A. Flag Conditions**
 | Condition | Threshold |
 |---|---|
-| PR Gap | > 0.05 (5 percentage points) |
-| Duration | ≥ 3 consecutive 1-hour intervals |
+| PR Gap | >= 0.05 (5 percentage points) |
+| Duration | 3-hour block interval |
 | Irradiance | > 200 W/m² at time of gap |
 
 **B. Severity Tiers**
@@ -337,7 +340,7 @@ _There are two different kinds of data being pulled into this project, and they'
 
 Performance ratio will only be validated when irradiance > 0 to prevent division-by-zero errors (from KPI formula) while dynamically capturing all periods of light rather than relying on hardcoded separation of daytime and nighttime timestamps (since nighttime usually has 0 irradiance).
 
----
+This also excludes the irradiance with zero values (nighttime) for the KPI analysis and anomaly detection but still accepted as valid data.
 
 ## Possible Final Dashboard
 
