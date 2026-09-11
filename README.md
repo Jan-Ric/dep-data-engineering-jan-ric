@@ -353,3 +353,29 @@ The dashboard should help the audience quickly see three components:
 **Note:** This will also be updated if Phase 2 and Phase 3 are developed.
 
 _PS: AI agents assisted with some formatting to make the markdown file cleaner and easier to read while preserving the template._
+
+---
+
+## Getting Started
+
+Follow these steps to run the project:
+
+**NOTE:** _This assumes that you already cloned the project in the GitHub repository._
+
+1. Install the required dependencies:
+
+   `pip install -r requirements.txt`
+
+2. Run the data extraction step:
+
+   `python scripts/ingest.py` -> For Windows
+
+   `python3 scripts/ingest.py` -> For Mac/Linux
+
+3. Run the processing and validation step:
+
+   `python scripts/transform.py` -> For Windows
+
+   `python3 scripts/transform.py` -> For Mac/Linux
+
+---
