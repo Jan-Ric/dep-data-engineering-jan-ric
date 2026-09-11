@@ -2,7 +2,8 @@ from pathlib import Path
 import requests
 import json
 
-RAW_DIR = Path("data/raw")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_DIR = PROJECT_ROOT / "data/raw"
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 def fetch_data():

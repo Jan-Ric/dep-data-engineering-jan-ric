@@ -1,3 +1,6 @@
+# Current dependencies for data ingestion and processing:
 requests==2.34.2
 pandas>=2.0,<3.0
 
+# Expected to add: matplotlib, numpy, and scikit-learn in the future for data visualization and machine learning tasks. 
+# PV models like Fainman Model and STC Model are not included in this requirements.txt file as they are not directly related to the data ingestion process.
