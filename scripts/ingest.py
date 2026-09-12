@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 import requests
 import json
 
@@ -31,6 +32,18 @@ def fetch_data():
 def main():
     source_name = "open_meteo"
     payload = fetch_data()
+    expected_hours = int(
+        (datetime(2026, 1, 1) - datetime(2025, 1, 1)).total_seconds() / 3600
+    )
+    weather_fields = ["temperature_2m", "wind_speed_10m", "global_tilted_irradiance"]
+    # Fail before saving because this pipeline has no fallback for gappy API responses.
+    for field in weather_fields:
+        values = payload["hourly"][field]
+        assert len(values) == expected_hours, (
+            f"{field} has {len(values)} rows, expected {expected_hours}"
+        )
+        null_count = sum(value is None for value in values)
+        assert null_count == 0, f"{field} contains {null_count} null readings"
     output_file = RAW_DIR / f"{source_name}_raw.json"
     
     # Save as properly formatted JSON

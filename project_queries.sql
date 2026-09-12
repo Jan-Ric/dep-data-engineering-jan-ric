@@ -27,7 +27,7 @@ SELECT
     FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3) AS three_hour_block
 FROM processed_inv_metrics
 GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
-HAVING 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND AVG(IRRADIANCE) > 200 -- IRRADIANCE remains in W/m² for this threshold
+HAVING COUNT(*) = 3 AND 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND MIN(IRRADIANCE) > 200 -- every hour in the block exceeds 200 W/m²
 ORDER by performance_ratio ASC;
 
 /* 
@@ -49,6 +49,6 @@ SELECT
 END AS severity_label
 FROM processed_inv_metrics
 GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
-HAVING 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND AVG(IRRADIANCE) > 200 -- IRRADIANCE remains in W/m² for this threshold
+HAVING COUNT(*) = 3 AND 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND MIN(IRRADIANCE) > 200 -- every hour in the block exceeds 200 W/m²
 ORDER by severity_gap DESC;
 

@@ -7,7 +7,6 @@ RAW_FILE = PROJECT_ROOT / "data/raw/open_meteo_raw.json"
 WEATHER_FILE = PROJECT_ROOT / "data/processed/open_meteo_cleaned.csv"
 COMPUTATION_FILE = PROJECT_ROOT / "data/processed/open_meteo_computation.csv"
 MAIN_INV_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
-DAILY_SUMMARY_FILE = PROJECT_ROOT / "data/processed/daily_inv_summary.csv"
 
 
 def load_raw_data() -> pd.DataFrame:
@@ -26,6 +25,55 @@ def load_raw_data() -> pd.DataFrame:
     )
     df["date_time"] = pd.to_datetime(df["date_time"])
     return df.sort_values("date_time").reset_index(drop=True)
+
+
+def validate_missing_values(df_raw: pd.DataFrame, df_metrics: pd.DataFrame) -> None:
+    raw_required_columns = [
+        "date_time",
+        "ambient_temperature_c",
+        "wind_speed_10m_ms",
+        "irradiation_w_m2",
+    ]
+    raw_missing = df_raw[raw_required_columns].isna().sum()
+    unexpected_raw_missing = raw_missing[raw_missing > 0]
+    assert unexpected_raw_missing.empty, (
+        "Missing required weather values: "
+        f"{unexpected_raw_missing.to_dict()}"
+    )
+
+    calculated_columns = [
+        "n_module",
+        "dc_inv_cap",
+        "module_temperature_c",
+        "internal_temperature_c",
+        "dc_power_kw",
+        "ac_power_kw",
+        "inverter_id",
+        "delta_t_fault",
+        "internal_temperature_fault_c",
+        "inverter_efficiency",
+    ]
+    calculated_missing = df_metrics[calculated_columns].isna().sum()
+    unexpected_calculated_missing = calculated_missing[calculated_missing > 0]
+    assert unexpected_calculated_missing.empty, (
+        "Missing calculated values: "
+        f"{unexpected_calculated_missing.to_dict()}"
+    )
+
+    daytime_data = df_metrics[df_metrics["irradiation_w_m2"] > 0]
+    nighttime_data = df_metrics[df_metrics["irradiation_w_m2"] == 0]
+    assert daytime_data["performance_ratio"].notna().all(), (
+        "Performance ratio is missing for a daylight row"
+    )
+    assert nighttime_data["performance_ratio"].isna().all(), (
+        "Performance ratio must be undefined when irradiance is zero"
+    )
+
+    print(
+        "Cleaning decisions: no values imputed; "
+        f"{len(nighttime_data)} nighttime rows have intentionally undefined "
+        "performance_ratio values; all other required values are present."
+    )
 
 
 def solar_inv_engr_features(df_features) -> pd.DataFrame:
@@ -145,35 +193,6 @@ def create_query_dataset(df_metrics) -> pd.DataFrame:
     ]
 
 
-def create_daily_summary(df_metrics) -> pd.DataFrame:
-    all_metrics = df_metrics.copy()
-    all_metrics["date"] = all_metrics["date_time"].dt.date
-
-    daytime_metrics = df_metrics[df_metrics["irradiation_w_m2"] > 0].copy()
-    daytime_metrics["date"] = daytime_metrics["date_time"].dt.date
-    daytime_metrics["underperforming"] = (
-        (1 - daytime_metrics["performance_ratio"] >= 0.05)
-        & (daytime_metrics["irradiation_w_m2"] > 200)
-    )
-
-    summary = (
-        daytime_metrics.groupby(["inverter_id", "date"], as_index=False)
-        .agg(
-            avg_performance_ratio=("performance_ratio", "mean"),
-            min_performance_ratio=("performance_ratio", "min"),
-            flagged_hours_count=("underperforming", "sum"),
-        )
-    )
-    energy = (
-        all_metrics.groupby(["inverter_id", "date"], as_index=False)
-        .agg(total_ac_energy_kwh=("ac_power_kw", "sum"))
-    )
-    return (
-        summary.merge(energy, on=["inverter_id", "date"])
-        .rename(columns={"inverter_id": "INVERTER_ID", "date": "DATE"})
-    )
-
-
 def main() -> None:
     # 1. Load raw data and perform basic data exploration
     df_raw = load_raw_data()
@@ -181,6 +200,8 @@ def main() -> None:
     # 2. Feature Engineering: Compute all inverter parameters and PR
     df_features = solar_inv_engr_features(df_raw)
     df_metrics = create_inverter_metrics(df_features)
+
+    validate_missing_values(df_raw, df_metrics)
 
     # 3. Data Profiling
     print("First five rows:")
@@ -224,10 +245,6 @@ def main() -> None:
     query_dataset = create_query_dataset(df_metrics)
     query_dataset.to_csv(MAIN_INV_FILE, index=False)
     print(f"Saved query dataset to {MAIN_INV_FILE}")
-
-    daily_summary = create_daily_summary(df_metrics)
-    daily_summary.to_csv(DAILY_SUMMARY_FILE, index=False)
-    print(f"Saved daily summary to {DAILY_SUMMARY_FILE}")
 
 
 if __name__ == "__main__":

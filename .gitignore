@@ -1,5 +1,18 @@
-# Generated weather and inverter data
-/data/raw/*.json
-/data/processed/open_meteo_computation.csv
-/data/processed/processed_inv_metrics.csv
-/data/processed/daily_inv_summary.csv
+# Local Python environments and caches
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Generated raw and processed data
+data/raw/*.json
+data/processed/*.csv
+
+# Keep directory placeholders and the small review sample in version control
+!data/processed/.gitkeep
+!data/samples/processed_inv_metrics_sample.csv
+
+# Generated figures and local editor files
+output/figures/*
+!output/figures/.gitkeep
+.vscode/
