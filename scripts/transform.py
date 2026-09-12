@@ -7,6 +7,7 @@ RAW_FILE = PROJECT_ROOT / "data/raw/open_meteo_raw.json"
 WEATHER_FILE = PROJECT_ROOT / "data/processed/open_meteo_cleaned.csv"
 COMPUTATION_FILE = PROJECT_ROOT / "data/processed/open_meteo_computation.csv"
 MAIN_INV_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
+DAILY_SUMMARY_FILE = PROJECT_ROOT / "data/processed/daily_inv_summary.csv"
 
 
 def load_raw_data() -> pd.DataFrame:
@@ -46,7 +47,8 @@ def solar_inv_engr_features(df_features) -> pd.DataFrame:
     df_features["module_temperature_c"] = t_amb + (g_poa / (u_0 + u_1 * ws))
 
     # Formula E: Baseline internal temperature proxy
-    df_features["internal_temperature_c"] = df_features["module_temperature_c"]
+    module_temperature_rise = df_features["module_temperature_c"] - t_amb
+    df_features["internal_temperature_c"] = t_amb + module_temperature_rise
 
     # Formula C: Module DC Power Calculation (Output in kW)
     gamma_p = -0.41  # Temperature coefficient of Pmax (%/°C)
@@ -143,6 +145,35 @@ def create_query_dataset(df_metrics) -> pd.DataFrame:
     ]
 
 
+def create_daily_summary(df_metrics) -> pd.DataFrame:
+    all_metrics = df_metrics.copy()
+    all_metrics["date"] = all_metrics["date_time"].dt.date
+
+    daytime_metrics = df_metrics[df_metrics["irradiation_w_m2"] > 0].copy()
+    daytime_metrics["date"] = daytime_metrics["date_time"].dt.date
+    daytime_metrics["underperforming"] = (
+        (1 - daytime_metrics["performance_ratio"] >= 0.05)
+        & (daytime_metrics["irradiation_w_m2"] > 200)
+    )
+
+    summary = (
+        daytime_metrics.groupby(["inverter_id", "date"], as_index=False)
+        .agg(
+            avg_performance_ratio=("performance_ratio", "mean"),
+            min_performance_ratio=("performance_ratio", "min"),
+            flagged_hours_count=("underperforming", "sum"),
+        )
+    )
+    energy = (
+        all_metrics.groupby(["inverter_id", "date"], as_index=False)
+        .agg(total_ac_energy_kwh=("ac_power_kw", "sum"))
+    )
+    return (
+        summary.merge(energy, on=["inverter_id", "date"])
+        .rename(columns={"inverter_id": "INVERTER_ID", "date": "DATE"})
+    )
+
+
 def main() -> None:
     # 1. Load raw data and perform basic data exploration
     df_raw = load_raw_data()
@@ -193,6 +224,10 @@ def main() -> None:
     query_dataset = create_query_dataset(df_metrics)
     query_dataset.to_csv(MAIN_INV_FILE, index=False)
     print(f"Saved query dataset to {MAIN_INV_FILE}")
+
+    daily_summary = create_daily_summary(df_metrics)
+    daily_summary.to_csv(DAILY_SUMMARY_FILE, index=False)
+    print(f"Saved daily summary to {DAILY_SUMMARY_FILE}")
 
 
 if __name__ == "__main__":

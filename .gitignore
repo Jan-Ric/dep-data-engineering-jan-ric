@@ -1,0 +1,5 @@
+# Generated weather and inverter data
+/data/raw/*.json
+/data/processed/open_meteo_computation.csv
+/data/processed/processed_inv_metrics.csv
+/data/processed/daily_inv_summary.csv
