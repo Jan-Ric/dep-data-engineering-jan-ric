@@ -11,7 +11,7 @@ SELECT INVERTER_ID,
 FROM processed_inv_metrics
 WHERE 1 - PERFORMANCE_RATIO >= 0.05 AND IRRADIANCE > 200
 GROUP BY INVERTER_ID
-ORDER BY total_underperform_hrs DESC;
+ORDER BY total_underperform_hrs DESC, INVERTER_ID ASC;
 
 /* 
 Question 2: Which are the inverters that are underperforming with greater than 200 W/m² irradiance for 3-hour blocks?
@@ -28,7 +28,7 @@ SELECT
 FROM processed_inv_metrics
 GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
 HAVING COUNT(*) = 3 AND 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND MIN(IRRADIANCE) > 200 -- every hour in the block exceeds 200 W/m²
-ORDER by performance_ratio ASC;
+ORDER by performance_ratio ASC, date_only ASC, three_hour_block ASC, INVERTER_ID ASC;
 
 /* 
 Question 3: How are the underperforming inverters classified based on their severity?
@@ -50,5 +50,5 @@ END AS severity_label
 FROM processed_inv_metrics
 GROUP BY INVERTER_ID, DATE(DATE_TIME), FLOOR(EXTRACT(HOUR FROM DATE_TIME) / 3)
 HAVING COUNT(*) = 3 AND 1 - AVG(PERFORMANCE_RATIO) >= 0.05 AND MIN(IRRADIANCE) > 200 -- every hour in the block exceeds 200 W/m²
-ORDER by severity_gap DESC;
+ORDER by severity_gap DESC, date_only ASC, three_hour_block ASC, INVERTER_ID ASC;
 

@@ -4,6 +4,7 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_FILE = PROJECT_ROOT / "data/raw/open_meteo_raw.json"
+FAULT_CONFIG_FILE = PROJECT_ROOT / "config/fault_windows.json"
 WEATHER_FILE = PROJECT_ROOT / "data/processed/open_meteo_cleaned.csv"
 COMPUTATION_FILE = PROJECT_ROOT / "data/processed/open_meteo_computation.csv"
 MAIN_INV_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
@@ -137,13 +138,14 @@ def create_inverter_metrics(df_features) -> pd.DataFrame:
 
     # Formula F: Apply faults only to selected inverter and time windows
     df_metrics["delta_t_fault"] = 0.0
-    fault_windows = [
-        (101, "2025-03-15 10:00:00", "2025-03-15 12:00:00", 4.0),
-        (202, "2025-06-20 10:00:00", "2025-06-20 12:00:00", 8.0),
-        (303, "2025-09-10 10:00:00", "2025-09-10 12:00:00", 12.0),
-    ]
+    with FAULT_CONFIG_FILE.open(encoding="utf-8") as file:
+        fault_windows = json.load(file)["fault_windows"]
 
-    for inverter_id, start_time, end_time, delta_t_fault in fault_windows:
+    for fault in fault_windows:
+        inverter_id = fault["inverter_id"]
+        start_time = fault["start"]
+        end_time = fault["end"]
+        delta_t_fault = fault["delta_t_fault_c"]
         fault_mask = (
             (df_metrics["inverter_id"] == inverter_id)
             & (df_metrics["date_time"] >= pd.Timestamp(start_time))

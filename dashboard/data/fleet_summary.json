@@ -1,0 +1,124 @@
+{
+  "artifact_version": "1.0.0",
+  "daily_summary_reconciliation": {
+    "existing_file_found": true,
+    "existing_rows": 302950,
+    "key_mismatches": false,
+    "logic": "Per-inverter/day aggregates from processed_inv_metrics.csv; absolute PR gap >= 0.05 and irradiance > 200 W/m^2 for flagged hours.",
+    "matching": false,
+    "maximum_absolute_difference": {
+      "avg_performance_ratio": 0.00044928132592836345,
+      "total_ac_energy_kwh": 0.21247021435203806
+    },
+    "regenerated_rows": 302950,
+    "rows_differing_by_column": {
+      "avg_performance_ratio": 302950,
+      "flagged_hours_count": 6640,
+      "min_performance_ratio": 234890,
+      "total_ac_energy_kwh": 302950
+    }
+  },
+  "date_range": {
+    "end": "2025-12-31 23:00:00",
+    "start": "2025-01-01 00:00:00"
+  },
+  "fault_windows": [
+    {
+      "delta_t_fault_c": 4.0,
+      "end": "2025-03-15 12:00:00",
+      "inverter_id": 101,
+      "start": "2025-03-15 10:00:00"
+    },
+    {
+      "delta_t_fault_c": 8.0,
+      "end": "2025-06-20 12:00:00",
+      "inverter_id": 202,
+      "start": "2025-06-20 10:00:00"
+    },
+    {
+      "delta_t_fault_c": 12.0,
+      "end": "2025-09-10 12:00:00",
+      "inverter_id": 303,
+      "start": "2025-09-10 10:00:00"
+    }
+  ],
+  "git_sha": "ad1d0bc8da77903fbd371b3a23d1ef24a0d4d5cf",
+  "input": {
+    "bytes": 374281220,
+    "path": "data/processed/processed_inv_metrics.csv",
+    "sha256": "674086f246ea9032fcea4520fe3997304b23c87f8655730383a2c11a778dd045"
+  },
+  "kpis": {
+    "absolute_flagged_daytime_hours": 2379610,
+    "baseline_absolute_flagged_hours": 2867,
+    "baseline_relative_alert_blocks": 0,
+    "baseline_relative_flagged_hours": 2,
+    "fleet_mean_performance_ratio": 0.9292531056806381,
+    "injected_fault_window_detection_recall": 0.0,
+    "injected_fault_windows_detected": 0,
+    "injected_fault_windows_total": 3,
+    "non_fault_inverter_count": 827,
+    "non_fault_inverter_false_positive_rate": 0.0,
+    "non_fault_inverters_with_alert_blocks": 0
+  },
+  "location": {
+    "azimuth_degrees": 0,
+    "latitude": 13.9155,
+    "longitude": 120.6498,
+    "name": "Calatagan Solar Farm, Philippines",
+    "tilt_degrees": 11,
+    "timezone": "Asia/Singapore"
+  },
+  "nighttime_note": "PR is null when irradiance is zero; these rows are excluded from PR analysis, not treated as zero.",
+  "project": "Solar Power Plant Inverter Analysis",
+  "reproducibility": {
+    "fault_config": "config/fault_windows.json",
+    "formula_source": "scripts/transform.py",
+    "randomness_used": false,
+    "seed": null
+  },
+  "row_counts": {
+    "daytime_rows_with_defined_pr": 3824640,
+    "inverter_hour_rows": 7270800,
+    "inverters": 830
+  },
+  "simulation_note": "All inverter metrics are modeled. Faults for inverter IDs 101, 202, and 303 are injected test scenarios, not observed faults.",
+  "sql_query_result_rows": {
+    "absolute_fixed_3h_blocks": {
+      "preview_file": "absolute_fixed_3h_blocks_top100.csv",
+      "published_preview_rows": 100,
+      "result_rows": 696370
+    },
+    "absolute_fixed_3h_severity": {
+      "preview_file": "absolute_fixed_3h_severity_top100.csv",
+      "published_preview_rows": 100,
+      "result_rows": 696370
+    },
+    "absolute_hourly_ranking": {
+      "preview_file": "absolute_hourly_ranking.csv",
+      "published_preview_rows": 830,
+      "result_rows": 830
+    }
+  },
+  "thresholds": {
+    "absolute_pr_gap": 0.05,
+    "baseline_relative_gap": 0.05,
+    "fixed_block_hours": 3,
+    "irradiance_w_m2_minimum": 200.0,
+    "severity": {
+      "Alert": [
+        0.1,
+        0.2
+      ],
+      "Critical": [
+        0.2,
+        null
+      ],
+      "Watch": [
+        0.05,
+        0.1
+      ]
+    }
+  },
+  "weather_source": "Open-Meteo Historical API, ECMWF IFS reanalysis"
+}
