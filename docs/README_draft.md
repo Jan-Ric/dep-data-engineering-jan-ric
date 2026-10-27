@@ -51,91 +51,26 @@ No predictive model is appropriate for this dataset: injected faults follow a fi
 
 Generated from the tracked repository paths; generated local raw and large processed files are intentionally not listed.
 
-```text
-.
-|-- .gitignore
-|-- README.md
-|-- requirements.txt
-|-- archive/
-|   |-- .github/workflows/pages.yml
-|   |-- README.md
-|   |-- config/fault_windows.json
-|   |-- dashboard/
-|   |   |-- data/absolute_fixed_3h_blocks_top100.csv
-|   |   |-- data/absolute_fixed_3h_severity_top100.csv
-|   |   |-- data/absolute_hourly_ranking.csv
-|   |   |-- fleet_summary.json
-|   |   `-- index.html
-|   |-- data/daily_inv_summary.csv
-|   |-- notebooks/.gitkeep
-|   |-- project_queries.sql
-|   `-- scripts/publish_artifacts.py
-|-- data/
-|   |-- processed/
-|   |   |-- .gitkeep
-|   |   |-- monthly_inv_summary.csv
-|   |   |-- open_meteo_cleaned.csv
-|   |   `-- sample_processed_inv_metrics.csv
-|   |-- raw/.gitkeep
-|   `-- samples/processed_inv_metrics_sample.csv
-|-- docs/
-|   |-- audit.md
-|   |-- cleaning_log.md
-|   |-- insights.md
-|   |-- kpi_definitions.md
-|   |-- methodology.md
-|   |-- pipeline_baseline_hashes.txt
-|   |-- progress.md
-|   |-- README_draft.md
-|   |-- schema.md
-|   |-- segmentation.md
-|   |-- stakeholder_brief.md
-|   |-- status.md
-|   `-- UPDATE_NOTES.md
+|-- archive/ (.github/workflows/pages.yml, README.md, config/fault_windows.json,
+|   dashboard/{data/*.csv, fleet_summary.json, index.html},
+|   data/daily_inv_summary.csv, notebooks/.gitkeep, project_queries.sql,
+|   scripts/publish_artifacts.py)
+|-- data/ (processed/{.gitkeep, monthly_inv_summary.csv, open_meteo_cleaned.csv,
+|   sample_processed_inv_metrics.csv}, raw/.gitkeep,
+|   samples/processed_inv_metrics_sample.csv)
+|-- docs/ (audit.md, cleaning_log.md, insights.md, kpi_definitions.md,
+|   methodology.md, pipeline_baseline_hashes.txt, progress.md, README_draft.md,
+|   schema.md, segmentation.md, stakeholder_brief.md, status.md, UPDATE_NOTES.md)
 |-- output/
-|   |-- figures/
-|   |   |-- .gitkeep
-|   |   |-- fault_day_pr_101_202_303.png
-|   |   |-- flagged_blocks_by_severity_cohort.png
-|   |   |-- irradiance_vs_ac_power.png
-|   |   |-- mean_pr_by_irradiance_band.png
-|   |   |-- mean_pr_by_season_hour_band.png
-|   |   |-- monthly_mean_pr_by_group.png
-|   |   `-- pr_by_hour_of_day.png
-|   |-- sql_results/
-|   |   |-- 01_lowest_avg_pr.csv
-|   |   |-- 02_pr_gap_by_month_hour.csv
-|   |   `-- 03_flagged_3h_blocks.csv
-|   `-- tables/
-|       |-- alert_blocks.csv
-|       |-- baseline_daily.csv
-|       |-- cohort_fault_vs_normal.csv
-|       |-- cohort_flags_by_severity.csv
-|       |-- fault_day_pr_101_202_303.csv
-|       |-- fault_detection_validation.csv
-|       |-- flagged_blocks_by_severity.csv
-|       |-- hourly_mean_pr.csv
-|       |-- inverter_detail/101.csv
-|       |-- inverter_detail/202.csv
-|       |-- inverter_detail/303.csv
-|       |-- inverter_ranking.csv
-|       |-- kpi_summary.csv
-|       |-- monthly_mean_pr_by_group.csv
-|       |-- scatter_sample_100k.csv
-|       |-- scatter_sample_100k.csv.gz
-|       |-- segment_pr_by_irradiance_band.csv
-|       |-- segment_pr_by_season_hour.csv
-|       `-- summary_statistics.csv
-|-- scripts/
-|   |-- build_insight_tables.py
-|   |-- ingest.py
-|   |-- insights.py
-|   |-- kpis.py
-|   |-- run_pipeline.py
-|   |-- run_sql.py
-|   |-- segmentation.py
-|   `-- transform.py
-`-- sql/
+|   |-- figures/ (.gitkeep and seven PNG charts)
+|   |-- sql_results/ (01_lowest_avg_pr.csv, 02_pr_gap_by_month_hour.csv,
+|   |   03_flagged_3h_blocks.csv)
+|   `-- tables/ (analysis CSVs, scatter samples, inverter_detail/{101,202,303}.csv)
+|-- scripts/ (build_insight_tables.py, ingest.py, insights.py, kpis.py,
+|   run_pipeline.py, run_sql.py, segmentation.py, transform.py)
+`-- sql/ (01_lowest_average_pr.sql, 01_lowest_avg_pr.sql,
+	02_pr_gap_by_month_hour.sql, 03_consecutive_underperformance.sql,
+	03_flagged_3h_blocks.sql)
 	|-- 01_lowest_average_pr.sql
 	|-- 01_lowest_avg_pr.sql
 	|-- 02_pr_gap_by_month_hour.sql
