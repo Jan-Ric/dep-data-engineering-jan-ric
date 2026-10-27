@@ -1,14 +1,17 @@
--- Question: In which months and hours do absolute PR gaps of at least 0.05 occur?
--- Logic: Treat 1 - PR as the gap from the ideal PR of 1.0; require irradiance > 200 W/m^2.
--- Expected output: Compact month/hour counts and mean PR gap, ordered chronologically.
+/*
+Question: How does the average performance ratio gap vary by month and hour?
+Logic: Group positive-irradiance rows by calendar month and clock hour, then
+       report the average PR and its gap from 1. Null nighttime PR is excluded.
+Expected output: One row per month and hour with contributing inverter-hour
+                 count, average PR, and average PR gap, chronologically ordered.
+*/
 SELECT
-    SUBSTR(DATE_TIME, 1, 7) AS month,
-    CAST(SUBSTR(DATE_TIME, 12, 2) AS INTEGER) AS hour_of_day,
-    COUNT(*) AS flagged_inverter_hours,
-    AVG(1.0 - PERFORMANCE_RATIO) AS mean_pr_gap
+    strftime('%Y-%m', DATE_TIME) AS month,
+    strftime('%H', DATE_TIME) AS hour,
+    COUNT(PERFORMANCE_RATIO) AS daytime_inverter_hours,
+    AVG(PERFORMANCE_RATIO) AS avg_performance_ratio,
+    1.0 - AVG(PERFORMANCE_RATIO) AS avg_pr_gap
 FROM processed_inv_metrics
-WHERE PERFORMANCE_RATIO IS NOT NULL
-  AND 1.0 - PERFORMANCE_RATIO >= 0.05
-  AND IRRADIANCE > 200
-GROUP BY month, hour_of_day
-ORDER BY month, hour_of_day;
+WHERE IRRADIANCE > 0
+GROUP BY month, hour
+ORDER BY month ASC, hour ASC;

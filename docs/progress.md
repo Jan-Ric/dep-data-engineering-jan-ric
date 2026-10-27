@@ -78,6 +78,15 @@ The original locations for moved files appear as deletions in Git status, with t
 - Checked `main:README.md`: it has no links to these three docs. No working-tree `README.md` exists on this branch, so none was created.
 - Did not rerun the transform. Raw data and numeric outputs were not changed.
 
+## SQL Runner Batch (2026-10-27)
+
+- Added three SQLite queries for inverter daytime average PR, month/hour PR gaps, and rolling three-consecutive-hour qualifying blocks with Watch, Alert, and Critical tiers.
+- Added `scripts/run_sql.py` to load `processed_inv_metrics.csv` into the ignored `data/processed/sql_cache.sqlite` database in 100,000-row pandas chunks, index inverter/timestamp keys, and write query CSVs.
+- Executed the full-data workflow successfully. Query times were about 41 seconds, 7 seconds, and 58 seconds before query 3 was changed to a compact per-inverter/severity summary; the revised query returned 2,490 rows using the already-loaded SQLite cache.
+- Outputs: `01_lowest_avg_pr.csv` (830 rows), `02_pr_gap_by_month_hour.csv` (153 rows), and `03_flagged_3h_blocks.csv` (2,490 rows). Each output is compact and under 140 KB.
+- `project_queries.sql` was already archived and tracked as `archive/project_queries.sql`; it was left in place.
+- No transform was run, no raw data or numeric model outputs were changed.
+
 ## Remaining Work
 
 - Complete the notebook with the requested sections, five charts, interpretations, cautious inference, and saved outputs; execute it and keep notebook outputs concise.

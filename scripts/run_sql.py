@@ -1,74 +1,61 @@
-import csv
-import sqlite3
-import tempfile
 from pathlib import Path
+import sqlite3
+import time
+
+import pandas as pd
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-METRICS_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
-SQL_DIR = PROJECT_ROOT / "sql"
-OUTPUT_DIR = PROJECT_ROOT / "output/sql_results"
-BATCH_SIZE = 50_000
-
-
-def load_metrics(connection: sqlite3.Connection) -> None:
-    connection.execute(
-        """CREATE TABLE processed_inv_metrics (
-            INVERTER_ID INTEGER NOT NULL,
-            DATE_TIME TEXT NOT NULL,
-            AC_POWER REAL NOT NULL,
-            IRRADIANCE REAL NOT NULL,
-            PERFORMANCE_RATIO REAL
-        )"""
-    )
-    insert_sql = """INSERT INTO processed_inv_metrics VALUES (?, ?, ?, ?, ?)"""
-    with METRICS_FILE.open(encoding="utf-8", newline="") as file:
-        rows = csv.DictReader(file)
-        batch = []
-        for row in rows:
-            batch.append((
-                int(row["INVERTER_ID"]),
-                row["DATE_TIME"],
-                float(row["AC_POWER"]),
-                float(row["IRRADIANCE"]),
-                float(row["PERFORMANCE_RATIO"]) if row["PERFORMANCE_RATIO"] else None,
-            ))
-            if len(batch) >= BATCH_SIZE:
-                connection.executemany(insert_sql, batch)
-                batch.clear()
-        if batch:
-            connection.executemany(insert_sql, batch)
-    connection.commit()
-
-
-def save_query_results(connection: sqlite3.Connection) -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    for sql_file in sorted(SQL_DIR.glob("*.sql")):
-        query = sql_file.read_text(encoding="utf-8")
-        cursor = connection.execute(query)
-        output_file = OUTPUT_DIR / f"{sql_file.stem}.csv"
-        with output_file.open("w", encoding="utf-8", newline="") as file:
-            writer = csv.writer(file, lineterminator="\n")
-            writer.writerow([column[0] for column in cursor.description])
-            writer.writerows(cursor)
-        print(f"Saved {output_file.relative_to(PROJECT_ROOT)}")
+INPUT_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
+DATABASE_FILE = PROJECT_ROOT / "data/processed/sql_cache.sqlite"
+QUERY_DIRECTORY = PROJECT_ROOT / "sql"
+OUTPUT_DIRECTORY = PROJECT_ROOT / "output/sql_results"
+CHUNK_SIZE = 100_000
 
 
 def main() -> None:
-    if not METRICS_FILE.exists():
-        raise FileNotFoundError(
-            f"Missing {METRICS_FILE.relative_to(PROJECT_ROOT)}; run scripts/transform.py first."
-        )
-    with tempfile.TemporaryDirectory(prefix="solar-sql-") as temporary_directory:
-        database_file = Path(temporary_directory) / "metrics.db"
-        connection = sqlite3.connect(database_file)
+    OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    DATABASE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    with sqlite3.connect(DATABASE_FILE) as connection:
         connection.execute("PRAGMA journal_mode = OFF")
         connection.execute("PRAGMA synchronous = OFF")
-        print("Loading processed inverter metrics into a temporary SQLite database...")
-        load_metrics(connection)
-        print("Running the three documented queries...")
-        save_query_results(connection)
-        connection.close()
-    print("SQLite work is complete; temporary database removed.")
+        connection.execute("DROP TABLE IF EXISTS processed_inv_metrics")
+
+        for chunk_number, chunk in enumerate(
+            pd.read_csv(INPUT_FILE, chunksize=CHUNK_SIZE), start=1
+        ):
+            write_mode = "replace" if chunk_number == 1 else "append"
+            chunk.to_sql(
+                "processed_inv_metrics",
+                connection,
+                if_exists=write_mode,
+                index=False,
+            )
+            print(f"Loaded chunk {chunk_number}: {len(chunk):,} rows")
+
+        connection.execute(
+            "CREATE INDEX idx_metrics_inverter_datetime "
+            "ON processed_inv_metrics (INVERTER_ID, DATE_TIME)"
+        )
+
+        query_files = [
+            "01_lowest_avg_pr.sql",
+            "02_pr_gap_by_month_hour.sql",
+            "03_flagged_3h_blocks.sql",
+        ]
+        for query_file in query_files:
+            query_path = QUERY_DIRECTORY / query_file
+            output_path = OUTPUT_DIRECTORY / query_file.replace(".sql", ".csv")
+            query = query_path.read_text(encoding="utf-8")
+            started = time.perf_counter()
+            result = pd.read_sql_query(query, connection)
+            result.to_csv(output_path, index=False)
+            elapsed = time.perf_counter() - started
+            print(
+                f"{query_file}: {len(result):,} rows in {elapsed:.1f} seconds; "
+                f"saved {output_path.relative_to(PROJECT_ROOT)}"
+            )
 
 
 if __name__ == "__main__":
