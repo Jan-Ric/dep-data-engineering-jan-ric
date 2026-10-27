@@ -119,3 +119,9 @@ The original locations for moved files appear as deletions in Git status, with t
 - Added `docs/UPDATE_NOTES.md` with overview, M3/M4 criteria, removals/additions/simplifications, data flow, concepts, commands, hashes, assumptions, and open items.
 - Audited dependencies, ignore rules, file sizes, paths, and notebook files. Active third-party imports match requirements; archived publishing code alone imports DuckDB. No tracked file exceeds 50 MB, no absolute paths were found in project text, and no `.ipynb` remains. Added `*.ipynb` to `.gitignore` and removed the archived empty notebook.
 - The only criterion not fully met is a paired module-temperature/PR correlation, because no compact permitted input contains both observations. This is stated in the M4 report and update notes.
+
+## Status Inventory Batch (2026-10-27)
+
+- Added `docs/status.md` with the requested yes/no milestone inventory, current directory listings, archived-item locations, notebook check, file sizes over 5 MB, recorded baseline hashes, and the Batch 1–10 list.
+- The processed CSV baseline hashes were already recorded above; repeated them in the status report without re-hashing or modifying the large outputs.
+- No code, raw data, or numeric output was changed, and no transform or other project script was rerun.
