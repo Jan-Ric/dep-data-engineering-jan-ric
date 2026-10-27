@@ -125,3 +125,10 @@ The original locations for moved files appear as deletions in Git status, with t
 - Added `docs/status.md` with the requested yes/no milestone inventory, current directory listings, archived-item locations, notebook check, file sizes over 5 MB, recorded baseline hashes, and the Batch 1–10 list.
 - The processed CSV baseline hashes were already recorded above; repeated them in the status report without re-hashing or modifying the large outputs.
 - No code, raw data, or numeric output was changed, and no transform or other project script was rerun.
+
+## M3 Documentation Links Batch (2026-10-27)
+
+- Confirmed `docs/schema.md`, `docs/methodology.md`, and `docs/cleaning_log.md` already exist and were documented as complete in the preceding project progress entries; left them unchanged.
+- Read `scripts/transform.py`, `docs/audit.md`, and the long historical README at `ad1d0bc:README.md` as requested.
+- Attempted to add links to the three existing M3 documents in the README without editing the problem statement or Formula A–F content. The workspace edit tools reported success, but the README remained unchanged on disk; this requested link change is incomplete.
+- Did not run the transform or change code, raw data, or numeric outputs.
