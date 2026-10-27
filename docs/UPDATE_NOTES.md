@@ -1,4 +1,161 @@
-| Former empty `notebooks/insights.ipynb` | Removed from the repository to keep the project script-only and ensure no `.ipynb` files remain | `scripts/insights.py` in VS Code `# %%` sections, `docs/insights.md`, and `output/figures/` |
+# Project Update Notes
+
+## 1. Overview
+
+The project downloads hourly Open-Meteo weather, transforms it into modeled inverter-hour records, runs SQLite questions, builds compact summary tables and KPIs, compares segments and cohorts, and writes figures and plain-language interpretation. The inverter telemetry and fault events are simulated, so the results are descriptive rather than equipment diagnoses.
+
+This documentation update adds a copy-ready README draft and consolidates the milestone notes. It clarifies the Path B decision, corrects the detection summary to the current recorded result of 1 of 3 injected windows, links to existing outputs, and records the one incomplete analysis criterion. No code, thresholds, processed data, or numeric output was changed in this batch.
+
+## 2. Criteria Checklist
+
+### M3: Clean Dataset
+
+| Pass criterion | Status | Evidence |
+| --- | --- | --- |
+| Obtain and preserve hourly weather source data | Met | `scripts/ingest.py`; `data/raw/open_meteo_raw.json` is retained locally. |
+| Clean weather columns and parse timestamps | Met | `scripts/transform.py`; `data/processed/open_meteo_cleaned.csv`. |
+| Create detailed inverter-hour computation outputs and SQL-ready metrics | Met | `scripts/transform.py`; `data/processed/` contains the outputs, with the largest files generated locally. |
+| Document schemas, grain, key, formulas, sources, and cleaning decisions | Met | `docs/schema.md`, `docs/methodology.md`, `docs/cleaning_log.md`. |
+| Validate required values, types, ranges, keys, row counts, and nighttime PR nulls | Met | `scripts/transform.py`; `docs/cleaning_log.md`. |
+| Do not impute undefined or missing values | Met | `scripts/transform.py`; nighttime PR remains null at zero irradiance. |
+| Demonstrate repeatability for current local inputs | Met for recorded run | `docs/progress.md` records two matching transform runs; hashes are in `docs/pipeline_baseline_hashes.txt`. |
+
+### M4: Initial Insights
+
+| Pass criterion | Status | Evidence |
+| --- | --- | --- |
+| Answer the three beginner SQL analysis questions and save results | Met | `sql/`, `scripts/run_sql.py`, `output/sql_results/`. |
+| Produce compact descriptive tables and fixed-seed sample | Met | `scripts/build_insight_tables.py`, `output/tables/`. |
+| Produce four initial charts and written interpretation | Met | `scripts/insights.py`, `docs/insights.md`, `output/figures/`. |
+| Provide notebook-style, reproducible exploration | Met by script-format alternative | `scripts/insights.py` is divided into VS Code `# %%` cells, with `docs/insights.md` and `output/figures/`. The project requirement is plain scripts and no notebooks, so no `.ipynb` is used. |
+| Compare paired module temperature and PR observations | Not fully met | The allowed compact analysis inputs do not contain paired module-temperature and PR observations. `scripts/insights.py` and `docs/insights.md` report this limitation rather than an unsupported correlation. |
+
+### M5: Path B
+
+| Pass criterion | Status | Evidence |
+| --- | --- | --- |
+| Define and calculate the requested KPIs | Met | `scripts/kpis.py`, `docs/kpi_definitions.md`, `output/tables/kpi_summary.csv`. |
+| Segment by season/hour and irradiance and compare cohorts | Met | `scripts/segmentation.py`, `docs/segmentation.md`, segment/cohort tables and figures in `output/`. |
+| Explain results for the intended audience | Met | `docs/stakeholder_brief.md`. |
+| Select a justified non-predictive path | Met | Path B: injected faults use a fixed rule and Phase 2 has no real failure labels. See the Path Choice section below. |
+| Provide an ordered pipeline and repeatable run instructions | Met | `scripts/run_pipeline.py`; `docs/README_draft.md`; Batch 9 run evidence in `docs/progress.md`. |
+
+## 3. Removed or Archived
+
+| Item | Why it is outside M3-M5 | Replacement or disposition |
+| --- | --- | --- |
+| Dashboard website and publishing workflow | A dashboard deployment is beyond the beginner data and descriptive-analysis milestones. | Supporting material remains under `archive/dashboard/` and `archive/.github/workflows/`; analysis tables and figures remain under `output/`. |
+| Legacy query collection | Superseded by focused SQLite questions for the current study. | Current queries are under `sql/`. |
+| Empty Jupyter notebook placeholder | A notebook runtime conflicts with the requested plain-script workflow; no executed analysis depended on it. | `scripts/insights.py` in `# %%` cell format, `docs/insights.md`, and `output/figures/`. |
+| Unreconciled legacy daily summary | No verified generator or reconciliation supported it. | Documented monthly and compact analysis outputs. |
+| External fault JSON as active configuration | A separate configuration file added indirection for three fixed demonstration windows. | The source of truth is the `FAULT_WINDOWS` list in `scripts/transform.py`; consumers import it. The archival JSON is retained under `archive/config/`. |
+
+Raw source files in `data/raw/` are not removed by this project workflow and were not touched in this batch.
+
+## 4. Added
+
+- `docs/README_draft.md`: copy-ready stranger-facing project guide; the root README was deliberately not edited in this batch.
+- `docs/UPDATE_NOTES.md`: this consolidated milestone checklist, walkthrough, and study record.
+- `scripts/run_sql.py` and focused SQL query files; `--sample` supports a small checked-in input.
+- `scripts/build_insight_tables.py`, `scripts/insights.py`, `scripts/kpis.py`, `scripts/segmentation.py`, and `scripts/run_pipeline.py` for repeatable analysis.
+- Compact SQL results, tables, and charts under `output/`.
+- M3-M5 explanations under `docs/`, including schema, methods, cleaning, insights, KPI definitions, segmentation, stakeholder brief, and baseline hashes.
+
+## 5. Simplified
+
+The examples below compare the earlier tracked transform with the simplified form. The changes explain implementation organization; they do not authorize changing model outputs or detector thresholds.
+
+**Duplicate AC and PR calculation merged.** The earlier transform had one feature-calculation path and another inverter-metrics path that computed AC and PR again after fault assignment. The current transform computes inverter metrics once after applying the selected fault offset, then derives the SQL-ready columns from those metrics.
+
+Earlier calculation shape:
+
+```python
+df_features["ac_power_kw"] = (df_features["dc_power_kw"] * eta_inv).clip(upper=p_ac_rated)
+df_features["performance_ratio"] = df_features["ac_power_kw"] / (irradiation_kwh_m2 * dc_inv_kwp)
+```
+
+The later calculation applies the fault-adjusted efficiency before calculating AC and PR for the modeled inverter rows, avoiding a separate competing result path.
+
+**Dummy-key merge replaced by a cross join.** Earlier code added a constant key to both tables, joined on it, then removed the key:
+
+```python
+df_features = df_features.assign(key=1)
+inverter_ids = inverter_ids.assign(key=1)
+df_metrics = df_features.merge(inverter_ids, on="key").drop(columns="key")
+```
+
+The current code states the intended all-pairs relation directly:
+
+```python
+df_metrics = df_features.merge(inverter_ids, how="cross")
+```
+
+**JSON fault config replaced by an inline fault list.** Earlier code opened `config/fault_windows.json` and loaded `json.load(file)["fault_windows"]`. The active configuration is now `FAULT_WINDOWS` in `scripts/transform.py`, so a beginner can see the three fixed examples beside other project constants. Shared consumers import that list rather than copying the dates.
+
+**Constants moved to the top.** Earlier formulas assigned plant, module, inverter, and thermal constants inside calculation functions. The current transform puts these assumptions near the top of the file so the formula functions use one visible definition.
+
+**Validation made explicit.** The current transform validates expected schemas and row counts, missing values, numeric and datetime types, unique inverter-hour keys, physical ranges, allowed fault offsets, and daytime/nighttime PR behavior.
+
+**Fault windows shared by import.** Table building, segmentation, and insights use `from transform import FAULT_WINDOWS`, reducing duplicated fault dates.
+
+**Pipeline runner added.** `scripts/run_pipeline.py` runs ingestion, transformation, SQL, table building, KPI, segmentation, and insights in order, while supporting `skip-ingest` and `skip-transform`.
+
+## 6. File-by-File Walkthrough
+
+1. `scripts/ingest.py` requests historical hourly weather and validates coverage before saving the source response.
+2. `data/raw/` holds the retained API input. Preserve it as the reproducible source for transformation; do not delete it.
+3. `scripts/transform.py` cleans weather, calculates modeled module and inverter values, applies fixed demonstration fault windows, validates outputs, and writes processed files.
+4. `data/processed/` contains cleaned weather and compact checked-in samples; the detailed computation and full SQL-ready metrics files are generated locally. The main metrics grain is one row per inverter per hour, keyed by inverter ID and timestamp.
+5. `scripts/run_sql.py` loads the SQL-ready CSV to local SQLite in 100,000-row chunks, runs queries from `sql/`, and saves results under `output/sql_results/`.
+6. `output/sql_results/` contains the lowest-PR, month/hour gap, and rolling flagged-block query outputs.
+7. `scripts/build_insight_tables.py` reads large CSV inputs in chunks and creates compact summary, sample, and fault-validation tables.
+8. `output/tables/` stores those tables, including `kpi_summary.csv`, cohort summaries, segment summaries, and inverter detail files.
+9. `scripts/kpis.py` validates compact inputs, calculates the KPI summary, and writes `output/tables/kpi_summary.csv`.
+10. `scripts/segmentation.py` builds season/hour and irradiance summaries, compares faulted and non-faulted cohorts, and writes tables and charts.
+11. `scripts/insights.py` reads compact outputs, prints summaries, and generates the initial descriptive charts. Its VS Code `# %%` sections can run individually or as a script.
+12. `output/figures/` stores the initial insight and segmentation charts.
+13. `docs/` explains schemas, formulas, cleaning choices, results, KPI definitions, segmentation, stakeholders, and hashes.
+14. `scripts/run_pipeline.py` calls all stages in dependency order and supports reuse of existing raw or processed inputs with skip options.
+
+## 7. Concepts to Study
+
+- **Grain:** what one row represents; here, an inverter at one hour.
+- **Composite key:** a unique record identified by inverter ID plus timestamp.
+- **Cross join:** pairing every weather-hour row with each modeled inverter.
+- **Missing-value strategy:** preserve undefined nighttime PR as null; do not invent a value through imputation.
+- **Validation:** executable checks for schema, row count, types, value ranges, and unique keys.
+- **Reproducibility and hashing:** rerun the same transformation and compare SHA-256 output hashes for unchanged inputs and environment.
+- **Descriptive statistics:** summaries of the modeled data, not predictions or diagnoses.
+- **Rolling windows:** evaluate each overlapping set of three consecutive hourly records.
+- **PR gap against a fleet median:** at each timestamp, compare the inverter PR with the median valid fleet PR at that time; this differs from `1 - PR`.
+- **Segmentation and cohorts:** compare defined time/irradiance groups and faulted versus non-faulted records.
+- **KPI framework:** define formula, units, source, interpretation, and limits for each measure.
+- **Correlation versus causation:** a pattern does not establish that one variable caused another.
+- **Limits of simulated data:** fixed injected faults and modeled telemetry cannot establish real operating performance.
+
+## 8. How to Run and Verify
+
+Use the platform-specific setup and full pipeline commands in `docs/README_draft.md`. Windows uses `python`; Mac/Linux uses `python3`. Install pinned packages with `python -m pip install -r requirements.txt` after activating the virtual environment. Ingestion needs network access. The SQL runner can use `--sample` to exercise the small checked-in sample.
+
+For a full pipeline run that reuses the retained raw JSON, run `python scripts/run_pipeline.py skip-ingest`; to reuse processed files as well, use `python scripts/run_pipeline.py skip-ingest skip-transform` only if the runner permits both flags in the current version. Individual scripts can be run in data-flow order when debugging.
+
+The progress record documents that the full-data SQL, table, KPI, segmentation, insight, and pipeline steps completed, and that two transform runs matched on the saved processed-output hashes. `docs/pipeline_baseline_hashes.txt` stores hashes for recorded SQL/table outputs and the two large processed baselines. This documentation batch did not rerun project scripts because code and numeric outputs were explicitly out of scope.
+
+## 9. Assumptions and Open Questions
+
+- `n_module` is a float from `63,300,000 / 830 / 315`, approximately 242.1113. It is not rounded to 242; no numeric model output was changed to match an earlier approximate note.
+- Detector `pr_gap` is peer-relative: median valid PR across inverters at an hour minus that inverter's PR. It is distinct from the fleet mean shortfall `1 - pooled mean PR`.
+- The saved fault validation detects 1 of 3 windows: inverter 202 crosses the 0.05 threshold as Watch; inverters 101 and 303 do not. Fault degradation begins only above 45 C internal temperature, so weaker injected changes may yield a small PR effect. This is a fixed-rule simulation result, not a general detection-performance estimate.
+- M4 is delivered with `scripts/insights.py` in cell format plus its report and figures, not with a notebook file, to honor the scripts-only project constraint.
+- Path B is selected because injected faults follow a fixed rule and Phase 2 has no real failure labels. No predictive model is trained.
+- A module-temperature/PR paired correlation remains not fully met because permitted compact inputs do not contain paired observations. Do not infer this statistic from separate aggregates.
+- `docs/status.md` is a file inventory snapshot, not a current code review. `docs/progress.md` is the chronological work log. `docs/pipeline_baseline_hashes.txt` records expected hashes from prior validation runs.
+- The root `README.md` is not changed in this batch. The copy-ready content is in `docs/README_draft.md` for the owner to copy.
+- A duplicate SQL name (`01_lowest_average_pr.sql` and `01_lowest_avg_pr.sql`), archived non-snake-case names such as `README.md`, and empty directories are retained. The filename/empty-directory audit is not fully met and should be handled separately if repository policy permits.
+
+## M5 Path Choice
+
+Path B means keeping this phase descriptive and not training a predictive model. The injected faults are generated by a fixed rule, so a model could only reproduce that rule. Phase 2 does not have real, verified failure labels for supervised learning. Prediction should wait until representative operational labels and a meaningful target are available.| Former empty `notebooks/insights.ipynb` | Removed from the repository to keep the project script-only and ensure no `.ipynb` files remain | `scripts/insights.py` in VS Code `# %%` sections, `docs/insights.md`, and `output/figures/` |
 # Project Update Notes
 
 ## 1. Overview
