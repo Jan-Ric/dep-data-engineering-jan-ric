@@ -15,5 +15,10 @@
 | Output schema drift | Require exact column names and order for weather, computation, and query outputs | Preserve downstream CSV contracts | `scripts/transform.py`, schema constants and validation |
 | Raw irradiance and ambient temperature limits | Fail if irradiance is negative or ambient temperature is outside 10–50°C | Basic physical range checks for this project | `scripts/transform.py`, `main` |
 | Daytime PR range | Require PR between 0 and 1.5 | Basic guard against invalid calculation results | `scripts/transform.py`, `main` |
+| Fleet-relative PR gap and detector | For each timestamp, compute `pr_gap = median valid PR across all inverters - that inverter's PR`. Flag rolling three-hour windows only when each hour has irradiance above 200 W/m², valid PR, and mean `pr_gap` at least 0.05; retain Watch [0.05, 0.10), Alert [0.10, 0.20], Critical > 0.20. | A common peer-relative definition avoids confusing detector gaps with pooled shortfall from PR 1.0; overlapping consecutive windows are counted independently. | `sql/02_pr_gap_by_month_hour.sql`, `sql/03_flagged_3h_blocks.sql` |
+
+## Detection Result
+
+The rolling rule detected inverter 202's 2025-06-20 window (mean `pr_gap` 0.06220, Watch); it did not detect inverter 101 on 2025-03-15 (0.01144) or inverter 303 on 2025-09-10 (0.01385). The weaker +4°C and +12°C injections may fall below 0.05 because the degradation term starts only above 45°C internal temperature, so the simulated PR effect can be small; here +4°C stayed below threshold and +12°C crossed it. This reflects the simulation design, not a failure of the method.
 
 The raw JSON files are never removed or rewritten by the transformation. Ingestion only writes the dedicated `open_meteo_raw.json` output after validating the API payload.

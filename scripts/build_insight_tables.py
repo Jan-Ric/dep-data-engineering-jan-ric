@@ -18,6 +18,15 @@ FAULT_DAYS = {
     202: "2025-06-20",
     303: "2025-09-10",
 }
+FAULT_WINDOWS = {
+    inverter_id: (f"{fault_day} 10:00:00", f"{fault_day} 12:00:00")
+    for inverter_id, fault_day in FAULT_DAYS.items()
+}
+VALIDATION_TIMES = {
+    f"{fault_day} {hour:02d}:00:00"
+    for fault_day in FAULT_DAYS.values()
+    for hour in range(10, 13)
+}
 METRICS_COLUMNS = [
     "INVERTER_ID",
     "DATE_TIME",
@@ -67,6 +76,7 @@ def main() -> None:
     monthly_parts = []
     fault_day_parts = []
     scatter_candidates = []
+    validation_parts = []
     metrics_stats_parts = []
     metrics_missing = pd.Series(0, index=METRICS_COLUMNS, dtype="int64")
 
@@ -109,6 +119,12 @@ def main() -> None:
             ][METRICS_COLUMNS]
             if not fault_rows.empty:
                 fault_day_parts.append(fault_rows)
+
+        validation_rows = chunk[chunk["DATE_TIME"].isin(VALIDATION_TIMES)][
+            ["INVERTER_ID", "DATE_TIME", "IRRADIANCE", "PERFORMANCE_RATIO"]
+        ]
+        if not validation_rows.empty:
+            validation_parts.append(validation_rows)
 
         # Sample each chunk with a fixed seed so rows are spread across the year.
         scatter_candidates.append(
@@ -210,6 +226,49 @@ def main() -> None:
         TABLE_DIRECTORY / "flagged_blocks_by_severity.csv", index=False
     )
 
+    validation_data = pd.concat(validation_parts, ignore_index=True)
+    hourly_medians = validation_data.groupby("DATE_TIME")[
+        "PERFORMANCE_RATIO"
+    ].median()
+    validation_data["median_pr"] = validation_data["DATE_TIME"].map(hourly_medians)
+    validation_data["pr_gap"] = (
+        validation_data["median_pr"] - validation_data["PERFORMANCE_RATIO"]
+    )
+    validation_rows = []
+    for inverter_id, (window_start, window_end) in FAULT_WINDOWS.items():
+        window = validation_data[
+            validation_data["INVERTER_ID"].eq(inverter_id)
+            & validation_data["DATE_TIME"].between(window_start, window_end)
+        ].sort_values("DATE_TIME")
+        mean_pr_gap = float(window["pr_gap"].mean())
+        qualifying = (
+            len(window) == 3
+            and window["DATE_TIME"].tolist()
+            == [window_start, window_start[:11] + "11:00:00", window_end]
+            and window["IRRADIANCE"].gt(200).all()
+            and window["PERFORMANCE_RATIO"].notna().all()
+            and mean_pr_gap >= 0.05
+        )
+        if mean_pr_gap < 0.05:
+            severity_tier = "Below Watch"
+        elif mean_pr_gap < 0.10:
+            severity_tier = "Watch"
+        elif mean_pr_gap <= 0.20:
+            severity_tier = "Alert"
+        else:
+            severity_tier = "Critical"
+        validation_rows.append(
+            {
+                "inverter_id": inverter_id,
+                "window": f"{window_start} to {window_end}",
+                "mean_pr_gap": mean_pr_gap,
+                "detected": bool(qualifying),
+                "severity_tier": severity_tier,
+            }
+        )
+    validation_path = TABLE_DIRECTORY / "fault_detection_validation.csv"
+    pd.DataFrame(validation_rows).to_csv(validation_path, index=False)
+
     computation_summary = summarize_dataset(
         "open_meteo_computation", computation_stats_parts, computation_missing
     )
@@ -221,6 +280,7 @@ def main() -> None:
         TABLE_DIRECTORY / "monthly_mean_pr_by_group.csv",
         TABLE_DIRECTORY / "fault_day_pr_101_202_303.csv",
         TABLE_DIRECTORY / "flagged_blocks_by_severity.csv",
+        validation_path,
         scatter_path,
         TABLE_DIRECTORY / "summary_statistics.csv",
     ]

@@ -6,28 +6,31 @@ When do inverter records show sustained shortfalls, and how should O&M respond?
 
 ## What we did
 
-We summarized modeled hourly inverter data using performance ratio (PR), which compares AC output with expected output from sunlight and installed capacity. We applied a fixed rule to rolling three-hour periods and checked it against three simulated fault windows.
+We summarized modeled hourly inverter data using performance ratio (PR), which compares AC output with expected output from sunlight and installed capacity. At each daytime timestamp, `pr_gap` is the median valid PR across all inverters minus that inverter's PR. The detector checks rolling sets of three consecutive hours; each must have irradiance above 200 W/m² and valid PR, and their mean `pr_gap` must be at least 0.05.
 
 ## What we found
 
-- Mean valid PR was **0.9293**, or about **0.0707 (7.07 percentage points)** below the normalized reference of 1.0; this is not a comparison with a known healthy fleet.
-- The saved results contain **2,017,730 flagged three-hour blocks**: **1,337,958 Watch (66.31%)**, **629,972 Alert (31.22%)**, and **49,800 Critical (2.47%)**. A rolling block advances by one hour, so overlapping blocks can describe the same extended period rather than separate incidents.
-- An estimated **2.1640%** of sampled inverter-hour rows reached the modeled 60 kW AC output cap. This clipping is expected in the model and is not, on its own, evidence of a fault.
-- The fixed rule detected **0 of 3** simulated fault windows. This small test does not measure real-world detection performance, but it shows that this rule did not catch the examples it was designed to check.
+- Mean valid PR was **0.9293**. The separate KPI `fleet_mean_pr_shortfall_from_1` was **0.0707 (7.07 percentage points)** below 1.0; it is not the detector's `pr_gap` or a healthy-fleet comparison.
+- There was **1 flagged rolling block**, for inverter 202: **Watch 1 (100%)**, Alert 0, Critical 0. **1 of 830 inverters (0.12%)** had a qualifying block. Overlapping windows count separately.
+- **2.1640%** of sampled inverter-hour rows reached the modeled 60 kW AC cap. This expected model cap is not, by itself, evidence of a fault.
+- The detector found **1 of 3 simulated windows (33.33%)**: inverter 202 on June 20, 2025. It did not detect inverter 101 on March 15 or inverter 303 on September 10.
 
 ![Flagged blocks by severity and fault cohort](../output/figures/flagged_blocks_by_severity_cohort.png)
 
+## Detection result
+
+Window mean gaps were **0.01144** for inverter 101 (not detected), **0.06220** for inverter 202 (detected, Watch), and **0.01385** for inverter 303 (not detected). Severity is Watch from 0.05 to below 0.10, Alert from 0.10 through 0.20, and Critical above 0.20.
+
+The weaker +4°C and +12°C injections may fall below 0.05 because simulated degradation starts only above 45°C internal temperature, so its PR effect can be small. Here +4°C stayed below threshold while +12°C crossed it. This reflects the simulation design, not a failure of the method.
+
 ## What to do
 
-Treat Watch, Alert, and Critical as review priorities, not confirmed diagnoses. A flag means the average PR gap (distance below 1.0) met a demonstration threshold over three consecutive hours with irradiance above 200 W/m². For Watch, remotely check, log, and monitor for 24 hours. For Alert, attempt a remote reset and schedule a site visit within 72 hours. For Critical, the README suggests likely hardware fault and immediate dispatch. Verify flags against equipment readings before acting.
+Treat tiers as review priorities, not diagnoses. Verify flags against equipment telemetry and operating context before maintenance action. These demonstration thresholds are not validated maintenance limits.
 
 ## Limits
 
-Faults were injected for testing, and weather and inverter output are model-based. The project has no real inverter telemetry, so these results cannot confirm equipment condition or establish validated maintenance limits. Flagged blocks overlap, and the available severity summary cannot identify the share of inverters with at least one flag.
+Weather and inverter output are modeled, faults are injected, and no real inverter telemetry is included. This three-window check cannot confirm equipment condition or estimate real-world detection performance.
 
 ## Next steps
 
-Phase 2 is future work: explore remaining-life and PR estimates using historical data, weather forecasts, temperature change, and inverter age. Phase 3 is also future work: research how verified energy shortfalls could relate to gross revenue. Neither phase is delivered or validated by these descriptive results.
-
-PDF export in VS Code: Install the “Markdown PDF” extension, open this file, and run “Markdown PDF: Export (pdf)” from the Command Palette.
-Alternative: Open Markdown Preview with `Ctrl+Shift+V`, then print the preview to PDF using your system print dialog.
+Future work could test the rule with verified operational labels and assess whether validated energy shortfalls relate to revenue. Remaining-life estimates and revenue analysis are outside this descriptive study.

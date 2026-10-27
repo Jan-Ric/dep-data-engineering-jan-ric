@@ -1,4 +1,4 @@
-INVERTER_ID,fault_start,fault_end,injected_hours,detected_by_fixed_3h_rule,detection_recall
-101,2025-03-15 10:00:00,2025-03-15 12:00:00,3,False,0
-202,2025-06-20 10:00:00,2025-06-20 12:00:00,3,False,0
-303,2025-09-10 10:00:00,2025-09-10 12:00:00,3,False,0
+inverter_id,window,mean_pr_gap,detected,severity_tier
+101,2025-03-15 10:00:00 to 2025-03-15 12:00:00,0.011440677563453497,False,Below Watch
+202,2025-06-20 10:00:00 to 2025-06-20 12:00:00,0.06219851694865586,True,Watch
+303,2025-09-10 10:00:00 to 2025-09-10 12:00:00,0.013847592642688311,False,Below Watch

@@ -8,6 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 INPUT_CSV = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
 TABLES = PROJECT_ROOT / "output/tables"
 FIGURES = PROJECT_ROOT / "output/figures"
+FLAGGED_SOURCE = PROJECT_ROOT / "output/sql_results/03_flagged_3h_blocks.csv"
 CHUNK_SIZE = 100_000  # inverter-hour rows per read
 FIGURE_DPI = 140  # dots per inch
 FAULT_WINDOWS = {
@@ -88,11 +89,7 @@ def main():
     segment_parts = []
     irradiance_parts = []
     fault_window_parts = []
-    flag_parts = []
     overall_cohort_parts = []
-    previous_rows = pd.DataFrame(
-        columns=["INVERTER_ID", "DATE_TIME", "IRRADIANCE", "PERFORMANCE_RATIO"]
-    )
     rows_read = 0
 
     for chunk in pd.read_csv(
@@ -142,18 +139,6 @@ def main():
         current_chunk = chunk[
             ["INVERTER_ID", "DATE_TIME", "IRRADIANCE", "PERFORMANCE_RATIO"]
         ].copy()
-        current_chunk["is_current"] = True
-        previous_rows["is_current"] = False
-        combined = pd.concat([previous_rows, current_chunk], ignore_index=True)
-        combined = combined.sort_values(["INVERTER_ID", "DATE_TIME"])
-        grouped = combined.groupby("INVERTER_ID", sort=False)
-        combined["previous_time"] = grouped["DATE_TIME"].shift(1)
-        combined["two_hours_previous_time"] = grouped["DATE_TIME"].shift(2)
-        combined["previous_pr"] = grouped["PERFORMANCE_RATIO"].shift(1)
-        combined["two_hours_previous_pr"] = grouped["PERFORMANCE_RATIO"].shift(2)
-        combined["previous_irradiance"] = grouped["IRRADIANCE"].shift(1)
-        combined["two_hours_previous_irradiance"] = grouped["IRRADIANCE"].shift(2)
-
         fault_window = current_chunk[
             current_chunk["INVERTER_ID"].isin(FAULT_IDS)
             & current_chunk["DATE_TIME"].between(
@@ -167,48 +152,6 @@ def main():
             ][["INVERTER_ID", "DATE_TIME", "PERFORMANCE_RATIO"]]
             if not rows.empty:
                 fault_window_parts.append(rows)
-
-        combined["mean_pr"] = (
-            combined["PERFORMANCE_RATIO"]
-            + combined["previous_pr"]
-            + combined["two_hours_previous_pr"]
-        ) / 3
-        consecutive = (
-            (combined["DATE_TIME"] - combined["previous_time"])
-            .eq(pd.Timedelta(hours=1))
-            & (combined["previous_time"] - combined["two_hours_previous_time"])
-            .eq(pd.Timedelta(hours=1))
-        )
-        qualifying = (
-            combined["is_current"]
-            & consecutive
-            & combined["PERFORMANCE_RATIO"].notna()
-            & combined["previous_pr"].notna()
-            & combined["two_hours_previous_pr"].notna()
-            & combined["IRRADIANCE"].gt(200)
-            & combined["previous_irradiance"].gt(200)
-            & combined["two_hours_previous_irradiance"].gt(200)
-            & combined["mean_pr"].le(0.95)
-        )
-        qualifying_rows = combined.loc[
-            qualifying, ["INVERTER_ID", "mean_pr"]
-        ].copy()
-        if not qualifying_rows.empty:
-            gap = 1 - qualifying_rows["mean_pr"]
-            qualifying_rows["severity"] = "Watch"
-            qualifying_rows.loc[gap.ge(0.10), "severity"] = "Alert"
-            qualifying_rows.loc[gap.gt(0.20), "severity"] = "Critical"
-            cohort_names = {
-                inverter_id: f"Faulted {inverter_id}" for inverter_id in FAULT_IDS
-            }
-            qualifying_rows["cohort"] = qualifying_rows["INVERTER_ID"].map(
-                cohort_names
-            ).fillna("Non-faulted")
-            flag_counts = qualifying_rows.groupby(["cohort", "severity"]).size()
-            flag_parts.append(flag_counts.rename("flagged_blocks").reset_index())
-        previous_rows = combined.groupby("INVERTER_ID", sort=False).tail(2)[
-            ["INVERTER_ID", "DATE_TIME", "IRRADIANCE", "PERFORMANCE_RATIO"]
-        ].copy()
 
         if len(segment_parts) % 10 == 0:
             print(f"Processed {rows_read:,} inverter-hour rows")
@@ -315,9 +258,19 @@ def main():
     cohort_comparison = pd.DataFrame(cohort_parts)
     cohort_comparison.to_csv(TABLES / "cohort_fault_vs_normal.csv", index=False)
 
-    flag_summary = pd.concat(flag_parts, ignore_index=True).groupby(
-        ["cohort", "severity"], as_index=False
-    )["flagged_blocks"].sum()
+    flagged_blocks = pd.read_csv(FLAGGED_SOURCE)
+    cohort_names = {inverter_id: f"Faulted {inverter_id}" for inverter_id in FAULT_IDS}
+    flagged_blocks["cohort"] = flagged_blocks["INVERTER_ID"].map(
+        cohort_names
+    ).fillna("Non-faulted")
+    flag_summary = flagged_blocks.groupby(
+        ["cohort", "severity_tier"], as_index=False
+    )["qualifying_3h_blocks"].sum().rename(
+        columns={
+            "severity_tier": "severity",
+            "qualifying_3h_blocks": "flagged_blocks",
+        }
+    )
     all_cohorts = ["Non-faulted"] + [f"Faulted {value}" for value in sorted(FAULT_IDS)]
     complete_index = pd.MultiIndex.from_product(
         [all_cohorts, SEVERITY_ORDER], names=["cohort", "severity"]

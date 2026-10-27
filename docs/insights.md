@@ -2,7 +2,7 @@
 
 ## 1. Problem Statement
 
-This analysis asks when and where inverter-hours show negative performance-ratio gaps in the solar plant dataset. It uses compact outputs from the modeled 2025 hourly data for descriptive, non-predictive analysis. The purpose is to inspect the saved summaries and check the fixed three-hour detector against known simulated examples, not to establish equipment causes.
+This analysis asks when inverter-hours fall below the fleet's same-hour PR median. At each timestamp, `pr_gap` is the median valid PR across all inverters minus that inverter's PR. A flag is a rolling set of three consecutive hours, each with valid PR and irradiance above 200 W/m², whose mean `pr_gap` is at least 0.05. The analysis uses compact outputs from modeled 2025 hourly data, not equipment causes.
 
 ## 2. Summary Statistics
 
@@ -28,7 +28,7 @@ The monthly faulted and non-faulted group averages are very close across the yea
 
 ![Performance ratio on fault days for inverters 101, 202, and 303](../output/figures/fault_day_pr_101_202_303.png)
 
-The traces show hourly PR for inverter 101 on March 15, inverter 202 on June 20, and inverter 303 on September 10, 2025. The plots provide context around the configured 10:00–12:00 injected windows, but the saved validation table reports that the fixed three-hour rule detected none of the three examples.
+The traces show hourly PR for inverter 101 on March 15, inverter 202 on June 20, and inverter 303 on September 10, 2025. The plots provide context around the configured 10:00–12:00 injected windows; the saved validation table reports a detection for inverter 202 only.
 
 ### Irradiance and AC Power
 
@@ -44,6 +44,10 @@ The requested simple correlation between module temperature and PR could not be 
 
 ## 5. Conclusion and Limitations
 
-The charts describe hourly and monthly PR patterns, PR values around three configured fault windows, and the relationship between irradiance and modeled AC power. The validation output reports that the fixed three-hour rule missed all three injected examples, so detector criteria need further review before this rule can be considered effective.
+The charts describe hourly and monthly PR patterns, PR values around three configured fault windows, and the relationship between irradiance and modeled AC power. The rolling rule flagged one block and detected inverter 202's window; its mean `pr_gap` was 0.06220 (Watch). It did not detect inverter 101's window (0.01144) or inverter 303's window (0.01385).
+
+## Detection Result
+
+The weaker +4°C and +12°C injections may fall below 0.05 because the degradation term starts only above 45°C internal temperature, so the simulated PR effect can be small; here the +4°C example stayed below threshold while the +12°C example crossed it. This reflects the simulation design, not a failure of the method.
 
 These are modeled results based on hourly reanalysis weather and synthetic fault injections, not field measurements of inverter faults. Nighttime PR is undefined because its irradiance denominator is zero. The available compact files do not contain paired module-temperature and PR values, so that correlation remains unmeasured; further conclusions would require paired observations and real plant telemetry.

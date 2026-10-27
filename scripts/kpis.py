@@ -8,6 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TABLES_DIR = PROJECT_ROOT / "output" / "tables"
 SUMMARY_STATS_PATH = TABLES_DIR / "summary_statistics.csv"
 SEVERITY_PATH = TABLES_DIR / "flagged_blocks_by_severity.csv"
+FLAGGED_INVERTERS_PATH = PROJECT_ROOT / "output" / "sql_results" / "03_flagged_3h_blocks.csv"
 SCATTER_SAMPLE_PATH = TABLES_DIR / "scatter_sample_100k.csv"
 FAULT_VALIDATION_PATH = TABLES_DIR / "fault_detection_validation.csv"
 OUTPUT_PATH = TABLES_DIR / "kpi_summary.csv"
@@ -31,6 +32,7 @@ def main():
     print("Loading compact KPI source tables")
     summary_stats = pd.read_csv(SUMMARY_STATS_PATH)
     severity_counts = pd.read_csv(SEVERITY_PATH)
+    flagged_inverters = pd.read_csv(FLAGGED_INVERTERS_PATH)
     clipping_sample = pd.read_csv(SCATTER_SAMPLE_PATH)
     fault_validation = pd.read_csv(FAULT_VALIDATION_PATH)
 
@@ -47,8 +49,13 @@ def main():
     require_columns(clipping_sample, ["AC_POWER"], "scatter_sample_100k.csv")
     require_columns(
         fault_validation,
-        ["detected_by_fixed_3h_rule"],
+        ["detected"],
         "fault_detection_validation.csv",
+    )
+    require_columns(
+        flagged_inverters,
+        ["INVERTER_ID", "qualifying_3h_blocks"],
+        "03_flagged_3h_blocks.csv",
     )
 
     pr_rows = summary_stats.loc[
@@ -59,10 +66,12 @@ def main():
     mean_pr = float(pr_rows.iloc[0]["mean"])
     valid_pr_rows = int(pr_rows.iloc[0]["count"])
     assert valid_pr_rows > 0, "Expected valid daytime PR rows"
-    pr_gap = 1.0 - mean_pr
+    fleet_mean_pr_shortfall = 1.0 - mean_pr
 
     total_flagged_blocks = int(severity_counts["qualifying_3h_blocks"].sum())
     assert total_flagged_blocks > 0, "Expected at least one qualifying 3-hour block"
+    flagged_inverter_count = int(flagged_inverters["INVERTER_ID"].nunique())
+    flagged_inverter_share = flagged_inverter_count / FLEET_INVERTER_COUNT * 100.0
     severity_labels = ["Watch", "Alert", "Critical"]
     severity_parts = []
     for severity_label in severity_labels:
@@ -82,13 +91,7 @@ def main():
     )
     clipping_share = clipping_count / len(clipping_sample) * 100.0
 
-    detected_values = (
-        fault_validation["detected_by_fixed_3h_rule"]
-        .astype(str)
-        .str.strip()
-        .str.lower()
-    )
-    detected_count = int(detected_values.isin(["true", "1", "yes"]).sum())
+    detected_count = int(fault_validation["detected"].astype(bool).sum())
     injected_window_count = len(fault_validation)
     assert injected_window_count > 0, "Expected at least one injected fault window"
     detection_rate = detected_count / injected_window_count * 100.0
@@ -104,12 +107,12 @@ def main():
             "Limitation": "Aggregate mean does not show individual inverter-hour variation; inputs are modeled.",
         },
         {
-            "KPI": "PR gap",
-            "Value": pr_gap,
+            "KPI": "fleet_mean_pr_shortfall_from_1",
+            "Value": fleet_mean_pr_shortfall,
             "Unit": "unitless ratio",
-            "Definition and formula": "1 - mean valid PR.",
+            "Definition and formula": "1 - pooled mean valid hourly PR; distinct from per-timestamp fleet-median pr_gap.",
             "Source": "Derived from output/tables/summary_statistics.csv",
-            "How to read it": "Distance below the PR reference of 1.0.",
+            "How to read it": "Distance below the normalized PR reference of 1.0; this is not the detector's pr_gap.",
             "Limitation": "Not a comparison to a healthy-fleet baseline and not proof of a fault.",
         },
         {
@@ -123,12 +126,12 @@ def main():
         },
         {
             "KPI": "Flagged inverter share",
-            "Value": "Not available",
+            "Value": f"{flagged_inverter_share:.2f}% ({flagged_inverter_count}/{FLEET_INVERTER_COUNT})",
             "Unit": "% of fleet",
             "Definition and formula": "Inverters with at least one qualifying block / 830 * 100.",
-            "Source": "Requires inverter IDs with qualifying blocks; retained severity summary has none.",
-            "How to read it": "Would show the share of the fleet with one or more qualifying blocks.",
-            "Limitation": "Cannot be reconstructed from the permitted aggregate table without inverter-level records.",
+            "Source": "Distinct inverter IDs in output/sql_results/03_flagged_3h_blocks.csv; fleet size from README.md.",
+            "How to read it": "Share of the fleet with at least one qualifying rolling block.",
+            "Limitation": "Flags are based on simulated data and a fixed demonstration rule, not confirmed failures.",
         },
         {
             "KPI": "Severity distribution (Watch, Alert, Critical)",
@@ -154,7 +157,7 @@ def main():
             "Unit": "% of injected windows",
             "Definition and formula": "Detected injected windows / total injected windows * 100.",
             "Source": "output/tables/fault_detection_validation.csv",
-            "How to read it": "Checks the fixed 3-hour rule against the saved synthetic test windows.",
+            "How to read it": "Checks the rolling three-hour fleet-median-gap rule against the three synthetic windows.",
             "Limitation": "Only three synthetic windows; not a real-world performance estimate.",
         },
     ]
