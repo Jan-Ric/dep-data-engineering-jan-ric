@@ -62,6 +62,31 @@ The raw JSON is an hourly Open-Meteo extract. `open_meteo_cleaned.csv` keeps the
 | `IRRADIANCE` | decimal | Plane-of-array irradiance, W/m² |
 | `PERFORMANCE_RATIO` | decimal or null | `AC / (irradiance_kWh_m2 * installed_DC_kWp)` |
 
+### `data/processed/sample_processed_inv_metrics.csv`
+
+This file has the same columns and types as `processed_inv_metrics.csv`. It contains the first 1,000 rows in source order and is intended as a lightweight example, not a statistically representative sample.
+
+| Column | Type | Meaning |
+| --- | --- | --- |
+| `INVERTER_ID` | integer | Simulated inverter identifier |
+| `DATE_TIME` | timestamp | Hourly timestamp |
+| `AC_POWER` | decimal | Modeled AC power, kW |
+| `IRRADIANCE` | decimal | Plane-of-array irradiance, W/m² |
+| `PERFORMANCE_RATIO` | decimal or null | Hourly PR; null at zero irradiance |
+
+### `data/processed/monthly_inv_summary.csv`
+
+This is aggregated from the SQL-ready file by `INVERTER_ID` and calendar `MONTH`. Each row represents one inverter in one month. PR mean and minimum ignore null nighttime PR values; `daytime_hours` counts non-null PR values, and `total_ac_energy_kwh` sums hourly AC power at one-hour resolution.
+
+| Column | Type | Meaning |
+| --- | --- | --- |
+| `INVERTER_ID` | integer | Simulated inverter identifier |
+| `MONTH` | string (`YYYY-MM`) | Calendar month |
+| `mean_performance_ratio` | decimal | Mean daytime PR for the month |
+| `min_performance_ratio` | decimal | Minimum daytime PR for the month |
+| `daytime_hours` | integer | Count of rows with a non-null PR |
+| `total_ac_energy_kwh` | decimal | Sum of modeled hourly AC energy, kWh |
+
 ### Other useful outputs
 
 - `data/processed/sample_processed_inv_metrics.csv`: first 1,000 rows from the SQL-ready file.

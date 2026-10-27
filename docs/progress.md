@@ -70,6 +70,14 @@ Work paused at the user's request. No further milestone implementation should co
 
 The original locations for moved files appear as deletions in Git status, with their replacements under `archive/` or `output/tables/`. The seven retained analysis tables total about 0.96 MB. `data/processed/` has ignored local generated CSVs, including the two large outputs; they were not moved.
 
+## Documentation Batch (2026-10-27)
+
+- Expanded `docs/schema.md` with explicit sample and monthly aggregate grains, columns, and expected types; retained the one-hour-per-inverter grain and composite key.
+- Confirmed `docs/methodology.md` contains Formulas A to F, the field list, and datasheet/model sources. Clarified that `n_module` is a float, documented the requested about-242.4 note and the configured formula's about-242.1113 result, and made no calculation changes.
+- Updated `docs/cleaning_log.md` to state that required missing inputs and calculated values fail validation, with no imputation; nighttime PR remains null at zero irradiance and daylight PR must be non-null.
+- Checked `main:README.md`: it has no links to these three docs. No working-tree `README.md` exists on this branch, so none was created.
+- Did not rerun the transform. Raw data and numeric outputs were not changed.
+
 ## Remaining Work
 
 - Complete the notebook with the requested sections, five charts, interpretations, cautious inference, and saved outputs; execute it and keep notebook outputs concise.

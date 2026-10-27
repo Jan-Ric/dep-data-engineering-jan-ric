@@ -27,7 +27,7 @@ N_{module} = \dfrac{DC_{plant}/N_{inv}}{P_{STC}}
 DC_{inv} = \dfrac{DC_{plant}}{N_{inv}}
 $$
 
-The code uses 63,300,000 Wp plant DC capacity, 830 inverters, and a 315 Wp module rating. Therefore `n_module` is a floating-point value near 242.1113, not the rounded 242 modules; `dc_inv_cap` is about 76,265.06 W per inverter. This preserves the configured 63.3 MW capacity and is not rounded in the model.
+The code uses 63,300,000 Wp plant DC capacity, 830 inverters, and a 315 Wp module rating. `n_module` is stored as a float, not rounded to the integer 242. The requested approximate note is about 242.4, but the configured formula evaluates to about 242.1113; `dc_inv_cap` is about 76,265.06 W per inverter. No rounding is applied, and the numeric model output is unchanged.
 
 ### B. Module temperature, Faiman model
 

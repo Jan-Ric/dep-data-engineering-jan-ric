@@ -3,8 +3,8 @@
 | Issue | Decision | Reason | Where in code |
 | --- | --- | --- | --- |
 | API timestamps and source column names | Rename to project names, parse `date_time`, sort chronologically | Stable, typed hourly input for later calculations | `scripts/transform.py`, `load_raw_data` |
-| Missing weather inputs | Do not impute; stop with an assertion if required fields contain nulls | No defensible fallback measurement is defined | `scripts/transform.py`, `validate_missing_values` |
-| Missing calculated fields | Stop if required calculated values contain nulls | Prevent incomplete inverter-hour records | `scripts/transform.py`, `validate_missing_values` |
+| Missing weather inputs | Do not impute; validation fails with an assertion if required fields contain nulls | No defensible fallback measurement is defined | `scripts/transform.py`, `validate_missing_values` |
+| Missing calculated fields | Validation fails with an assertion if required calculated values contain nulls | Prevent incomplete inverter-hour records | `scripts/transform.py`, `validate_missing_values` |
 | Zero irradiance at night | Keep `PERFORMANCE_RATIO` null because the denominator is zero; exclude these rows from PR analysis, not treat them as zero | Zero would misrepresent an undefined ratio as a measurement | `scripts/transform.py`, PR calculation and validation |
 | Daytime PR is missing | Fail validation if any row with irradiance above zero has null PR | Daylight KPI must be computable | `scripts/transform.py`, `validate_missing_values` |
 | Nighttime PR is non-null | Fail validation if zero-irradiance rows have a PR value | Enforce the division-by-zero decision | `scripts/transform.py`, `validate_missing_values` |
