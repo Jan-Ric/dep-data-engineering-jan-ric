@@ -12,7 +12,7 @@ CHUNK_SIZE = 100_000
 SAMPLE_SIZE = 100_000
 CANDIDATES_PER_CHUNK = 2_000
 RANDOM_SEED = 42
-MAX_OUTPUT_BYTES = 2 * 1024 * 1024
+MAX_OUTPUT_BYTES = 2_000_000
 FAULT_DAYS = {
     101: "2025-03-15",
     202: "2025-06-20",
@@ -150,8 +150,8 @@ def main() -> None:
             f"Expected at least {SAMPLE_SIZE:,} scatter candidates, got {len(candidates):,}."
         )
     scatter_sample = candidates.sample(n=SAMPLE_SIZE, random_state=RANDOM_SEED)
-    scatter_path = TABLE_DIRECTORY / "scatter_sample_100k.csv.gz"
-    scatter_sample.to_csv(scatter_path, index=False, compression="gzip")
+    scatter_path = TABLE_DIRECTORY / "scatter_sample_100k.csv"
+    scatter_sample.to_csv(scatter_path, index=False, float_format="%.5f")
 
     metrics_summary = summarize_dataset(
         "processed_inv_metrics", metrics_stats_parts, metrics_missing

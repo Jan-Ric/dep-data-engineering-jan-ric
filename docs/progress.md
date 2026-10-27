@@ -150,3 +150,10 @@ The original locations for moved files appear as deletions in Git status, with t
 - Ran `scripts/transform.py` twice successfully. Both baseline hashes match: `processed_inv_metrics.csv` is `674086f246ea9032fcea4520fe3997304b23c87f8655730383a2c11a778dd045`; `open_meteo_computation.csv` is `7459ec2be9e90b2b530788273729c3edd8013eda8ace9216b70eb885665aa73d`.
 - Kept requirements limited to the existing imported third-party libraries with pinned versions and aligned Matplotlib to the configured environment version, 3.11.2. Added common test, type-checker, linter, and general cache directories to `.gitignore`; confirmed rules for the two large processed CSVs, `*.db`, caches, and `venv/`.
 - `py_compile` passed for both M3 scripts. Raw data was not modified.
+
+## Insight Table Output Format Batch (2026-10-27)
+
+- Confirmed `scripts/build_insight_tables.py` already reads both processed datasets in 100,000-row chunks and reuses `output/sql_results/03_flagged_3h_blocks.csv`.
+- Updated the scatter sample output to the requested uncompressed `scatter_sample_100k.csv`; five decimal places keep it below the strict 2,000,000-byte limit. The script checks every generated table against that limit.
+- Ran the builder successfully against the existing processed inputs. Final output sizes: `hourly_mean_pr.csv` 448 bytes; `monthly_mean_pr_by_group.csv` 1,106 bytes; `fault_day_pr_101_202_303.csv` 2,587 bytes; `flagged_blocks_by_severity.csv` 81 bytes; `scatter_sample_100k.csv` 1,830,511 bytes; `summary_statistics.csv` 1,089 bytes.
+- Did not run the transform or alter raw data or model calculations.
