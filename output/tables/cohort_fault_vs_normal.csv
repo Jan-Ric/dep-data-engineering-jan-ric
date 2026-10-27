@@ -1,0 +1,9 @@
+fault_cohort,comparison_group,valid_pr_rows,mean_pr
+All faulted inverters,All valid PR rows,13824,0.9292341884576013
+Non-faulted,All valid PR rows,3810816,0.9292531743055081
+Faulted 101,Fault window,3,0.8687590988029058
+Faulted 101,"Non-faulted peers, same hours",2481,0.8801997763663594
+Faulted 202,Fault window,3,0.8387782947013512
+Faulted 202,"Non-faulted peers, same hours",2481,0.900976811650007
+Faulted 303,Fault window,3,0.9311274200323965
+Faulted 303,"Non-faulted peers, same hours",2481,0.9449750126750847

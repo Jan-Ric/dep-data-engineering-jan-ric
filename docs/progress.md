@@ -175,3 +175,13 @@ The original locations for moved files appear as deletions in Git status, with t
 - The saved validation table records that the fixed three-hour rule detected none of the three injected examples; the report notes this limitation and makes no causal claim.
 - Figure sizes: `pr_by_hour_of_day.png` 53,742 bytes; `monthly_mean_pr_by_group.png` 89,240 bytes; `fault_day_pr_101_202_303.png` 117,908 bytes; `irradiance_vs_ac_power.png` 79,626 bytes.
 - Did not run the transform or modify raw data or numeric model outputs.
+
+## Segmentation Analysis Batch (2026-10-27)
+
+- Verified same-hour non-faulted PR identity with the retained sample, then with a chunked full-data check: all 827 non-faulted inverters had identical valid PR at each of 4,608 shared timestamps. The segmentation therefore treats shared fleet PR by time and fault cohort rather than by individual non-faulted inverter.
+- Added `scripts/segmentation.py`, a plain pandas/matplotlib pipeline that reads the existing 7,270,800-row processed CSV in 100,000-row chunks, applies the season/hour/irradiance definitions, compares each configured fault window with same-hour non-faulted peers, and calculates three-hour flags using the documented irradiance, gap, and severity thresholds.
+- Created `segment_pr_by_season_hour.csv` (316 bytes), `segment_pr_by_irradiance_band.csv` (147 bytes), `cohort_fault_vs_normal.csv` (524 bytes), and `cohort_flags_by_severity.csv` (329 bytes), all under 1 MB.
+- Created `mean_pr_by_season_hour_band.png` (84,575 bytes), `mean_pr_by_irradiance_band.png` (28,909 bytes), and `flagged_blocks_by_severity_cohort.png` (41,967 bytes).
+- Confirmed segmented severity counts exactly match the existing aggregate: Watch 1,337,958; Alert 629,972; Critical 49,800. Overall valid-hour mean PR is 0.929234 for the three faulted inverters and 0.929253 for the non-faulted cohort.
+- Added `docs/segmentation.md` with definitions, all three embedded charts and interpretations, cautious inference, and limitations. The report clarifies that simulated fault comparisons do not establish real-world causes.
+- Ran the segmentation script successfully against the existing processed data. No transform was run, raw data was untouched, and prior numeric outputs were not changed.

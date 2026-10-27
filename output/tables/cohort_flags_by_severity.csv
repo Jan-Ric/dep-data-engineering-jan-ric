@@ -1,0 +1,13 @@
+cohort,severity,flagged_blocks
+Non-faulted,Watch,1333124
+Non-faulted,Alert,627693
+Non-faulted,Critical,49620
+Faulted 101,Watch,1612
+Faulted 101,Alert,759
+Faulted 101,Critical,60
+Faulted 202,Watch,1610
+Faulted 202,Alert,761
+Faulted 202,Critical,60
+Faulted 303,Watch,1612
+Faulted 303,Alert,759
+Faulted 303,Critical,60
