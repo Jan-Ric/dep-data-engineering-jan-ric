@@ -157,3 +157,12 @@ The original locations for moved files appear as deletions in Git status, with t
 - Updated the scatter sample output to the requested uncompressed `scatter_sample_100k.csv`; five decimal places keep it below the strict 2,000,000-byte limit. The script checks every generated table against that limit.
 - Ran the builder successfully against the existing processed inputs. Final output sizes: `hourly_mean_pr.csv` 448 bytes; `monthly_mean_pr_by_group.csv` 1,106 bytes; `fault_day_pr_101_202_303.csv` 2,587 bytes; `flagged_blocks_by_severity.csv` 81 bytes; `scatter_sample_100k.csv` 1,830,511 bytes; `summary_statistics.csv` 1,089 bytes.
 - Did not run the transform or alter raw data or model calculations.
+
+## Insights Script and Report Batch (2026-10-27)
+
+- Updated `scripts/insights.py` to use the retained compact CSV tables, including the uncompressed 100,000-row scatter sample, with a `main()` entry point and explicit input checks.
+- Generated four charts with titles, labeled axes and units, PNG saves, and closed figures. Added the five matching report sections and figure interpretations in `docs/insights.md`. Attempts to add the README link did not persist, so that link remains incomplete.
+- Ran the script successfully. Weighted daytime mean PR is 0.929234 for faulted hours and 0.929253 for non-faulted hours. The compact permitted inputs do not contain paired module-temperature and PR observations, so the correlation is reported as unavailable.
+- The saved validation table records that the fixed three-hour rule detected none of the three injected examples; the report notes this limitation and makes no causal claim.
+- Figure sizes: `pr_by_hour_of_day.png` 53,742 bytes; `monthly_mean_pr_by_group.png` 89,240 bytes; `fault_day_pr_101_202_303.png` 117,908 bytes; `irradiance_vs_ac_power.png` 79,626 bytes.
+- Did not run the transform or modify raw data or numeric model outputs.
