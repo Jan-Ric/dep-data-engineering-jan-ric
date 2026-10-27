@@ -111,3 +111,11 @@ The original locations for moved files appear as deletions in Git status, with t
 - Review `docs/audit.md` after the final notebook, SQL, and README state is known.
 - Run the complete local flow, inspect generated PNGs and notebook file size, check that no repository artifact exceeds the requested limit, list the final tree, and identify any criterion that remains unmet.
 - Commit after each completed implementation step using short messages. Do not push to `main`.
+
+## Reproducibility and Update Notes Batch (2026-10-27)
+
+- Ran `scripts/transform.py` twice against the existing raw input. All five processed outputs had matching SHA-256 hashes between runs; the computation and SQL-ready hashes also match the earlier baselines. Raw files were not changed.
+- Restored historical `README.md` from `main`. Attempts to replace its run section failed because workspace edit operations rejected the existing context, so the README run-command update remains incomplete; the original problem statement is unchanged.
+- Added `docs/UPDATE_NOTES.md` with overview, M3/M4 criteria, removals/additions/simplifications, data flow, concepts, commands, hashes, assumptions, and open items.
+- Audited dependencies, ignore rules, file sizes, paths, and notebook files. Active third-party imports match requirements; archived publishing code alone imports DuckDB. No tracked file exceeds 50 MB, no absolute paths were found in project text, and no `.ipynb` remains. Added `*.ipynb` to `.gitignore` and removed the archived empty notebook.
+- The only criterion not fully met is a paired module-temperature/PR correlation, because no compact permitted input contains both observations. This is stated in the M4 report and update notes.
