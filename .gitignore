@@ -3,16 +3,30 @@ venv/
 .venv/
 __pycache__/
 *.py[cod]
+.ipynb_checkpoints/
+.env
+*.db
+*.sqlite
+*.sqlite3
+Thumbs.db
+.DS_Store
 
-# Generated raw and processed data
+# Raw API snapshots remain local inputs; the pipeline does not modify or delete them.
 data/raw/*.json
-data/processed/*.csv
 
-# Keep directory placeholders and the small review sample in version control
+# Large regenerable processed outputs stay local.
+data/processed/open_meteo_computation.csv
+data/processed/processed_inv_metrics.csv
+data/processed/open_meteo_cleaned.csv
+data/processed/monthly_inv_summary.csv
+data/processed/daily_inv_summary.csv
+
+# Keep the small review sample in version control.
 !data/processed/.gitkeep
-!data/samples/processed_inv_metrics_sample.csv
+!data/processed/open_meteo_cleaned.csv
+!data/processed/monthly_inv_summary.csv
+!data/processed/sample_processed_inv_metrics.csv
 
-# Generated figures and local editor files
-output/figures/*
+# Generated M4 figures are committed.
 !output/figures/.gitkeep
 .vscode/

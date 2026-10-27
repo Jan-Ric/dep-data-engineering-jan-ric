@@ -30,7 +30,6 @@ def fetch_data():
     return response.json()
 
 def main():
-    source_name = "open_meteo"
     payload = fetch_data()
     expected_hours = int(
         (datetime(2026, 1, 1) - datetime(2025, 1, 1)).total_seconds() / 3600
@@ -44,7 +43,7 @@ def main():
         )
         null_count = sum(value is None for value in values)
         assert null_count == 0, f"{field} contains {null_count} null readings"
-    output_file = RAW_DIR / f"{source_name}_raw.json"
+    output_file = RAW_DIR / "open_meteo_raw.json"
     
     # Save as properly formatted JSON
     output_file.write_text(json.dumps(payload, indent=4), encoding="utf-8")
