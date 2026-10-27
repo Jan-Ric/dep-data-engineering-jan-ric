@@ -132,3 +132,7 @@ The dependency file covers all third-party imports used by active scripts: `requ
 
 The final audit found no tracked file over 50 MB, no machine-specific absolute paths in project text, and no remaining `.ipynb` file in the repository. The paired module-temperature and PR correlation is the only criterion not fully met because no allowed compact input contains those paired observations.
 - The requested README run-command update is also not fully met: the historical README is restored from `main`, but workspace edit attempts failed to replace its existing Getting Started section. Its original problem statement is preserved. The commands are available in this section and were executed as part of verification where applicable.
+
+## M5 Path Choice
+
+Path B is selected because the available project data has no predictive target worth modeling. The demonstrated fault events are injected by a fixed rule (Formula F), so a predictive model would only relearn that rule rather than discover an independently observed failure pattern. Phase 2 also has no real inverter-failure labels for supervised learning. The next analysis should remain descriptive and non-predictive until representative operational failure labels are available.

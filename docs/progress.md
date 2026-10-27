@@ -151,6 +151,15 @@ The original locations for moved files appear as deletions in Git status, with t
 - Kept requirements limited to the existing imported third-party libraries with pinned versions and aligned Matplotlib to the configured environment version, 3.11.2. Added common test, type-checker, linter, and general cache directories to `.gitignore`; confirmed rules for the two large processed CSVs, `*.db`, caches, and `venv/`.
 - `py_compile` passed for both M3 scripts. Raw data was not modified.
 
+## KPI Definitions and Script Batch (2026-10-27)
+
+- Added `docs/kpi_definitions.md` with seven KPI definitions, formulas, units, sources, interpretation guidance, and limitations; documented thresholds, the O&M engineer and plant supervisor audiences, and the 0.20 severity-boundary difference between SQL and methodology.
+- Added `scripts/kpis.py`, a plain pandas script that reads only compact files in `output/tables/`, validates its inputs, computes the pooled PR mean and gap, total flagged-block count, severity distribution, clipping share estimate, and injected-window detection rate, then writes `output/tables/kpi_summary.csv`.
+- The saved severity aggregate does not include inverter IDs, so flagged inverter share is explicitly reported as unavailable rather than inferred. Clipping is labeled as an estimate from the retained fixed-seed 100,000-row sample, not a fleet-wide exact value.
+- Added the requested `M5 Path Choice` section to `docs/UPDATE_NOTES.md`: Path B is non-predictive because Formula F injects faults by a fixed rule and Phase 2 has no real failure labels.
+- Ran `scripts/kpis.py` once successfully. The output has seven rows and is 2,348 bytes; pooled mean PR is 0.9292531057, PR gap is 0.0707468943, flagged blocks total 2,017,730, sample clipping share is 2.1640%, and the fixed rule detected 0 of 3 injected windows.
+- Pylance reported no errors in `scripts/kpis.py`. Did not rerun the transform or change raw data or prior numeric outputs.
+
 ## Insight Table Output Format Batch (2026-10-27)
 
 - Confirmed `scripts/build_insight_tables.py` already reads both processed datasets in 100,000-row chunks and reuses `output/sql_results/03_flagged_3h_blocks.csv`.
