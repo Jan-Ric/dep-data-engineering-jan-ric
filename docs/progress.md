@@ -132,3 +132,12 @@ The original locations for moved files appear as deletions in Git status, with t
 - Read `scripts/transform.py`, `docs/audit.md`, and the long historical README at `ad1d0bc:README.md` as requested.
 - Attempted to add links to the three existing M3 documents in the README without editing the problem statement or Formula A–F content. The workspace edit tools reported success, but the README remained unchanged on disk; this requested link change is incomplete.
 - Did not run the transform or change code, raw data, or numeric outputs.
+
+## SQL Analysis Batch (2026-10-27)
+
+- Confirmed the three requested SQL files and `scripts/run_sql.py` already existed. Existing SQL defines PR gap as `1 - PERFORMANCE_RATIO`; retained this explicit definition rather than adding a non-faulted fleet baseline.
+- Updated the Query 3 comment block to state its rolling consecutive-hour rule, irradiance and gap thresholds, severity bands, and compact output.
+- Added `--sample` support to `scripts/run_sql.py` for loading `data/samples/processed_inv_metrics_sample.csv`; the default continues to load the full processed CSV in 100,000-row chunks. The runner now uses ignored `data/processed/sql_cache.db`.
+- Sample run completed on 1,296 rows: query outputs contained 6, 38, and 12 rows. Full run completed within the three-minute limit on 7,270,800 rows: query outputs contained 830, 153, and 2,490 rows.
+- Confirmed `*.db` already exists in `.gitignore` and `project_queries.sql` is already tracked at `archive/project_queries.sql`; no ignore-rule change or file move was needed.
+- Python compilation passed. No transform, raw data, or numeric model output was changed.

@@ -1,5 +1,6 @@
 from pathlib import Path
 import sqlite3
+import sys
 import time
 
 import pandas as pd
@@ -7,13 +8,21 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 INPUT_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
-DATABASE_FILE = PROJECT_ROOT / "data/processed/sql_cache.sqlite"
+SAMPLE_INPUT_FILE = PROJECT_ROOT / "data/samples/processed_inv_metrics_sample.csv"
+DATABASE_FILE = PROJECT_ROOT / "data/processed/sql_cache.db"
 QUERY_DIRECTORY = PROJECT_ROOT / "sql"
 OUTPUT_DIRECTORY = PROJECT_ROOT / "output/sql_results"
 CHUNK_SIZE = 100_000
 
 
 def main() -> None:
+    assert len(sys.argv) <= 2, "Usage: python scripts/run_sql.py [--sample]"
+    assert len(sys.argv) == 1 or sys.argv[1] == "--sample", (
+        "The only supported option is --sample"
+    )
+    input_file = SAMPLE_INPUT_FILE if len(sys.argv) == 2 else INPUT_FILE
+    assert input_file.exists(), f"Input file does not exist: {input_file}"
+
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
     DATABASE_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -23,7 +32,7 @@ def main() -> None:
         connection.execute("DROP TABLE IF EXISTS processed_inv_metrics")
 
         for chunk_number, chunk in enumerate(
-            pd.read_csv(INPUT_FILE, chunksize=CHUNK_SIZE), start=1
+            pd.read_csv(input_file, chunksize=CHUNK_SIZE), start=1
         ):
             write_mode = "replace" if chunk_number == 1 else "append"
             chunk.to_sql(
@@ -33,6 +42,8 @@ def main() -> None:
                 index=False,
             )
             print(f"Loaded chunk {chunk_number}: {len(chunk):,} rows")
+
+        print(f"Loaded input: {input_file.relative_to(PROJECT_ROOT)}")
 
         connection.execute(
             "CREATE INDEX idx_metrics_inverter_datetime "

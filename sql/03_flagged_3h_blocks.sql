@@ -1,12 +1,12 @@
 /*
-Question: Which inverter has a flagged block of three consecutive daytime hours?
-Logic: Join each inverter-hour to the next two exact hourly timestamps. Require
-       irradiance above 200 W/m2 and non-null PR at all three hours. Classify
-    the three-hour mean PR gap: Watch [0.05, 0.10), Alert [0.10, 0.20],
-    Critical > 0.20.
-Expected output: One row per qualifying rolling three-hour block, including
+Question: Which inverters have three consecutive qualifying daytime hours?
+Logic: Join each inverter-hour to the next two exact hourly timestamps. Each
+    hour must have irradiance above 200 W/m2 and a non-null PR. Define the
+    gap as 1 - PR; require the three-hour mean gap to be at least 0.05.
+    Classify the mean gap as Watch [0.05, 0.10), Alert [0.10, 0.20],
+    or Critical > 0.20.
 Expected output: Compact one-row-per-inverter-and-severity summary with the
-                 number of qualifying rolling blocks and mean/maximum PR gap.
+           count of qualifying rolling blocks and mean/maximum gap.
 */
 WITH flagged_blocks AS (
     SELECT
