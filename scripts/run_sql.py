@@ -15,12 +15,14 @@ OUTPUT_DIRECTORY = PROJECT_ROOT / "output/sql_results"
 CHUNK_SIZE = 100_000
 
 
-def main() -> None:
-    assert len(sys.argv) <= 2, "Usage: python scripts/run_sql.py [--sample]"
-    assert len(sys.argv) == 1 or sys.argv[1] == "--sample", (
+def main(arguments=None) -> None:
+    if arguments is None:
+        arguments = sys.argv[1:]
+    assert len(arguments) <= 1, "Usage: python scripts/run_sql.py [--sample]"
+    assert len(arguments) == 0 or arguments[0] == "--sample", (
         "The only supported option is --sample"
     )
-    input_file = SAMPLE_INPUT_FILE if len(sys.argv) == 2 else INPUT_FILE
+    input_file = SAMPLE_INPUT_FILE if arguments else INPUT_FILE
     assert input_file.exists(), f"Input file does not exist: {input_file}"
 
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)

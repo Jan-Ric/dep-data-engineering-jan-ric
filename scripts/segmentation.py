@@ -3,6 +3,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from transform import FAULT_WINDOWS
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 INPUT_CSV = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
@@ -11,14 +13,14 @@ FIGURES = PROJECT_ROOT / "output/figures"
 FLAGGED_SOURCE = PROJECT_ROOT / "output/sql_results/03_flagged_3h_blocks.csv"
 CHUNK_SIZE = 100_000  # inverter-hour rows per read
 FIGURE_DPI = 140  # dots per inch
-FAULT_WINDOWS = {
-    101: ("2025-03-15 10:00:00", "2025-03-15 12:00:00"),
-    202: ("2025-06-20 10:00:00", "2025-06-20 12:00:00"),
-    303: ("2025-09-10 10:00:00", "2025-09-10 12:00:00"),
+FAULT_IDS = {fault["inverter_id"] for fault in FAULT_WINDOWS}
+FAULT_WINDOW_BY_INVERTER = {
+    fault["inverter_id"]: (fault["start"], fault["end"])
+    for fault in FAULT_WINDOWS
 }
-FAULT_IDS = set(FAULT_WINDOWS)
+FAULT_START = min(fault["start"] for fault in FAULT_WINDOWS)
+FAULT_END = max(fault["end"] for fault in FAULT_WINDOWS)
 SEVERITY_ORDER = ["Watch", "Alert", "Critical"]
-COLORS = {"Faulted": "#b44b40", "Non-faulted": "#376f9d"}
 
 
 def create_season_hour_chart(segment_pr_by_season_hour):
@@ -82,6 +84,7 @@ def create_severity_chart(cohort_flags_by_severity):
 
 
 def main():
+    plt.style.use("seaborn-v0_8-whitegrid")
     assert INPUT_CSV.exists(), f"Processed metrics file is missing: {INPUT_CSV}"
     TABLES.mkdir(parents=True, exist_ok=True)
     FIGURES.mkdir(parents=True, exist_ok=True)
@@ -141,11 +144,9 @@ def main():
         ].copy()
         fault_window = current_chunk[
             current_chunk["INVERTER_ID"].isin(FAULT_IDS)
-            & current_chunk["DATE_TIME"].between(
-                "2025-03-15 10:00:00", "2025-09-10 12:00:00"
-            )
+            & current_chunk["DATE_TIME"].between(FAULT_START, FAULT_END)
         ].copy()
-        for inverter_id, (fault_start, fault_end) in FAULT_WINDOWS.items():
+        for inverter_id, (fault_start, fault_end) in FAULT_WINDOW_BY_INVERTER.items():
             rows = fault_window[
                 fault_window["INVERTER_ID"].eq(inverter_id)
                 & fault_window["DATE_TIME"].between(fault_start, fault_end)
@@ -217,7 +218,7 @@ def main():
     )[["sum", "count"]].sum()
     cohort_parts = []
     overall_faulted = overall_cohort_summary.loc[
-        ["Faulted 101", "Faulted 202", "Faulted 303"]
+        [f"Faulted {inverter_id}" for inverter_id in sorted(FAULT_IDS)]
     ].sum()
     overall_cohorts = [
         ("All faulted inverters", overall_faulted),
@@ -290,5 +291,4 @@ def main():
 
 
 if __name__ == "__main__":
-    plt.style.use("seaborn-v0_8-whitegrid")
     main()

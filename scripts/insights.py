@@ -9,6 +9,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from transform import FAULT_WINDOWS
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TABLES = PROJECT_ROOT / "output/tables"
@@ -16,9 +18,7 @@ FIGURES = PROJECT_ROOT / "output/figures"
 FIGURE_DPI = 140  # dots per inch
 AC_CLIP_KW = 60.0  # rated AC power in kilowatts
 FAULT_DATES = {
-    101: "2025-03-15",
-    202: "2025-06-20",
-    303: "2025-09-10",
+    fault["inverter_id"]: fault["start"][:10] for fault in FAULT_WINDOWS
 }
 
 

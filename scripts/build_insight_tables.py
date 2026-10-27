@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from transform import FAULT_WINDOWS
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 METRICS_FILE = PROJECT_ROOT / "data/processed/processed_inv_metrics.csv"
@@ -14,26 +16,17 @@ CANDIDATES_PER_CHUNK = 2_000
 RANDOM_SEED = 42
 MAX_OUTPUT_BYTES = 2_000_000
 FAULT_DAYS = {
-    101: "2025-03-15",
-    202: "2025-06-20",
-    303: "2025-09-10",
+    fault["inverter_id"]: fault["start"][:10] for fault in FAULT_WINDOWS
 }
-FAULT_WINDOWS = {
-    inverter_id: (f"{fault_day} 10:00:00", f"{fault_day} 12:00:00")
-    for inverter_id, fault_day in FAULT_DAYS.items()
+FAULT_WINDOW_BY_INVERTER = {
+    fault["inverter_id"]: (fault["start"], fault["end"])
+    for fault in FAULT_WINDOWS
 }
 VALIDATION_TIMES = {
     f"{fault_day} {hour:02d}:00:00"
     for fault_day in FAULT_DAYS.values()
     for hour in range(10, 13)
 }
-METRICS_COLUMNS = [
-    "INVERTER_ID",
-    "DATE_TIME",
-    "AC_POWER",
-    "IRRADIANCE",
-    "PERFORMANCE_RATIO",
-]
 METRICS_STATS_COLUMNS = ["AC_POWER", "IRRADIANCE", "PERFORMANCE_RATIO"]
 COMPUTATION_STATS_COLUMNS = [
     "dc_power_kw",
@@ -74,7 +67,6 @@ def main() -> None:
 
     hourly_parts = []
     monthly_parts = []
-    fault_day_parts = []
     scatter_candidates = []
     validation_parts = []
     metrics_stats_parts = []
@@ -112,14 +104,6 @@ def main() -> None:
             )
         )
 
-        for inverter_id, fault_day in FAULT_DAYS.items():
-            fault_rows = chunk[
-                (chunk["INVERTER_ID"] == inverter_id)
-                & chunk["DATE_TIME"].str.startswith(fault_day)
-            ][METRICS_COLUMNS]
-            if not fault_rows.empty:
-                fault_day_parts.append(fault_rows)
-
         validation_rows = chunk[chunk["DATE_TIME"].isin(VALIDATION_TIMES)][
             ["INVERTER_ID", "DATE_TIME", "IRRADIANCE", "PERFORMANCE_RATIO"]
         ]
@@ -154,11 +138,6 @@ def main() -> None:
         ["month", "inverter_group", "daytime_rows", "mean_daytime_pr"]
     ]
     monthly.to_csv(TABLE_DIRECTORY / "monthly_mean_pr_by_group.csv", index=False)
-
-    fault_day_metrics = pd.concat(fault_day_parts, ignore_index=True)
-    fault_day_metrics.to_csv(
-        TABLE_DIRECTORY / "fault_day_pr_101_202_303.csv", index=False
-    )
 
     candidates = pd.concat(scatter_candidates, ignore_index=True)
     if len(candidates) < SAMPLE_SIZE:
@@ -235,7 +214,7 @@ def main() -> None:
         validation_data["median_pr"] - validation_data["PERFORMANCE_RATIO"]
     )
     validation_rows = []
-    for inverter_id, (window_start, window_end) in FAULT_WINDOWS.items():
+    for inverter_id, (window_start, window_end) in FAULT_WINDOW_BY_INVERTER.items():
         window = validation_data[
             validation_data["INVERTER_ID"].eq(inverter_id)
             & validation_data["DATE_TIME"].between(window_start, window_end)
