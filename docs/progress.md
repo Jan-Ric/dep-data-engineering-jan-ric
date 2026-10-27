@@ -141,3 +141,12 @@ The original locations for moved files appear as deletions in Git status, with t
 - Sample run completed on 1,296 rows: query outputs contained 6, 38, and 12 rows. Full run completed within the three-minute limit on 7,270,800 rows: query outputs contained 830, 153, and 2,490 rows.
 - Confirmed `*.db` already exists in `.gitignore` and `project_queries.sql` is already tracked at `archive/project_queries.sql`; no ignore-rule change or file move was needed.
 - Python compilation passed. No transform, raw data, or numeric model output was changed.
+
+## M3 Scope and Beginner Cleanup Batch (2026-10-27)
+
+- Confirmed `dashboard/`, `config/`, `scripts/publish_artifacts.py`, and `.github/workflows/` were already moved out of the project root and preserved under `archive/`. Corrected the workflow location to `archive/.github/workflows/pages.yml` to retain its original directory structure and added `archive/README.md` explaining the M3 to M5 scope rationale.
+- Simplified `scripts/ingest.py` with top-level API and validation constants and a clear fetch, validate, save flow. Simplified `scripts/transform.py` by removing pandas-specific type annotations and exploratory profiling output, centralizing repeated numeric values, and ordering its work as load, compute, validate, save. Fault windows remain a plain list of dictionaries. Formulas, output schemas, and row ordering were not intentionally changed.
+- Validation now checks required-value nulls, datetime/numeric/integer dtypes, unique `(inverter_id, date_time)` keys, 8,760 weather rows and the expected inverter-hour total, AC power from 0 to 60 kW, daytime PR from 0 to 1.5, and null PR for nighttime rows.
+- Ran `scripts/transform.py` twice successfully. Both baseline hashes match: `processed_inv_metrics.csv` is `674086f246ea9032fcea4520fe3997304b23c87f8655730383a2c11a778dd045`; `open_meteo_computation.csv` is `7459ec2be9e90b2b530788273729c3edd8013eda8ace9216b70eb885665aa73d`.
+- Kept requirements limited to the existing imported third-party libraries with pinned versions and aligned Matplotlib to the configured environment version, 3.11.2. Added common test, type-checker, linter, and general cache directories to `.gitignore`; confirmed rules for the two large processed CSVs, `*.db`, caches, and `venv/`.
+- `py_compile` passed for both M3 scripts. Raw data was not modified.

@@ -5,49 +5,59 @@ import json
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = PROJECT_ROOT / "data/raw"
-RAW_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_FILE = RAW_DIR / "open_meteo_raw.json"
+API_URL = "https://archive-api.open-meteo.com/v1/archive"
+START_DATE = "2025-01-01"
+END_DATE = "2025-12-31"
+EXPECTED_HOURS = int(
+    (datetime(2026, 1, 1) - datetime(2025, 1, 1)).total_seconds() / 3600
+)
+WEATHER_FIELDS = [
+    "temperature_2m",
+    "wind_speed_10m",
+    "global_tilted_irradiance",
+]
+REQUEST_TIMEOUT_SECONDS = 30  # seconds
+REQUEST_PARAMS = {
+    "latitude": 13.9155,
+    "longitude": 120.6498,
+    "start_date": START_DATE,
+    "end_date": END_DATE,
+    "hourly": ",".join(WEATHER_FIELDS),
+    "models": "ecmwf_ifs",
+    "timezone": "Asia/Singapore",
+    "wind_speed_unit": "ms",
+    "tilt": 11,
+    "azimuth": 0,
+}
+REQUEST_HEADERS = {"Accept": "application/json"}
 
 def fetch_data():
-    url = "https://archive-api.open-meteo.com/v1/archive"
-    
-    # Parameters cleanly separated as a dictionary
-    params = {
-        "latitude": 13.9155,
-        "longitude": 120.6498,
-        "start_date": "2025-01-01",
-        "end_date": "2025-12-31",
-        "hourly": "temperature_2m,wind_speed_10m,global_tilted_irradiance",
-        "models": "ecmwf_ifs",
-        "timezone": "Asia/Singapore",
-        "wind_speed_unit": "ms",
-        "tilt": 11,
-        "azimuth": 0
-    }
-    headers = {"Accept": "application/json"}
-
-    response = requests.get(url, params=params, headers=headers, timeout=30)
-    response.raise_for_status() # Fails fast if the API is down
+    response = requests.get(
+        API_URL,
+        params=REQUEST_PARAMS,
+        headers=REQUEST_HEADERS,
+        timeout=REQUEST_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
     return response.json()
 
-def main():
-    payload = fetch_data()
-    expected_hours = int(
-        (datetime(2026, 1, 1) - datetime(2025, 1, 1)).total_seconds() / 3600
-    )
-    weather_fields = ["temperature_2m", "wind_speed_10m", "global_tilted_irradiance"]
-    # Fail before saving because this pipeline has no fallback for gappy API responses.
-    for field in weather_fields:
+def validate_payload(payload):
+    for field in WEATHER_FIELDS:
         values = payload["hourly"][field]
-        assert len(values) == expected_hours, (
-            f"{field} has {len(values)} rows, expected {expected_hours}"
+        assert len(values) == EXPECTED_HOURS, (
+            f"{field} has {len(values)} rows, expected {EXPECTED_HOURS}"
         )
         null_count = sum(value is None for value in values)
         assert null_count == 0, f"{field} contains {null_count} null readings"
-    output_file = RAW_DIR / "open_meteo_raw.json"
-    
-    # Save as properly formatted JSON
-    output_file.write_text(json.dumps(payload, indent=4), encoding="utf-8")
-    print(f"Saved raw extract to {output_file}")
+
+def main():
+    payload = fetch_data()
+    validate_payload(payload)
+
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FILE.write_text(json.dumps(payload, indent=4), encoding="utf-8")
+    print(f"Saved raw extract to {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     main()

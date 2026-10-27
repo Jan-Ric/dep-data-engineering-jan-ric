@@ -1,0 +1,1 @@
+The dashboard, configuration, publishing script, and deployment workflow were moved out because they go beyond the M3 to M5 scope and are kept here for reference.
