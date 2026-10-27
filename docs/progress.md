@@ -87,6 +87,12 @@ The original locations for moved files appear as deletions in Git status, with t
 - `project_queries.sql` was already archived and tracked as `archive/project_queries.sql`; it was left in place.
 - No transform was run, no raw data or numeric model outputs were changed.
 
+## Insight Tables Batch (2026-10-27)
+
+- Added `scripts/build_insight_tables.py`, a linear pandas script that reads both existing processed CSVs in 100,000-row chunks; the transform was not rerun.
+- Generated `output/tables/hourly_mean_pr.csv` (14 rows, 448 bytes), `monthly_mean_pr_by_group.csv` (24 rows, 1,106 bytes), `fault_day_pr_101_202_303.csv` (72 rows, 2,587 bytes), `flagged_blocks_by_severity.csv` (81 bytes, reusing the SQL result), `scatter_sample_100k.csv.gz` (100,000 rows, 565,404 bytes, fixed seed), and `summary_statistics.csv` (7 rows, 1,089 bytes for both processed datasets).
+- All six output files are under 2 MB. `archive/notebooks/` preserves the former `notebooks/` directory, including `insights.ipynb` and `.gitkeep`.
+
 ## Remaining Work
 
 - Complete the notebook with the requested sections, five charts, interpretations, cautious inference, and saved outputs; execute it and keep notebook outputs concise.
