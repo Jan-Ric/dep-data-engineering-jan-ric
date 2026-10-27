@@ -93,6 +93,14 @@ The original locations for moved files appear as deletions in Git status, with t
 - Generated `output/tables/hourly_mean_pr.csv` (14 rows, 448 bytes), `monthly_mean_pr_by_group.csv` (24 rows, 1,106 bytes), `fault_day_pr_101_202_303.csv` (72 rows, 2,587 bytes), `flagged_blocks_by_severity.csv` (81 bytes, reusing the SQL result), `scatter_sample_100k.csv.gz` (100,000 rows, 565,404 bytes, fixed seed), and `summary_statistics.csv` (7 rows, 1,089 bytes for both processed datasets).
 - All six output files are under 2 MB. `archive/notebooks/` preserves the former `notebooks/` directory, including `insights.ipynb` and `.gitkeep`.
 
+## M4 Insights Report Batch (2026-10-27)
+
+- Added `scripts/insights.py` with VS Code `# %%` script sections. It reads compact output tables and SQL results, prints saved summary statistics and a cautious weighted comparison of faulted and non-faulted inverter-hour PR, and writes four PNG charts.
+- Added `docs/insights.md` with the five requested report sections, chart interpretations, cautious language, and simulated-data limitations. A working-tree `README.md` was absent, and attempts to add the requested link did not persist.
+- Figure sizes: `pr_by_hour_of_day.png` 52,157 bytes; `monthly_mean_pr_by_group.png` 86,982 bytes; `fault_day_pr_101_202_303.png` 116,766 bytes; `irradiance_vs_ac_power.png` 79,626 bytes.
+- The allowed compact files do not contain paired module-temperature and PR observations, so the script reports that the requested correlation cannot be calculated from the available inputs rather than presenting an invalid statistic.
+- Ran `scripts/insights.py` as a normal script. Did not use notebooks or rerun the transform.
+
 ## Remaining Work
 
 - Complete the notebook with the requested sections, five charts, interpretations, cautious inference, and saved outputs; execute it and keep notebook outputs concise.
