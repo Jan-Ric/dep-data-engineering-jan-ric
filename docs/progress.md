@@ -185,3 +185,5 @@ The original locations for moved files appear as deletions in Git status, with t
 - Confirmed segmented severity counts exactly match the existing aggregate: Watch 1,337,958; Alert 629,972; Critical 49,800. Overall valid-hour mean PR is 0.929234 for the three faulted inverters and 0.929253 for the non-faulted cohort.
 - Added `docs/segmentation.md` with definitions, all three embedded charts and interpretations, cautious inference, and limitations. The report clarifies that simulated fault comparisons do not establish real-world causes.
 - Ran the segmentation script successfully against the existing processed data. No transform was run, raw data was untouched, and prior numeric outputs were not changed.
+
+Batch 8: created docs/stakeholder_brief.md (436 words, figure embedded, KPI values from kpi_summary.csv). README link added manually.

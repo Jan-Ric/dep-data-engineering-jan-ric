@@ -10,6 +10,8 @@
 2. Inverters are hard and complex to repair - As Operations and Maintenance can't just simply repair or troubleshoot faulty inverters, these components are also more sensitive as they compose of major electronics circuits and parts.
 3. Current solution is cure (based on historical data) rather than prevention (like predicting the remaining life-span of the inverters).
 
+Stakeholder brief (plain-language summary for O&M): [docs/stakeholder_brief.md](docs/stakeholder_brief.md)
+
 ### **I want to answer (Phase 1):**
 
 **"When and where are those inverters that have negative performance ratio gaps in a solar power plant?"**
