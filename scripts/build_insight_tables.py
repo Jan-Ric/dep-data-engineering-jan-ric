@@ -44,7 +44,7 @@ def summarize_dataset(
     numeric_values = pd.concat(stat_parts, ignore_index=True)
     summary = numeric_values.describe().transpose().reset_index(names="column")
     summary["dataset"] = dataset_name
-    summary["missing_values"] = summary["column"].map(missing_counts)
+    summary["missing_values"] = summary["column"].map(missing_counts).astype("int64")
     return summary[
         [
             "dataset",
@@ -70,7 +70,7 @@ def main() -> None:
     scatter_candidates = []
     validation_parts = []
     metrics_stats_parts = []
-    metrics_missing = pd.Series(0, index=METRICS_COLUMNS, dtype="int64")
+    metrics_missing = pd.Series(0, index=METRICS_STATS_COLUMNS, dtype="int64")
 
     for chunk_number, chunk in enumerate(
         pd.read_csv(
@@ -198,9 +198,9 @@ def main() -> None:
 
     flagged_source = SQL_RESULTS_DIRECTORY / "03_flagged_3h_blocks.csv"
     flagged = pd.read_csv(flagged_source)
-    flagged_counts = flagged.groupby("severity_tier", as_index=False).agg(
-        qualifying_3h_blocks=("qualifying_3h_blocks", "sum")
-    )
+    flagged_counts = flagged.groupby("severity_tier").size().rename(
+        "qualifying_3h_blocks"
+    ).reset_index()
     flagged_counts.to_csv(
         TABLE_DIRECTORY / "flagged_blocks_by_severity.csv", index=False
     )

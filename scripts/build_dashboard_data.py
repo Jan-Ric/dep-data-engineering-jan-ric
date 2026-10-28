@@ -30,27 +30,21 @@ def load_sql_csv(filename):
         return list(csv.DictReader(input_file))
 
 
-def build_flagged_blocks(rows, validation_rows):
-    validation_by_inverter = {
-        row["inverter_id"]: row for row in validation_rows if row["detected"].lower() == "true"
-    }
+def build_flagged_blocks(rows):
     flagged_blocks = []
     for row in rows:
-        window_row = validation_by_inverter.get(row["INVERTER_ID"])
-        date = "Time unavailable"
-        start_time = ""
-        end_time = ""
-        if window_row:
-            start_value, end_value = window_row["window"].split(" to ")
-            date, start_time = start_value.split(" ")
-            end_date, end_time = end_value.split(" ")
-            assert end_date == date, "Flagged validation window crosses dates"
+        block_start = row["block_start"]
+        block_end = row["block_end"]
+        date, start_time = block_start.split(" ", maxsplit=1)
+        _, end_time = block_end.split(" ", maxsplit=1)
         flagged_blocks.append(
             {
-                "inverter_id": row["INVERTER_ID"],
+                "inverter_id": row["inverter_id"],
                 "date": date,
                 "start_time": start_time,
                 "end_time": end_time,
+                "block_start": block_start,
+                "block_end": block_end,
                 "mean_gap": row["mean_pr_gap"],
                 "severity_tier": row["severity_tier"],
             }
@@ -93,7 +87,7 @@ def main():
     fault_day_rows = load_csv("fault_day_pr_101_202_303.csv")
     hourly_mean_pr = load_csv("hourly_mean_pr.csv")
 
-    flagged_blocks = build_flagged_blocks(flagged_block_rows, detection_validation)
+    flagged_blocks = build_flagged_blocks(flagged_block_rows)
     flagged_count = int(
         next(row["Value"] for row in kpis if row["KPI"] == "Flagged 3-hour block count")
     )

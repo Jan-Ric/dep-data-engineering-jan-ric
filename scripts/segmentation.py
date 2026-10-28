@@ -261,16 +261,13 @@ def main():
 
     flagged_blocks = pd.read_csv(FLAGGED_SOURCE)
     cohort_names = {inverter_id: f"Faulted {inverter_id}" for inverter_id in FAULT_IDS}
-    flagged_blocks["cohort"] = flagged_blocks["INVERTER_ID"].map(
+    flagged_blocks["cohort"] = flagged_blocks["inverter_id"].map(
         cohort_names
     ).fillna("Non-faulted")
     flag_summary = flagged_blocks.groupby(
-        ["cohort", "severity_tier"], as_index=False
-    )["qualifying_3h_blocks"].sum().rename(
-        columns={
-            "severity_tier": "severity",
-            "qualifying_3h_blocks": "flagged_blocks",
-        }
+        ["cohort", "severity_tier"]
+    ).size().rename("flagged_blocks").reset_index().rename(
+        columns={"severity_tier": "severity"}
     )
     all_cohorts = ["Non-faulted"] + [f"Faulted {value}" for value in sorted(FAULT_IDS)]
     complete_index = pd.MultiIndex.from_product(

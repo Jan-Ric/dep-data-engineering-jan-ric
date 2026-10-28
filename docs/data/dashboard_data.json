@@ -24,6 +24,8 @@
   ],
   "flagged_blocks": [
     {
+      "block_end": "2025-06-20 12:00:00",
+      "block_start": "2025-06-20 10:00:00",
       "date": "2025-06-20",
       "end_time": "12:00:00",
       "inverter_id": "202",

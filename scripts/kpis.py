@@ -54,7 +54,7 @@ def main():
     )
     require_columns(
         flagged_inverters,
-        ["INVERTER_ID", "qualifying_3h_blocks"],
+        ["inverter_id", "block_start", "block_end", "mean_pr_gap", "severity_tier"],
         "03_flagged_3h_blocks.csv",
     )
 
@@ -70,7 +70,7 @@ def main():
 
     total_flagged_blocks = int(severity_counts["qualifying_3h_blocks"].sum())
     assert total_flagged_blocks > 0, "Expected at least one qualifying 3-hour block"
-    flagged_inverter_count = int(flagged_inverters["INVERTER_ID"].nunique())
+    flagged_inverter_count = int(flagged_inverters["inverter_id"].nunique())
     flagged_inverter_share = flagged_inverter_count / FLEET_INVERTER_COUNT * 100.0
     severity_labels = ["Watch", "Alert", "Critical"]
     severity_parts = []

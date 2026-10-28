@@ -1,2 +1,2 @@
-INVERTER_ID,severity_tier,qualifying_3h_blocks,mean_pr_gap,maximum_pr_gap
-202,Watch,1,0.06219851694865586,0.06219851694865586
+inverter_id,block_start,block_end,mean_pr_gap,severity_tier
+202,2025-06-20 10:00:00,2025-06-20 12:00:00,0.06219851694865586,Watch
