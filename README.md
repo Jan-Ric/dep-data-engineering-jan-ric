@@ -1,4 +1,4 @@
-# Solar Power Plant Inverter Analysis: A 12-month AC output quantification of inverters with a negative performance ratio gap.
+# Solar Power Plant Inverter Analysis: A 12-month AC output quantification of inverters with a negative performance ratio gap
 
 ---
 
@@ -346,6 +346,8 @@ This also excludes the irradiance with zero values (nighttime) for the KPI analy
 
 The full `open_meteo_computation.csv` contains the detailed inverter-level transformation fields, including Formula E and F outputs. The SQL-ready `processed_inv_metrics.csv` contains the query columns: `INVERTER_ID`, `DATE_TIME`, `AC_POWER`, `IRRADIANCE`, and `PERFORMANCE_RATIO`. Zero-irradiance rows remain valid records, while their undefined PR values are excluded from daytime analysis.
 
+---
+
 ## Possible Final Dashboard
 
 The dashboard should help the audience quickly see three components:
@@ -369,20 +371,31 @@ Follow these steps to run the project:
 
 **NOTE:** _This assumes that you already cloned the project in the GitHub repository._
 
-1. Install the required dependencies:
+## How to Run
 
-   `pip install -r requirements.txt`
+Install dependencies:
 
-2. Run the data extraction step:
+    pip install -r requirements.txt
 
-   `python scripts/ingest.py` -> For Windows
+Run the whole pipeline (Windows: python, Mac/Linux: python3):
 
-   `python3 scripts/ingest.py` -> For Mac/Linux
+    python scripts/run_pipeline.py
 
-3. Run the processing and validation step:
+Options (add after the command):
 
-   `python scripts/transform.py` -> For Windows
+    skip-ingest      reuse data/raw/open_meteo_raw.json instead of downloading again
+    skip-transform   reuse the existing files in data/processed/
 
-   `python3 scripts/transform.py` -> For Mac/Linux
+Run one step at a time:
+
+    python scripts/ingest.py
+    python scripts/transform.py
+    python scripts/run_sql.py
+    python scripts/build_insight_tables.py
+    python scripts/kpis.py
+    python scripts/segmentation.py
+    python scripts/insights.py
+
+Note: transform.py takes about 2 minutes, and the large processed CSVs are generated locally and not stored in Git.
 
 ---
