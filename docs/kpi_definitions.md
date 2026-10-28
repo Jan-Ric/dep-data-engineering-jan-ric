@@ -10,7 +10,9 @@ These metrics summarize modeled inverter-hour data and saved analysis tables. Th
 | Flagged inverter share | `inverters with at least one qualifying block / 830 inverters * 100`. | Percent of fleet | Distinct IDs in `output/sql_results/03_flagged_3h_blocks.csv`; fleet size from `README.md` | Portion of the fleet with one or more qualifying blocks. | Flags are based on simulated data and a fixed demonstration rule, not confirmed failures. |
 | Severity distribution | For each tier, `tier block count / total flagged blocks * 100`; report Watch, Alert, and Critical counts and shares together. | Blocks and percent of flagged blocks | `output/tables/flagged_blocks_by_severity.csv` | Shows how saved flagged blocks are distributed by their 3-hour mean gap tier. | Overlapping blocks are counted separately. The SQL assigns exactly 0.20 to Alert and values above 0.20 to Critical; `docs/methodology.md` describes Critical as starting at 0.20, so that boundary should be reconciled before operational use. |
 | Clipping hours share | `sample rows with AC_POWER >= 60 kW / sampled inverter-hour rows * 100`. | Percent of sampled inverter-hour rows | `output/tables/scatter_sample_100k.csv` | Estimates how often the modeled AC output reaches the 60 kW cap in this fixed-seed sample. | This is a sample estimate, not the exact fleet-wide share. The sample has no timestamp, so it cannot identify unique clock hours. Clipping is an expected model cap, not by itself a fault. |
-| Fault detection rate | `injected fault windows detected by the rolling 3-hour rule / total injected fault windows * 100`. | Percent of injected windows | `output/tables/fault_detection_validation.csv` | Measures whether the rule detected the known synthetic test windows. | There are only three configured synthetic windows; this is a rule check, not a real-world detection-performance estimate. |
+| Fault detection rate | `detected designed Watch, Alert, and Critical windows / designed windows * 100`; expected-miss hard cases are excluded. | Percent of designed tier windows | `output/tables/fault_detection_validation.csv` | Checks the 12 designed positive tests against the rolling three-hour rule. | The controlled synthetic test is not a real-world accuracy estimate. |
+| False alarm blocks | Count of flagged rolling blocks on inverters not listed in `transform.FAULT_WINDOWS`. | Blocks on non-faulted inverters | `output/tables/false_alarm_check.csv` and `output/sql_results/03_flagged_3h_blocks.csv` | Zero is expected because non-faulted inverters share the same weather and simulated PR. This confirms the rule does not misfire on identical simulated peers. | It says nothing about noisy real data. |
+| Detection by target | Detected / injected windows for Watch, Alert, Critical, plus hard cases missed as expected. | Detected / injected windows | `output/tables/fault_detection_validation.csv` | Separates target-tier detection from deliberate below-threshold and too-short tests. | Synthetic test outcomes are not field accuracy or evidence of real-world performance. |
 
 ## Thresholds
 
@@ -18,7 +20,11 @@ The saved three-hour query evaluates rolling sets of three consecutive hourly ti
 
 ## Detection Result
 
-The regenerated validation detected inverter 202's 2025-06-20 window (mean `pr_gap` 0.06220, Watch). It did not detect inverter 101 on 2025-03-15 (0.01144) or inverter 303 on 2025-09-10 (0.01385). The weaker +4°C and +12°C injections may stay below 0.05 because the simulated degradation term starts only above 45°C internal temperature, making the resulting PR effect small; in this run the +4°C window stayed below threshold while the +12°C window crossed it. This result reflects the simulation design, not a failure of the method.
+The saved validation has 12/12 designed Watch, Alert, and Critical windows detected with matching target tiers. The three hard windows were missed as expected: two have a mean gap below 0.05, and the third has a qualifying-sized gap but only two hourly records, shorter than the required three-hour run. The 12/12 result checks deterministic scenarios only; it is not evidence of real-world accuracy.
+
+## False-Alarm Check
+
+The saved check reports zero flagged blocks on non-faulted inverters. Zero is expected here because all non-faulted inverters share the same weather and the same simulated PR; this confirms the rule does not misfire on identical inverters and says nothing about noisy real data.
 
 ## Audience
 

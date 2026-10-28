@@ -1,0 +1,2 @@
+faulted_inverters,non_faulted_inverters,flagged_blocks_on_non_faulted,non_faulted_inverters_flagged,note
+15,815,0,0,"Zero false alarms are expected here because non-faulted inverters share the same weather and simulated PR; this checks identical peers only, not noisy real data."

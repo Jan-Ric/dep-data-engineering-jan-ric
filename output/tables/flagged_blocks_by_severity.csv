@@ -1,2 +1,4 @@
 severity_tier,qualifying_3h_blocks
-Watch,1
+Alert,15
+Critical,4
+Watch,16

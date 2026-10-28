@@ -85,8 +85,28 @@ def build_page(data):
             find_kpi(kpis, "Fault detection rate"),
         ),
         (
+            "False alarm blocks",
+            find_kpi(kpis, "False alarm blocks"),
+        ),
+        (
+            "Detection by target",
+            find_kpi(kpis, "Detection by target"),
+        ),
+        (
             "Pooled mean hourly PR",
             find_kpi(kpis, "Performance Ratio (hourly, per inverter)"),
+        ),
+        (
+            "Fleet mean PR shortfall",
+            find_kpi(kpis, "fleet_mean_pr_shortfall_from_1"),
+        ),
+        (
+            "Severity distribution",
+            find_kpi(kpis, "Severity distribution (Watch, Alert, Critical)"),
+        ),
+        (
+            "Clipping hours share",
+            find_kpi(kpis, "Clipping hours share (sample estimate)"),
         ),
     ]
     kpi_cards = "\n".join(kpi_card(label, value) for label, value in kpi_values)
@@ -149,7 +169,7 @@ def build_page(data):
         "Inverter ranking by mean performance ratio",
     )
 
-    figure_name = "fault_day_pr_101_202_303.png"
+    figure_name = "fault_day_pr_by_tier.png"
     investigation_rows = []
     for inverter_id in data["inverter_detail"]:
         for observation in data["inverter_detail"][inverter_id]:
@@ -176,13 +196,15 @@ def build_page(data):
         cells = [
             escape(item.get("inverter_id", "")),
             escape(item.get("window", "")),
+            escape(item.get("target_tier", "")),
             escape(item.get("mean_pr_gap", "")),
             "Yes" if detected else "No",
             tier_label(item.get("severity_tier", "")),
+            "Yes" if str(item.get("tier_matches_target", "")).lower() == "true" else "No",
         ]
         detection_rows.append("".join(f"<td>{cell}</td>" for cell in cells))
     detection_table = table(
-        ["Inverter", "Injected test window", "Mean PR gap", "Detected", "Tier"],
+        ["Inverter", "Injected test window", "Target", "Mean PR gap", "Detected", "Tier", "Target matched"],
         detection_rows,
         "Fault-window detection validation",
     )
@@ -229,7 +251,7 @@ def build_page(data):
             "    </section>",
             '    <section class="panel" aria-labelledby="blocks-title">',
             '      <h2 id="blocks-title">When and where</h2>',
-            '      <p class="panel-intro">The saved SQL result contains per-inverter aggregates; dates and times are matched from detected validation windows.</p>',
+            '      <p class="panel-intro">Dates and times are read from each saved rolling-block row in the SQL output.</p>',
             f"      {flagged_content}",
             "    </section>",
             '    <section class="panel" aria-labelledby="ranking-title">',
@@ -239,17 +261,21 @@ def build_page(data):
             "    </section>",
             '    <section class="panel" aria-labelledby="investigation-title">',
             '      <h2 id="investigation-title">Investigation: validation fault days</h2>',
-            '      <p class="panel-intro">Hourly PR series for validation inverters 101, 202, and 303.</p>',
+            '      <p class="panel-intro">Hourly PR series for one representative Watch, Alert, and Critical test window.</p>',
             '      <figure class="investigation-figure">',
-            f'        <img src="assets/{escape(figure_name)}" alt="Line chart comparing hourly performance ratio on the validation fault days for inverters 101, 202, and 303.">',
+            f'        <img src="assets/{escape(figure_name)}" alt="Three-panel line chart showing hourly performance ratio on representative Watch, Alert, and Critical test days.">',
             '        <figcaption>Chart from the saved fault-day analysis; the table below provides the underlying hourly values.</figcaption>',
             "      </figure>",
             f"      {investigation_table}",
             "    </section>",
             '    <section class="panel" aria-labelledby="detection-title">',
             '      <h2 id="detection-title">Detection check</h2>',
-            '      <p class="panel-intro">Detected status is written as Yes or No for each planted validation window.</p>',
+            '      <p class="panel-intro">Designed tier cases and hard expected misses are checked separately; these synthetic results are not real-world accuracy.</p>',
             f"      {detection_table}",
+            "    </section>",
+            '    <section class="panel" aria-labelledby="false-alarm-title">',
+            '      <h2 id="false-alarm-title">False-alarm check</h2>',
+            '      <p class="panel-intro">' + escape(data["false_alarm_check"][0]["note"]) + '</p>',
             "    </section>",
             '    <section class="panel" aria-labelledby="actions-title">',
             '      <h2 id="actions-title">What to do</h2>',

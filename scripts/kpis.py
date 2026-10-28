@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from transform import FAULT_WINDOWS
+
 
 # Paths are relative to the project root; all input tables are compact outputs.
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +13,7 @@ SEVERITY_PATH = TABLES_DIR / "flagged_blocks_by_severity.csv"
 FLAGGED_INVERTERS_PATH = PROJECT_ROOT / "output" / "sql_results" / "03_flagged_3h_blocks.csv"
 SCATTER_SAMPLE_PATH = TABLES_DIR / "scatter_sample_100k.csv"
 FAULT_VALIDATION_PATH = TABLES_DIR / "fault_detection_validation.csv"
+FALSE_ALARM_PATH = TABLES_DIR / "false_alarm_check.csv"
 OUTPUT_PATH = TABLES_DIR / "kpi_summary.csv"
 
 # Project assumptions and thresholds.
@@ -49,7 +52,7 @@ def main():
     require_columns(clipping_sample, ["AC_POWER"], "scatter_sample_100k.csv")
     require_columns(
         fault_validation,
-        ["detected"],
+        ["inverter_id", "target_tier", "detected", "tier_matches_target"],
         "fault_detection_validation.csv",
     )
     require_columns(
@@ -91,10 +94,52 @@ def main():
     )
     clipping_share = clipping_count / len(clipping_sample) * 100.0
 
-    detected_count = int(fault_validation["detected"].astype(bool).sum())
-    injected_window_count = len(fault_validation)
-    assert injected_window_count > 0, "Expected at least one injected fault window"
+    designed_validation = fault_validation[
+        fault_validation["target_tier"].isin(severity_labels)
+    ]
+    detected_flags = fault_validation["detected"].astype(str).str.lower().eq("true")
+    designed_detected = detected_flags.loc[designed_validation.index]
+    detected_count = int(designed_detected.sum())
+    injected_window_count = len(designed_validation)
+    assert injected_window_count > 0, "Expected designed fault windows"
     detection_rate = detected_count / injected_window_count * 100.0
+    faulted_inverters = {fault["inverter_id"] for fault in FAULT_WINDOWS}
+    non_faulted_inverter_count = FLEET_INVERTER_COUNT - len(faulted_inverters)
+    non_faulted_flags = flagged_inverters[
+        ~flagged_inverters["inverter_id"].isin(faulted_inverters)
+    ]
+    flagged_blocks_on_non_faulted = len(non_faulted_flags)
+    non_faulted_inverters_flagged = int(
+        non_faulted_flags["inverter_id"].nunique()
+    )
+    false_alarm_note = (
+        "Zero false alarms are expected here because non-faulted inverters share "
+        "the same weather and simulated PR; this checks identical peers only, "
+        "not noisy real data."
+    )
+    pd.DataFrame(
+        [
+            {
+                "faulted_inverters": len(faulted_inverters),
+                "non_faulted_inverters": non_faulted_inverter_count,
+                "flagged_blocks_on_non_faulted": flagged_blocks_on_non_faulted,
+                "non_faulted_inverters_flagged": non_faulted_inverters_flagged,
+                "note": false_alarm_note,
+            }
+        ]
+    ).to_csv(FALSE_ALARM_PATH, index=False)
+    tier_detection = []
+    for tier in severity_labels:
+        tier_rows = fault_validation[fault_validation["target_tier"] == tier]
+        tier_detection.append(
+            f"{tier}: {int(detected_flags.loc[tier_rows.index].sum())}/{len(tier_rows)}"
+        )
+    hard_rows = fault_validation[
+        fault_validation["target_tier"].str.contains("expected miss", case=False)
+    ]
+    hard_misses = int((~detected_flags.loc[hard_rows.index]).sum())
+    tier_detection.append(f"Hard cases (expected misses): {hard_misses}/{len(hard_rows)}")
+    detection_by_tier = "; ".join(tier_detection)
 
     kpi_rows = [
         {
@@ -155,20 +200,39 @@ def main():
             "KPI": "Fault detection rate",
             "Value": f"{detection_rate:.2f}% ({detected_count}/{injected_window_count})",
             "Unit": "% of injected windows",
-            "Definition and formula": "Detected injected windows / total injected windows * 100.",
+            "Definition and formula": "Detected designed Watch, Alert, and Critical windows / designed windows * 100; excludes hard cases labeled expected misses.",
             "Source": "output/tables/fault_detection_validation.csv",
-            "How to read it": "Checks the rolling three-hour fleet-median-gap rule against the three synthetic windows.",
-            "Limitation": "Only three synthetic windows; not a real-world performance estimate.",
+            "How to read it": "Checks the 12 designed tier-positive synthetic windows against the fixed rolling rule.",
+            "Limitation": "This controlled test is not a real-world accuracy estimate.",
+        },
+        {
+            "KPI": "False alarm blocks",
+            "Value": flagged_blocks_on_non_faulted,
+            "Unit": "blocks on non-faulted inverters",
+            "Definition and formula": "Count of saved flagged rolling blocks whose inverter ID is absent from FAULT_WINDOWS.",
+            "Source": "output/tables/false_alarm_check.csv and output/sql_results/03_flagged_3h_blocks.csv",
+            "How to read it": "Zero is expected because all non-faulted inverters share identical modeled weather and PR.",
+            "Limitation": "Confirms the rule does not misfire on identical simulated peers; it says nothing about noisy real data.",
+        },
+        {
+            "KPI": "Detection by target",
+            "Value": detection_by_tier,
+            "Unit": "detected / injected windows",
+            "Definition and formula": "Detected windows / injected windows by target tier; hard windows are expected misses.",
+            "Source": "output/tables/fault_detection_validation.csv",
+            "How to read it": "Separates the 12 designed tier tests from the three hard cases that demonstrate rule limits.",
+            "Limitation": "Synthetic checks do not establish real-world detection accuracy.",
         },
     ]
 
     kpi_summary = pd.DataFrame(kpi_rows)
-    assert len(kpi_summary) == 7, "Expected exactly seven KPI rows"
+    assert len(kpi_summary) == 9, "Expected exactly nine KPI rows"
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     kpi_summary.to_csv(OUTPUT_PATH, index=False)
     output_size = OUTPUT_PATH.stat().st_size
     assert output_size < MAX_OUTPUT_BYTES, "kpi_summary.csv must be under 1 MB"
     print(f"Saved {len(kpi_summary)} KPIs to {OUTPUT_PATH.relative_to(PROJECT_ROOT)}")
+    print(f"Saved false-alarm check to {FALSE_ALARM_PATH.relative_to(PROJECT_ROOT)}")
     print(f"Output size: {output_size:,} bytes")
 
 

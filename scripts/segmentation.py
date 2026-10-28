@@ -14,6 +14,21 @@ FLAGGED_SOURCE = PROJECT_ROOT / "output/sql_results/03_flagged_3h_blocks.csv"
 CHUNK_SIZE = 100_000  # inverter-hour rows per read
 FIGURE_DPI = 140  # dots per inch
 FAULT_IDS = {fault["inverter_id"] for fault in FAULT_WINDOWS}
+FAULT_COHORT_BY_INVERTER = {
+    fault["inverter_id"]: (
+        "Hard cases (expected misses)"
+        if "expected miss" in fault["target_tier"].lower()
+        else f"{fault['target_tier']}-target faults"
+    )
+    for fault in FAULT_WINDOWS
+}
+COHORT_ORDER = [
+    "Watch-target faults",
+    "Alert-target faults",
+    "Critical-target faults",
+    "Hard cases (expected misses)",
+    "Not faulted",
+]
 FAULT_WINDOW_BY_INVERTER = {
     fault["inverter_id"]: (fault["start"], fault["end"])
     for fault in FAULT_WINDOWS
@@ -121,9 +136,8 @@ def main():
 
         valid_pr = chunk[chunk["PERFORMANCE_RATIO"].notna()]
         valid_pr = valid_pr.copy()
-        cohort_names = {inverter_id: f"Faulted {inverter_id}" for inverter_id in FAULT_IDS}
-        valid_pr["cohort"] = valid_pr["INVERTER_ID"].map(cohort_names).fillna(
-            "Non-faulted"
+        valid_pr["cohort"] = valid_pr["INVERTER_ID"].map(FAULT_COHORT_BY_INVERTER).fillna(
+            "Not faulted"
         )
         overall_cohort_parts.append(
             valid_pr.groupby("cohort")["PERFORMANCE_RATIO"]
@@ -188,7 +202,7 @@ def main():
     fault_windows = pd.concat(fault_window_parts, ignore_index=True)
     fault_windows["DATE_TIME"] = pd.to_datetime(fault_windows["DATE_TIME"])
     fault_windows["cohort"] = fault_windows["INVERTER_ID"].map(
-        lambda value: f"Faulted {value}"
+        FAULT_COHORT_BY_INVERTER
     )
     normal_rows = pd.read_csv(
         INPUT_CSV,
@@ -217,14 +231,8 @@ def main():
         "cohort"
     )[["sum", "count"]].sum()
     cohort_parts = []
-    overall_faulted = overall_cohort_summary.loc[
-        [f"Faulted {inverter_id}" for inverter_id in sorted(FAULT_IDS)]
-    ].sum()
-    overall_cohorts = [
-        ("All faulted inverters", overall_faulted),
-        ("Non-faulted", overall_cohort_summary.loc["Non-faulted"]),
-    ]
-    for overall_label, rows in overall_cohorts:
+    for overall_label in COHORT_ORDER:
+        rows = overall_cohort_summary.loc[overall_label]
         cohort_parts.append(
             {
                 "fault_cohort": overall_label,
@@ -233,8 +241,8 @@ def main():
                 "mean_pr": rows["sum"] / rows["count"],
             }
         )
-    for inverter_id in sorted(FAULT_IDS):
-        rows = fault_windows[fault_windows["INVERTER_ID"] == inverter_id]
+    for cohort in COHORT_ORDER[:-1]:
+        rows = fault_windows[fault_windows["cohort"] == cohort]
         fault_mean = rows["PERFORMANCE_RATIO"].mean()
         fault_count = rows["PERFORMANCE_RATIO"].count()
         times = rows["DATE_TIME"]
@@ -243,13 +251,13 @@ def main():
         cohort_parts.extend(
             [
                 {
-                    "fault_cohort": f"Faulted {inverter_id}",
+                    "fault_cohort": cohort,
                     "comparison_group": "Fault window",
                     "valid_pr_rows": fault_count,
                     "mean_pr": fault_mean,
                 },
                 {
-                    "fault_cohort": f"Faulted {inverter_id}",
+                    "fault_cohort": cohort,
                     "comparison_group": "Non-faulted peers, same hours",
                     "valid_pr_rows": normal_count,
                     "mean_pr": normal_sum / normal_count if normal_count else float("nan"),
@@ -260,18 +268,16 @@ def main():
     cohort_comparison.to_csv(TABLES / "cohort_fault_vs_normal.csv", index=False)
 
     flagged_blocks = pd.read_csv(FLAGGED_SOURCE)
-    cohort_names = {inverter_id: f"Faulted {inverter_id}" for inverter_id in FAULT_IDS}
     flagged_blocks["cohort"] = flagged_blocks["inverter_id"].map(
-        cohort_names
-    ).fillna("Non-faulted")
+        FAULT_COHORT_BY_INVERTER
+    ).fillna("Not faulted")
     flag_summary = flagged_blocks.groupby(
         ["cohort", "severity_tier"]
     ).size().rename("flagged_blocks").reset_index().rename(
         columns={"severity_tier": "severity"}
     )
-    all_cohorts = ["Non-faulted"] + [f"Faulted {value}" for value in sorted(FAULT_IDS)]
     complete_index = pd.MultiIndex.from_product(
-        [all_cohorts, SEVERITY_ORDER], names=["cohort", "severity"]
+        [COHORT_ORDER, SEVERITY_ORDER], names=["cohort", "severity"]
     )
     flag_summary = (
         flag_summary.set_index(["cohort", "severity"])

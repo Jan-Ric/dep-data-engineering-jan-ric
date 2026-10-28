@@ -13,6 +13,7 @@ REQUIRED_KEYS = (
     "flagged_blocks",
     "ranking",
     "detection_validation",
+    "false_alarm_check",
     "inverter_detail",
     "hourly_mean_pr",
 )
@@ -63,7 +64,7 @@ def build_severity_counts(rows):
 
 
 def build_inverter_detail(rows, validation_rows):
-    inverter_ids = {row["inverter_id"] for row in validation_rows}
+    inverter_ids = {row["INVERTER_ID"] for row in rows}
     detail = {inverter_id: [] for inverter_id in sorted(inverter_ids, key=int)}
     for row in rows:
         inverter_id = row["INVERTER_ID"]
@@ -84,7 +85,8 @@ def main():
     flagged_block_rows = load_sql_csv("03_flagged_3h_blocks.csv")
     ranking = load_csv("inverter_ranking.csv")[:10]
     detection_validation = load_csv("fault_detection_validation.csv")
-    fault_day_rows = load_csv("fault_day_pr_101_202_303.csv")
+    fault_day_rows = load_csv("fault_day_pr_by_tier.csv")
+    false_alarm_check = load_csv("false_alarm_check.csv")
     hourly_mean_pr = load_csv("hourly_mean_pr.csv")
 
     flagged_blocks = build_flagged_blocks(flagged_block_rows)
@@ -101,6 +103,7 @@ def main():
         "flagged_blocks": flagged_blocks,
         "ranking": ranking,
         "detection_validation": detection_validation,
+        "false_alarm_check": false_alarm_check,
         "inverter_detail": build_inverter_detail(fault_day_rows, detection_validation),
         "hourly_mean_pr": hourly_mean_pr,
     }

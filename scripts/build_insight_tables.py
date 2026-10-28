@@ -19,14 +19,18 @@ FAULT_DAYS = {
     fault["inverter_id"]: fault["start"][:10] for fault in FAULT_WINDOWS
 }
 FAULT_WINDOW_BY_INVERTER = {
-    fault["inverter_id"]: (fault["start"], fault["end"])
+    fault["inverter_id"]: fault
     for fault in FAULT_WINDOWS
 }
 VALIDATION_TIMES = {
-    f"{fault_day} {hour:02d}:00:00"
-    for fault_day in FAULT_DAYS.values()
-    for hour in range(10, 13)
+    timestamp.strftime("%Y-%m-%d %H:%M:%S")
+    for fault in FAULT_WINDOWS
+    for timestamp in pd.date_range(fault["start"], fault["end"], freq="h")
 }
+FAULT_DAY_REPRESENTATIVES = {}
+for fault in FAULT_WINDOWS:
+    if fault["target_tier"] in ("Watch", "Alert", "Critical"):
+        FAULT_DAY_REPRESENTATIVES.setdefault(fault["target_tier"], fault)
 METRICS_STATS_COLUMNS = ["AC_POWER", "IRRADIANCE", "PERFORMANCE_RATIO"]
 COMPUTATION_STATS_COLUMNS = [
     "dc_power_kw",
@@ -175,7 +179,9 @@ def main() -> None:
         )
         computation_stats_parts.append(chunk[COMPUTATION_STATS_COLUMNS].copy())
 
-        for inverter_id, fault_day in FAULT_DAYS.items():
+        for tier, fault in FAULT_DAY_REPRESENTATIVES.items():
+            inverter_id = fault["inverter_id"]
+            fault_day = fault["start"][:10]
             fault_rows = chunk[
                 (chunk["inverter_id"] == inverter_id)
                 & chunk["date_time"].str.startswith(fault_day)
@@ -185,6 +191,13 @@ def main() -> None:
         print(f"Processed computation chunk {chunk_number}: {len(chunk):,} rows")
 
     fault_day_computation = pd.concat(fault_day_computation_parts, ignore_index=True)
+    target_tier_by_inverter = {
+        fault["inverter_id"]: fault["target_tier"]
+        for fault in FAULT_DAY_REPRESENTATIVES.values()
+    }
+    fault_day_computation["target_tier"] = fault_day_computation[
+        "inverter_id"
+    ].map(target_tier_by_inverter)
     fault_day_computation = fault_day_computation.rename(
         columns={
             "inverter_id": "INVERTER_ID",
@@ -193,7 +206,7 @@ def main() -> None:
         }
     )
     fault_day_computation.to_csv(
-        TABLE_DIRECTORY / "fault_day_pr_101_202_303.csv", index=False
+        TABLE_DIRECTORY / "fault_day_pr_by_tier.csv", index=False
     )
 
     flagged_source = SQL_RESULTS_DIRECTORY / "03_flagged_3h_blocks.csv"
@@ -214,16 +227,20 @@ def main() -> None:
         validation_data["median_pr"] - validation_data["PERFORMANCE_RATIO"]
     )
     validation_rows = []
-    for inverter_id, (window_start, window_end) in FAULT_WINDOW_BY_INVERTER.items():
+    for inverter_id, fault in FAULT_WINDOW_BY_INVERTER.items():
+        window_start = fault["start"]
+        window_end = fault["end"]
         window = validation_data[
             validation_data["INVERTER_ID"].eq(inverter_id)
             & validation_data["DATE_TIME"].between(window_start, window_end)
         ].sort_values("DATE_TIME")
         mean_pr_gap = float(window["pr_gap"].mean())
+        expected_times = pd.date_range(window_start, window_end, freq="h").strftime(
+            "%Y-%m-%d %H:%M:%S"
+        ).tolist()
         qualifying = (
             len(window) == 3
-            and window["DATE_TIME"].tolist()
-            == [window_start, window_start[:11] + "11:00:00", window_end]
+            and window["DATE_TIME"].tolist() == expected_times
             and window["IRRADIANCE"].gt(200).all()
             and window["PERFORMANCE_RATIO"].notna().all()
             and mean_pr_gap >= 0.05
@@ -236,13 +253,21 @@ def main() -> None:
             severity_tier = "Alert"
         else:
             severity_tier = "Critical"
+        expected_miss = "expected miss" in fault["target_tier"].lower()
+        tier_matches_target = (
+            not qualifying
+            if expected_miss
+            else qualifying and severity_tier == fault["target_tier"]
+        )
         validation_rows.append(
             {
                 "inverter_id": inverter_id,
                 "window": f"{window_start} to {window_end}",
+                "target_tier": fault["target_tier"],
                 "mean_pr_gap": mean_pr_gap,
                 "detected": bool(qualifying),
                 "severity_tier": severity_tier,
+                "tier_matches_target": bool(tier_matches_target),
             }
         )
     validation_path = TABLE_DIRECTORY / "fault_detection_validation.csv"
@@ -257,7 +282,7 @@ def main() -> None:
     output_files = [
         TABLE_DIRECTORY / "hourly_mean_pr.csv",
         TABLE_DIRECTORY / "monthly_mean_pr_by_group.csv",
-        TABLE_DIRECTORY / "fault_day_pr_101_202_303.csv",
+        TABLE_DIRECTORY / "fault_day_pr_by_tier.csv",
         TABLE_DIRECTORY / "flagged_blocks_by_severity.csv",
         validation_path,
         scatter_path,

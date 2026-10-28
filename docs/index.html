@@ -18,19 +18,39 @@
       <h2 id="overview-title">Fleet overview</h2>
       <div class="kpi-grid"><div class="kpi">
   <span class="kpi-label">Flagged 3-hour blocks</span>
-  <span class="kpi-value">1</span>
+  <span class="kpi-value">35</span>
 </div>
 <div class="kpi">
   <span class="kpi-label">Flagged inverter share</span>
-  <span class="kpi-value">0.12% (1/830)</span>
+  <span class="kpi-value">1.57% (13/830)</span>
 </div>
 <div class="kpi">
   <span class="kpi-label">Fault detection rate</span>
-  <span class="kpi-value">33.33% (1/3)</span>
+  <span class="kpi-value">100.00% (12/12)</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">False alarm blocks</span>
+  <span class="kpi-value">0</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Detection by target</span>
+  <span class="kpi-value">Watch: 4/4; Alert: 4/4; Critical: 4/4; Hard cases (expected misses): 3/3</span>
 </div>
 <div class="kpi">
   <span class="kpi-label">Pooled mean hourly PR</span>
-  <span class="kpi-value">0.9292531056819616</span>
+  <span class="kpi-value">0.9292514749567232</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Fleet mean PR shortfall</span>
+  <span class="kpi-value">0.07074852504327678</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Severity distribution</span>
+  <span class="kpi-value">Watch: 16 (45.71%); Alert: 15 (42.86%); Critical: 4 (11.43%)</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Clipping hours share</span>
+  <span class="kpi-value">2.1640%</span>
 </div></div>
     </section>
     <section class="panel" aria-labelledby="severity-title">
@@ -38,23 +58,23 @@
       <p class="panel-intro">Saved rolling blocks by tier; each tier is labeled as well as color-coded.</p>
       <div class="severity-grid"><div class="severity-item tier-watch">
   <span class="severity-label"><span class="tier tier-watch">Watch</span> blocks</span>
-  <span class="severity-value">1</span>
-  <span>100.00% of saved blocks</span>
+  <span class="severity-value">16</span>
+  <span>45.71% of saved blocks</span>
 </div>
 <div class="severity-item tier-alert">
   <span class="severity-label"><span class="tier tier-alert">Alert</span> blocks</span>
-  <span class="severity-value">0</span>
-  <span>0.00% of saved blocks</span>
+  <span class="severity-value">15</span>
+  <span>42.86% of saved blocks</span>
 </div>
 <div class="severity-item tier-critical">
   <span class="severity-label"><span class="tier tier-critical">Critical</span> blocks</span>
-  <span class="severity-value">0</span>
-  <span>0.00% of saved blocks</span>
+  <span class="severity-value">4</span>
+  <span>11.43% of saved blocks</span>
 </div></div>
     </section>
     <section class="panel" aria-labelledby="blocks-title">
       <h2 id="blocks-title">When and where</h2>
-      <p class="panel-intro">The saved SQL result contains per-inverter aggregates; dates and times are matched from detected validation windows.</p>
+      <p class="panel-intro">Dates and times are read from each saved rolling-block row in the SQL output.</p>
       <div class="table-scroll">
 <table>
 <caption class="visually-hidden">Flagged inverter blocks</caption>
@@ -65,7 +85,41 @@
 <th scope="col">Tier</th>
 </tr></thead>
 <tbody>
-<tr><td>202</td><td>2025-06-20 10:00 to 12:00</td><td>0.06219851694865586</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>456</td><td>2025-11-18 14:00 to 16:00</td><td>0.2800356726782316</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>808</td><td>2025-09-29 08:00 to 10:00</td><td>0.28001815809264213</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>789</td><td>2025-12-24 14:00 to 16:00</td><td>0.2799911036914747</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>123</td><td>2025-10-09 14:00 to 16:00</td><td>0.2799877656100029</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>808</td><td>2025-09-29 09:00 to 11:00</td><td>0.1992381673657501</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>123</td><td>2025-10-09 13:00 to 15:00</td><td>0.19679779119235233</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>456</td><td>2025-11-18 13:00 to 15:00</td><td>0.19422708280394382</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>789</td><td>2025-12-24 13:00 to 15:00</td><td>0.1930672845723226</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 14:00 to 16:00</td><td>0.15002185794958325</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>707</td><td>2025-08-21 14:00 to 16:00</td><td>0.15001428534674766</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>404</td><td>2025-05-19 08:00 to 10:00</td><td>0.15000117703032959</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>505</td><td>2025-06-25 08:00 to 10:00</td><td>0.13654759344105297</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>707</td><td>2025-08-21 13:00 to 15:00</td><td>0.10856486952025972</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>404</td><td>2025-05-19 09:00 to 11:00</td><td>0.10822454461812432</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>505</td><td>2025-06-25 09:00 to 11:00</td><td>0.10744795072869646</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 13:00 to 15:00</td><td>0.10417707544863901</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 15:00 to 17:00</td><td>0.10082525644507412</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>123</td><td>2025-10-09 12:00 to 14:00</td><td>0.1005084257016936</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>808</td><td>2025-09-29 10:00 to 12:00</td><td>0.1002565529821996</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>350</td><td>2025-03-04 14:00 to 16:00</td><td>0.0999786764053534</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>350</td><td>2025-03-04 15:00 to 17:00</td><td>0.0999786764053534</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>456</td><td>2025-11-18 12:00 to 14:00</td><td>0.09932765253230191</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>789</td><td>2025-12-24 12:00 to 14:00</td><td>0.09745177197814203</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>303</td><td>2025-04-17 15:00 to 17:00</td><td>0.07500122409733896</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>118</td><td>2025-02-21 14:00 to 16:00</td><td>0.07498403033721279</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>101</td><td>2025-01-22 14:00 to 16:00</td><td>0.07496576941548809</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>202</td><td>2025-03-11 15:00 to 17:00</td><td>0.07495470548641843</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>303</td><td>2025-04-17 14:00 to 16:00</td><td>0.06201028446592564</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>118</td><td>2025-02-21 13:00 to 15:00</td><td>0.05999365844749819</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>202</td><td>2025-03-11 14:00 to 16:00</td><td>0.05902162655208446</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>404</td><td>2025-05-19 10:00 to 12:00</td><td>0.057411378377939006</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>101</td><td>2025-01-22 13:00 to 15:00</td><td>0.055687811534064435</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>505</td><td>2025-06-25 10:00 to 12:00</td><td>0.05542521270130015</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>350</td><td>2025-03-04 13:00 to 15:00</td><td>0.05330791707364909</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>707</td><td>2025-08-21 12:00 to 14:00</td><td>0.05264806253116231</td><td><span class="tier tier-watch">Watch</span></td></tr>
 </tbody>
 </table>
 </div><p class="panel-intro">Overlapping rolling blocks count separately.</p>
@@ -101,9 +155,9 @@
     </section>
     <section class="panel" aria-labelledby="investigation-title">
       <h2 id="investigation-title">Investigation: validation fault days</h2>
-      <p class="panel-intro">Hourly PR series for validation inverters 101, 202, and 303.</p>
+      <p class="panel-intro">Hourly PR series for one representative Watch, Alert, and Critical test window.</p>
       <figure class="investigation-figure">
-        <img src="assets/fault_day_pr_101_202_303.png" alt="Line chart comparing hourly performance ratio on the validation fault days for inverters 101, 202, and 303.">
+        <img src="assets/fault_day_pr_by_tier.png" alt="Three-panel line chart showing hourly performance ratio on representative Watch, Alert, and Critical test days.">
         <figcaption>Chart from the saved fault-day analysis; the table below provides the underlying hourly values.</figcaption>
       </figure>
       <div class="table-scroll">
@@ -115,102 +169,120 @@
 <th scope="col">Performance ratio</th>
 </tr></thead>
 <tbody>
-<tr><td>101</td><td>2025-03-15 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 06:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 07:00:00</td><td>0.9732886947892258</td></tr>
-<tr><td>101</td><td>2025-03-15 08:00:00</td><td>0.9530854600503744</td></tr>
-<tr><td>101</td><td>2025-03-15 09:00:00</td><td>0.9360644132041356</td></tr>
-<tr><td>101</td><td>2025-03-15 10:00:00</td><td>0.9188725344329848</td></tr>
-<tr><td>101</td><td>2025-03-15 11:00:00</td><td>0.859790773105645</td></tr>
-<tr><td>101</td><td>2025-03-15 12:00:00</td><td>0.8276139888700876</td></tr>
-<tr><td>101</td><td>2025-03-15 13:00:00</td><td>0.8108109428217102</td></tr>
-<tr><td>101</td><td>2025-03-15 14:00:00</td><td>0.9023166163779164</td></tr>
-<tr><td>101</td><td>2025-03-15 15:00:00</td><td>0.902797860429326</td></tr>
-<tr><td>101</td><td>2025-03-15 16:00:00</td><td>0.9170498831441108</td></tr>
-<tr><td>101</td><td>2025-03-15 17:00:00</td><td>0.9411407830567052</td></tr>
-<tr><td>101</td><td>2025-03-15 18:00:00</td><td>0.9608838532859098</td></tr>
-<tr><td>101</td><td>2025-03-15 19:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-03-15 23:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 06:00:00</td><td>0.972408998146254</td></tr>
-<tr><td>202</td><td>2025-06-20 07:00:00</td><td>0.96350640605741</td></tr>
-<tr><td>202</td><td>2025-06-20 08:00:00</td><td>0.9492048661234036</td></tr>
-<tr><td>202</td><td>2025-06-20 09:00:00</td><td>0.931423355662667</td></tr>
-<tr><td>202</td><td>2025-06-20 10:00:00</td><td>0.8731603227771801</td></tr>
-<tr><td>202</td><td>2025-06-20 11:00:00</td><td>0.830257723267358</td></tr>
-<tr><td>202</td><td>2025-06-20 12:00:00</td><td>0.8129168380595153</td></tr>
-<tr><td>202</td><td>2025-06-20 13:00:00</td><td>0.8701979164564448</td></tr>
-<tr><td>202</td><td>2025-06-20 14:00:00</td><td>0.89940514348886</td></tr>
-<tr><td>202</td><td>2025-06-20 15:00:00</td><td>0.9109037123534895</td></tr>
-<tr><td>202</td><td>2025-06-20 16:00:00</td><td>0.9279239936732486</td></tr>
-<tr><td>202</td><td>2025-06-20 17:00:00</td><td>0.9490636897844978</td></tr>
-<tr><td>202</td><td>2025-06-20 18:00:00</td><td>0.9605209805676244</td></tr>
-<tr><td>202</td><td>2025-06-20 19:00:00</td><td>0.9694077850921764</td></tr>
-<tr><td>202</td><td>2025-06-20 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>202</td><td>2025-06-20 23:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 06:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 07:00:00</td><td>0.9696513691694676</td></tr>
-<tr><td>303</td><td>2025-09-10 08:00:00</td><td>0.9473151007916736</td></tr>
-<tr><td>303</td><td>2025-09-10 09:00:00</td><td>0.9358883974405996</td></tr>
-<tr><td>303</td><td>2025-09-10 10:00:00</td><td>0.9512628831391144</td></tr>
-<tr><td>303</td><td>2025-09-10 11:00:00</td><td>0.940888148926347</td></tr>
-<tr><td>303</td><td>2025-09-10 12:00:00</td><td>0.9012312280317276</td></tr>
-<tr><td>303</td><td>2025-09-10 13:00:00</td><td>0.9348895448305622</td></tr>
-<tr><td>303</td><td>2025-09-10 14:00:00</td><td>0.9335656658687448</td></tr>
-<tr><td>303</td><td>2025-09-10 15:00:00</td><td>0.9428419563150336</td></tr>
-<tr><td>303</td><td>2025-09-10 16:00:00</td><td>0.9472888473383114</td></tr>
-<tr><td>303</td><td>2025-09-10 17:00:00</td><td>0.9662263066721264</td></tr>
-<tr><td>303</td><td>2025-09-10 18:00:00</td><td>0.9780653010878952</td></tr>
-<tr><td>303</td><td>2025-09-10 19:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>303</td><td>2025-09-10 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 06:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 07:00:00</td><td>0.9778094123996744</td></tr>
+<tr><td>101</td><td>2025-01-22 08:00:00</td><td>0.9626949072671372</td></tr>
+<tr><td>101</td><td>2025-01-22 09:00:00</td><td>0.9473178423255204</td></tr>
+<tr><td>101</td><td>2025-01-22 10:00:00</td><td>0.9353854527524912</td></tr>
+<tr><td>101</td><td>2025-01-22 11:00:00</td><td>0.9277052437389546</td></tr>
+<tr><td>101</td><td>2025-01-22 12:00:00</td><td>0.9208373768478656</td></tr>
+<tr><td>101</td><td>2025-01-22 13:00:00</td><td>0.9173432029555744</td></tr>
+<tr><td>101</td><td>2025-01-22 14:00:00</td><td>0.8321800483847152</td></tr>
+<tr><td>101</td><td>2025-01-22 15:00:00</td><td>0.8632915022407385</td></tr>
+<tr><td>101</td><td>2025-01-22 16:00:00</td><td>0.8848840784787858</td></tr>
+<tr><td>101</td><td>2025-01-22 17:00:00</td><td>0.9559813763621172</td></tr>
+<tr><td>101</td><td>2025-01-22 18:00:00</td><td>0.9700299809583236</td></tr>
+<tr><td>101</td><td>2025-01-22 19:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 06:00:00</td><td>0.969133516935454</td></tr>
+<tr><td>404</td><td>2025-05-19 07:00:00</td><td>0.956297063764758</td></tr>
+<tr><td>404</td><td>2025-05-19 08:00:00</td><td>0.813072124392199</td></tr>
+<tr><td>404</td><td>2025-05-19 09:00:00</td><td>0.7734333802014944</td></tr>
+<tr><td>404</td><td>2025-05-19 10:00:00</td><td>0.7442545176258124</td></tr>
+<tr><td>404</td><td>2025-05-19 11:00:00</td><td>0.9026799254195416</td></tr>
+<tr><td>404</td><td>2025-05-19 12:00:00</td><td>0.8605664600961553</td></tr>
+<tr><td>404</td><td>2025-05-19 13:00:00</td><td>0.9052556257882464</td></tr>
+<tr><td>404</td><td>2025-05-19 14:00:00</td><td>0.9087014359481138</td></tr>
+<tr><td>404</td><td>2025-05-19 15:00:00</td><td>0.9169031434056364</td></tr>
+<tr><td>404</td><td>2025-05-19 16:00:00</td><td>0.926806102857143</td></tr>
+<tr><td>404</td><td>2025-05-19 17:00:00</td><td>0.9408979977966362</td></tr>
+<tr><td>404</td><td>2025-05-19 18:00:00</td><td>0.9512222725763712</td></tr>
+<tr><td>404</td><td>2025-05-19 19:00:00</td><td>0.9570788858271424</td></tr>
+<tr><td>404</td><td>2025-05-19 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>404</td><td>2025-05-19 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 06:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 07:00:00</td><td>0.9691944048184392</td></tr>
+<tr><td>808</td><td>2025-09-29 08:00:00</td><td>0.7015925466288588</td></tr>
+<tr><td>808</td><td>2025-09-29 09:00:00</td><td>0.6199317777788501</td></tr>
+<tr><td>808</td><td>2025-09-29 10:00:00</td><td>0.6141417052710249</td></tr>
+<tr><td>808</td><td>2025-09-29 11:00:00</td><td>0.880344466026439</td></tr>
+<tr><td>808</td><td>2025-09-29 12:00:00</td><td>0.9036684494802836</td></tr>
+<tr><td>808</td><td>2025-09-29 13:00:00</td><td>0.9303331876297082</td></tr>
+<tr><td>808</td><td>2025-09-29 14:00:00</td><td>0.9294637145479832</td></tr>
+<tr><td>808</td><td>2025-09-29 15:00:00</td><td>0.9252230680340644</td></tr>
+<tr><td>808</td><td>2025-09-29 16:00:00</td><td>0.9423182145109756</td></tr>
+<tr><td>808</td><td>2025-09-29 17:00:00</td><td>0.9582476549895852</td></tr>
+<tr><td>808</td><td>2025-09-29 18:00:00</td><td>0.9720549978862956</td></tr>
+<tr><td>808</td><td>2025-09-29 19:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>808</td><td>2025-09-29 23:00:00</td><td>No daytime reading</td></tr>
 </tbody>
 </table>
 </div>
     </section>
     <section class="panel" aria-labelledby="detection-title">
       <h2 id="detection-title">Detection check</h2>
-      <p class="panel-intro">Detected status is written as Yes or No for each planted validation window.</p>
+      <p class="panel-intro">Designed tier cases and hard expected misses are checked separately; these synthetic results are not real-world accuracy.</p>
       <div class="table-scroll">
 <table>
 <caption class="visually-hidden">Fault-window detection validation</caption>
 <thead><tr>
 <th scope="col">Inverter</th>
 <th scope="col">Injected test window</th>
+<th scope="col">Target</th>
 <th scope="col">Mean PR gap</th>
 <th scope="col">Detected</th>
 <th scope="col">Tier</th>
+<th scope="col">Target matched</th>
 </tr></thead>
 <tbody>
-<tr><td>101</td><td>2025-03-15 10:00:00 to 2025-03-15 12:00:00</td><td>0.011440677563453497</td><td>No</td><td>Below Watch</td></tr>
-<tr><td>202</td><td>2025-06-20 10:00:00 to 2025-06-20 12:00:00</td><td>0.06219851694865586</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>303</td><td>2025-09-10 10:00:00 to 2025-09-10 12:00:00</td><td>0.013847592642688311</td><td>No</td><td>Below Watch</td></tr>
+<tr><td>101</td><td>2025-01-22 14:00:00 to 2025-01-22 16:00:00</td><td>Watch</td><td>0.07496576941548809</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
+<tr><td>118</td><td>2025-02-21 14:00:00 to 2025-02-21 16:00:00</td><td>Watch</td><td>0.07498403033721279</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
+<tr><td>202</td><td>2025-03-11 15:00:00 to 2025-03-11 17:00:00</td><td>Watch</td><td>0.07495470548641843</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
+<tr><td>303</td><td>2025-04-17 15:00:00 to 2025-04-17 17:00:00</td><td>Watch</td><td>0.07500122409733896</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
+<tr><td>404</td><td>2025-05-19 08:00:00 to 2025-05-19 10:00:00</td><td>Alert</td><td>0.15000117703032959</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
+<tr><td>505</td><td>2025-06-25 08:00:00 to 2025-06-25 10:00:00</td><td>Alert</td><td>0.13654759344105297</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
+<tr><td>606</td><td>2025-07-08 14:00:00 to 2025-07-08 16:00:00</td><td>Alert</td><td>0.15002185794958325</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
+<tr><td>707</td><td>2025-08-21 14:00:00 to 2025-08-21 16:00:00</td><td>Alert</td><td>0.15001428534674766</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
+<tr><td>808</td><td>2025-09-29 08:00:00 to 2025-09-29 10:00:00</td><td>Critical</td><td>0.28001815809264213</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
+<tr><td>123</td><td>2025-10-09 14:00:00 to 2025-10-09 16:00:00</td><td>Critical</td><td>0.2799877656100029</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
+<tr><td>456</td><td>2025-11-18 14:00:00 to 2025-11-18 16:00:00</td><td>Critical</td><td>0.2800356726782316</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
+<tr><td>789</td><td>2025-12-24 14:00:00 to 2025-12-24 16:00:00</td><td>Critical</td><td>0.2799911036914747</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
+<tr><td>150</td><td>2025-01-01 09:00:00 to 2025-01-01 11:00:00</td><td>Below Watch (expected miss)</td><td>0.024993854990795723</td><td>No</td><td>Below Watch</td><td>Yes</td></tr>
+<tr><td>250</td><td>2025-02-04 14:00:00 to 2025-02-04 16:00:00</td><td>Below Watch (expected miss)</td><td>0.03496990434871061</td><td>No</td><td>Below Watch</td><td>Yes</td></tr>
+<tr><td>350</td><td>2025-03-04 15:00:00 to 2025-03-04 16:00:00</td><td>Too short (expected miss)</td><td>0.1499680146080301</td><td>No</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
 </tbody>
 </table>
 </div>
+    </section>
+    <section class="panel" aria-labelledby="false-alarm-title">
+      <h2 id="false-alarm-title">False-alarm check</h2>
+      <p class="panel-intro">Zero false alarms are expected here because non-faulted inverters share the same weather and simulated PR; this checks identical peers only, not noisy real data.</p>
     </section>
     <section class="panel" aria-labelledby="actions-title">
       <h2 id="actions-title">What to do</h2>

@@ -72,7 +72,27 @@ $$
 \eta_{inv,degraded} = \eta_{inv}\left[1 - \beta\max(0,T_{internal,fault}-T_{threshold})\right]
 $$
 
-The demonstration uses $\beta=0.01$ and a 45°C threshold. The configured windows are inverter 101 (+4°C, 2025-03-15 10:00–12:00), inverter 202 (+8°C, 2025-06-20 10:00–12:00), and inverter 303 (+12°C, 2025-09-10 10:00–12:00). They are synthetic test scenarios, not observed equipment faults.
+The demonstration uses $\beta=0.01$ and a 45°C threshold. The configured Formula F windows, imported by downstream scripts from `scripts/transform.py`, are:
+
+| Inverter | Date | Hours | Irradiance per hour (W/m²) | Baseline internal temperature per hour (°C) | $\Delta T_{fault}$ (°C) | Predicted mean `pr_gap` | Target |
+|---:|---|---|---|---|---:|---:|---|
+| 101 | 2025-01-22 | 14:00–16:00 | 626.2, 468.1, 396.4 | 39.03, 36.64, 34.99 | 16.14 | 0.07497 | Watch |
+| 118 | 2025-02-21 | 14:00–16:00 | 660.4, 583.0, 330.2 | 39.13, 37.83, 33.53 | 16.21 | 0.07498 | Watch |
+| 202 | 2025-03-11 | 15:00–17:00 | 673.8, 496.8, 309.0 | 42.72, 39.53, 36.57 | 13.53 | 0.07496 | Watch |
+| 303 | 2025-04-17 | 15:00–17:00 | 693.4, 521.1, 302.5 | 43.90, 40.96, 36.39 | 12.77 | 0.07500 | Watch |
+| 404 | 2025-05-19 | 08:00–10:00 | 337.3, 509.2, 649.3 | 36.07, 39.17, 41.50 | 22.29 | 0.15000 | Alert |
+| 505 | 2025-06-25 | 08:00–10:00 | 309.7, 502.7, 695.4 | 35.47, 43.36, 49.57 | 18.81 | 0.15001 | Alert |
+| 606 | 2025-07-08 | 14:00–16:00 | 472.8, 643.4, 393.0 | 35.86, 37.86, 34.72 | 24.85 | 0.15002 | Alert |
+| 707 | 2025-08-21 | 14:00–16:00 | 508.3, 586.5, 370.0 | 41.33, 42.49, 37.44 | 20.89 | 0.15001 | Alert |
+| 808 | 2025-09-29 | 08:00–10:00 | 336.1, 534.1, 543.5 | 34.69, 41.41, 41.89 | 35.98 | 0.28002 | Critical |
+| 123 | 2025-10-09 | 14:00–16:00 | 616.5, 531.0, 352.4 | 41.36, 39.76, 34.95 | 36.52 | 0.27999 | Critical |
+| 456 | 2025-11-18 | 14:00–16:00 | 594.4, 563.2, 350.6 | 40.02, 38.36, 35.03 | 37.28 | 0.28004 | Critical |
+| 789 | 2025-12-24 | 14:00–16:00 | 608.7, 524.8, 364.4 | 40.19, 39.49, 36.29 | 36.53 | 0.27999 | Critical |
+| 150 | 2025-01-01 | 09:00–11:00 | 310.8, 531.3, 632.2 | 33.60, 36.81, 38.04 | 11.53 | 0.02499 | Below Watch (expected miss) |
+| 250 | 2025-02-04 | 14:00–16:00 | 478.1, 453.5, 353.0 | 37.82, 36.47, 34.21 | 12.57 | 0.03497 | Below Watch (expected miss) |
+| 350 | 2025-03-04 | 15:00–16:00 | 693.6, 547.5 | 40.30, 37.98 | 22.06 | 0.14997 | Too short (expected miss) |
+
+The 12 positive tests span Watch, Alert, and Critical. The three hard windows deliberately test two sub-0.05 gaps and one two-hour run. The positive-test $\Delta T_{fault}$ values exceed the README's earlier 2 to 15°C suggestion for some tiers, especially the Critical cases, because larger stress values were required to reach the intended Critical gap in this model. These are synthetic test scenarios, not observed equipment faults; the severe offsets are not proposed as realistic field temperatures.
 
 ## Field List
 
@@ -109,6 +129,6 @@ The simulation uses 63.3 MWp, 830 inverters, a 315 Wp module rating, 0.983 Euro 
 
 - Absolute PR gap: $1-PR \ge 0.05$.
 - Irradiance: greater than 200 W/m² for every hour in a qualifying three-hour block.
-- Severity: Watch $[0.05,0.10)$, Alert $[0.10,0.20)$, Critical $\ge 0.20$.
+- Severity: Watch $[0.05,0.10)$, Alert $[0.10,0.20]$, Critical $> 0.20$.
 
 These are educational demonstration assumptions. Since the baseline PR itself can be below 0.95, an absolute gap is not by itself evidence of inverter faults.

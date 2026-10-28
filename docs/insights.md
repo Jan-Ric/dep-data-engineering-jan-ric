@@ -24,11 +24,11 @@ Mean daytime PR is higher in the early and later daylight hours and lower around
 
 The monthly faulted and non-faulted group averages are very close across the year. Only three of 830 modeled inverters have injected fault windows, so the monthly group means dilute those few hours and should not be read as a sensitive fault detector.
 
-### PR on the Three Fault Days
+### PR on Representative Tier Fault Days
 
-![Performance ratio on fault days for inverters 101, 202, and 303](../output/figures/fault_day_pr_101_202_303.png)
+![Performance ratio on representative Watch, Alert, and Critical fault days](../output/figures/fault_day_pr_by_tier.png)
 
-The traces show hourly PR for inverter 101 on March 15, inverter 202 on June 20, and inverter 303 on September 10, 2025. The plots provide context around the configured 10:00–12:00 injected windows; the saved validation table reports a detection for inverter 202 only.
+The three panels show one representative inverter-day for each designed positive tier, with the selected windows and hourly values read from the fault list and processed computation table. The chart provides day-level context; the validation table checks every one of the 15 configured windows, including the three hard expected misses.
 
 ### Irradiance and AC Power
 
@@ -38,16 +38,16 @@ AC power generally rises with plane-of-array irradiance, and the horizontal refe
 
 ## 4. Cautious Inference
 
-Weighting monthly means by daytime-row counts gives a faulted-hour mean PR of 0.929234 and a non-faulted-hour mean PR of 0.929253. These values are nearly equal, which is consistent with the injected windows making up a small share of all inverter-hours; it does not show that the fixed three-hour detector successfully found the injected examples.
+Weighting monthly means by daytime-row counts gives a faulted-hour mean PR of 0.929159 and a non-faulted-hour mean PR of 0.929253. The positive test windows are sparse within all inverter-hours; the separate validation table, rather than these pooled monthly means, records the detector outcome.
 
 The requested simple correlation between module temperature and PR could not be calculated: the permitted compact tables contain no paired observations of both variables. A correlation cannot be recovered from separate or aggregate summaries. Faults are injected into simulated data, so this analysis checks the detector against test scenarios and does not show real-world causes; no causal claim is made.
 
 ## 5. Conclusion and Limitations
 
-The charts describe hourly and monthly PR patterns, PR values around three configured fault windows, and the relationship between irradiance and modeled AC power. The rolling rule flagged one block and detected inverter 202's window; its mean `pr_gap` was 0.06220 (Watch). It did not detect inverter 101's window (0.01144) or inverter 303's window (0.01385).
+The charts describe hourly and monthly PR patterns, PR values around one representative window per target tier, and the relationship between irradiance and modeled AC power. The rolling rule flagged 35 blocks across 13 of 830 inverters (1.57%): 16 Watch, 15 Alert, and 4 Critical. It detects 12/12 designed tier windows with target matches; three hard cases are missed as intended because two gaps are below 0.05 and the remaining Alert-sized gap lasts only two hours.
 
 ## Detection Result
 
-The weaker +4°C and +12°C injections may fall below 0.05 because the degradation term starts only above 45°C internal temperature, so the simulated PR effect can be small; here the +4°C example stayed below threshold while the +12°C example crossed it. This reflects the simulation design, not a failure of the method.
+All three hard cases were missed as expected: the two below-Watch cases have mean gaps of 0.02499 and 0.03497, while the two-hour case has a 0.14997 mean gap but does not satisfy the required three consecutive hours. The designed test result is not real-world accuracy. Zero false alarms are expected on the identical non-faulted simulated inverters; the check says nothing about noisy real data.
 
 These are modeled results based on hourly reanalysis weather and synthetic fault injections, not field measurements of inverter faults. Nighttime PR is undefined because its irradiance denominator is zero. The available compact files do not contain paired module-temperature and PR values, so that correlation remains unmeasured; further conclusions would require paired observations and real plant telemetry.

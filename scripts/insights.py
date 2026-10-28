@@ -18,8 +18,15 @@ FIGURES = PROJECT_ROOT / "output/figures"
 FIGURE_DPI = 140  # dots per inch
 AC_CLIP_KW = 60.0  # rated AC power in kilowatts
 FAULT_DATES = {
-    fault["inverter_id"]: fault["start"][:10] for fault in FAULT_WINDOWS
+    fault["inverter_id"]: (fault["start"][:10], fault["target_tier"])
+    for fault in FAULT_WINDOWS
+    if fault["target_tier"] in ("Watch", "Alert", "Critical")
 }
+FAULT_DAY_REPRESENTATIVES = {}
+for inverter_id, (fault_date, target_tier) in FAULT_DATES.items():
+    FAULT_DAY_REPRESENTATIVES.setdefault(
+        target_tier, (inverter_id, fault_date)
+    )
 
 
 # %% [markdown]
@@ -83,8 +90,10 @@ def create_monthly_chart(monthly):
 # %%
 def create_fault_day_chart(fault_day):
     fault_day["DATE_TIME"] = pd.to_datetime(fault_day["DATE_TIME"])
-    figure, axes = plt.subplots(3, 1, figsize=(9, 9), sharex=True, sharey=True)
-    for axis, (inverter_id, fault_date) in zip(axes, FAULT_DATES.items()):
+    figure, axes = plt.subplots(1, 3, figsize=(12, 4), sharey=True)
+    for axis, (target_tier, (inverter_id, fault_date)) in zip(
+        axes, FAULT_DAY_REPRESENTATIVES.items()
+    ):
         rows = fault_day[fault_day["INVERTER_ID"] == inverter_id].sort_values("DATE_TIME")
         axis.plot(
             rows["DATE_TIME"].dt.hour,
@@ -92,14 +101,14 @@ def create_fault_day_chart(fault_day):
             marker="o",
             color="#bc7138",
         )
-        axis.set_title(f"Inverter {inverter_id}, {fault_date}")
-        axis.set_ylabel("Performance ratio (unitless)")
+        axis.set_title(f"{target_tier}: inverter {inverter_id}, {fault_date}")
         axis.set_xticks(range(0, 24, 2))
+    axes[0].set_ylabel("Performance ratio (unitless)")
     axes[-1].set_xlabel("Hour of day (local time, h)")
-    figure.suptitle("Performance Ratio on Simulated Fault Days", y=1.01)
+    figure.suptitle("Performance Ratio on Representative Tier Fault Days", y=1.03)
     figure.tight_layout()
     figure.savefig(
-        FIGURES / "fault_day_pr_101_202_303.png",
+        FIGURES / "fault_day_pr_by_tier.png",
         dpi=FIGURE_DPI,
         bbox_inches="tight",
     )
@@ -197,13 +206,15 @@ def main():
     summary_statistics = pd.read_csv(TABLES / "summary_statistics.csv")
     hourly = pd.read_csv(TABLES / "hourly_mean_pr.csv")
     monthly = pd.read_csv(TABLES / "monthly_mean_pr_by_group.csv")
-    fault_day = pd.read_csv(TABLES / "fault_day_pr_101_202_303.csv")
+    fault_day = pd.read_csv(TABLES / "fault_day_pr_by_tier.csv")
     scatter = pd.read_csv(TABLES / "scatter_sample_100k.csv")
     flagged = pd.read_csv(TABLES / "flagged_blocks_by_severity.csv")
 
     assert len(hourly) > 0, "Hourly PR table must not be empty"
-    assert set(FAULT_DATES).issubset(set(fault_day["INVERTER_ID"])), (
-        "Fault-day table must include inverters 101, 202, and 303"
+    assert set(FAULT_DAY_REPRESENTATIVES).issubset(
+        set(fault_day["target_tier"])
+    ), (
+        "Fault-day table must include one representative for each designed tier"
     )
     assert len(scatter) == 100_000, "Scatter sample must contain 100,000 rows"
 

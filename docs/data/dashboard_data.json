@@ -1,37 +1,500 @@
 {
   "detection_validation": [
     {
-      "detected": "False",
+      "detected": "True",
       "inverter_id": "101",
-      "mean_pr_gap": "0.011440677563453497",
-      "severity_tier": "Below Watch",
-      "window": "2025-03-15 10:00:00 to 2025-03-15 12:00:00"
+      "mean_pr_gap": "0.07496576941548809",
+      "severity_tier": "Watch",
+      "target_tier": "Watch",
+      "tier_matches_target": "True",
+      "window": "2025-01-22 14:00:00 to 2025-01-22 16:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "118",
+      "mean_pr_gap": "0.07498403033721279",
+      "severity_tier": "Watch",
+      "target_tier": "Watch",
+      "tier_matches_target": "True",
+      "window": "2025-02-21 14:00:00 to 2025-02-21 16:00:00"
     },
     {
       "detected": "True",
       "inverter_id": "202",
-      "mean_pr_gap": "0.06219851694865586",
+      "mean_pr_gap": "0.07495470548641843",
       "severity_tier": "Watch",
-      "window": "2025-06-20 10:00:00 to 2025-06-20 12:00:00"
+      "target_tier": "Watch",
+      "tier_matches_target": "True",
+      "window": "2025-03-11 15:00:00 to 2025-03-11 17:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "303",
+      "mean_pr_gap": "0.07500122409733896",
+      "severity_tier": "Watch",
+      "target_tier": "Watch",
+      "tier_matches_target": "True",
+      "window": "2025-04-17 15:00:00 to 2025-04-17 17:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "404",
+      "mean_pr_gap": "0.15000117703032959",
+      "severity_tier": "Alert",
+      "target_tier": "Alert",
+      "tier_matches_target": "True",
+      "window": "2025-05-19 08:00:00 to 2025-05-19 10:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "505",
+      "mean_pr_gap": "0.13654759344105297",
+      "severity_tier": "Alert",
+      "target_tier": "Alert",
+      "tier_matches_target": "True",
+      "window": "2025-06-25 08:00:00 to 2025-06-25 10:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "606",
+      "mean_pr_gap": "0.15002185794958325",
+      "severity_tier": "Alert",
+      "target_tier": "Alert",
+      "tier_matches_target": "True",
+      "window": "2025-07-08 14:00:00 to 2025-07-08 16:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "707",
+      "mean_pr_gap": "0.15001428534674766",
+      "severity_tier": "Alert",
+      "target_tier": "Alert",
+      "tier_matches_target": "True",
+      "window": "2025-08-21 14:00:00 to 2025-08-21 16:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "808",
+      "mean_pr_gap": "0.28001815809264213",
+      "severity_tier": "Critical",
+      "target_tier": "Critical",
+      "tier_matches_target": "True",
+      "window": "2025-09-29 08:00:00 to 2025-09-29 10:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "123",
+      "mean_pr_gap": "0.2799877656100029",
+      "severity_tier": "Critical",
+      "target_tier": "Critical",
+      "tier_matches_target": "True",
+      "window": "2025-10-09 14:00:00 to 2025-10-09 16:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "456",
+      "mean_pr_gap": "0.2800356726782316",
+      "severity_tier": "Critical",
+      "target_tier": "Critical",
+      "tier_matches_target": "True",
+      "window": "2025-11-18 14:00:00 to 2025-11-18 16:00:00"
+    },
+    {
+      "detected": "True",
+      "inverter_id": "789",
+      "mean_pr_gap": "0.2799911036914747",
+      "severity_tier": "Critical",
+      "target_tier": "Critical",
+      "tier_matches_target": "True",
+      "window": "2025-12-24 14:00:00 to 2025-12-24 16:00:00"
     },
     {
       "detected": "False",
-      "inverter_id": "303",
-      "mean_pr_gap": "0.013847592642688311",
+      "inverter_id": "150",
+      "mean_pr_gap": "0.024993854990795723",
       "severity_tier": "Below Watch",
-      "window": "2025-09-10 10:00:00 to 2025-09-10 12:00:00"
+      "target_tier": "Below Watch (expected miss)",
+      "tier_matches_target": "True",
+      "window": "2025-01-01 09:00:00 to 2025-01-01 11:00:00"
+    },
+    {
+      "detected": "False",
+      "inverter_id": "250",
+      "mean_pr_gap": "0.03496990434871061",
+      "severity_tier": "Below Watch",
+      "target_tier": "Below Watch (expected miss)",
+      "tier_matches_target": "True",
+      "window": "2025-02-04 14:00:00 to 2025-02-04 16:00:00"
+    },
+    {
+      "detected": "False",
+      "inverter_id": "350",
+      "mean_pr_gap": "0.1499680146080301",
+      "severity_tier": "Alert",
+      "target_tier": "Too short (expected miss)",
+      "tier_matches_target": "True",
+      "window": "2025-03-04 15:00:00 to 2025-03-04 16:00:00"
+    }
+  ],
+  "false_alarm_check": [
+    {
+      "faulted_inverters": "15",
+      "flagged_blocks_on_non_faulted": "0",
+      "non_faulted_inverters": "815",
+      "non_faulted_inverters_flagged": "0",
+      "note": "Zero false alarms are expected here because non-faulted inverters share the same weather and simulated PR; this checks identical peers only, not noisy real data."
     }
   ],
   "flagged_blocks": [
     {
-      "block_end": "2025-06-20 12:00:00",
-      "block_start": "2025-06-20 10:00:00",
-      "date": "2025-06-20",
+      "block_end": "2025-11-18 16:00:00",
+      "block_start": "2025-11-18 14:00:00",
+      "date": "2025-11-18",
+      "end_time": "16:00:00",
+      "inverter_id": "456",
+      "mean_gap": "0.2800356726782316",
+      "severity_tier": "Critical",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-09-29 10:00:00",
+      "block_start": "2025-09-29 08:00:00",
+      "date": "2025-09-29",
+      "end_time": "10:00:00",
+      "inverter_id": "808",
+      "mean_gap": "0.28001815809264213",
+      "severity_tier": "Critical",
+      "start_time": "08:00:00"
+    },
+    {
+      "block_end": "2025-12-24 16:00:00",
+      "block_start": "2025-12-24 14:00:00",
+      "date": "2025-12-24",
+      "end_time": "16:00:00",
+      "inverter_id": "789",
+      "mean_gap": "0.2799911036914747",
+      "severity_tier": "Critical",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-10-09 16:00:00",
+      "block_start": "2025-10-09 14:00:00",
+      "date": "2025-10-09",
+      "end_time": "16:00:00",
+      "inverter_id": "123",
+      "mean_gap": "0.2799877656100029",
+      "severity_tier": "Critical",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-09-29 11:00:00",
+      "block_start": "2025-09-29 09:00:00",
+      "date": "2025-09-29",
+      "end_time": "11:00:00",
+      "inverter_id": "808",
+      "mean_gap": "0.1992381673657501",
+      "severity_tier": "Alert",
+      "start_time": "09:00:00"
+    },
+    {
+      "block_end": "2025-10-09 15:00:00",
+      "block_start": "2025-10-09 13:00:00",
+      "date": "2025-10-09",
+      "end_time": "15:00:00",
+      "inverter_id": "123",
+      "mean_gap": "0.19679779119235233",
+      "severity_tier": "Alert",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-11-18 15:00:00",
+      "block_start": "2025-11-18 13:00:00",
+      "date": "2025-11-18",
+      "end_time": "15:00:00",
+      "inverter_id": "456",
+      "mean_gap": "0.19422708280394382",
+      "severity_tier": "Alert",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-12-24 15:00:00",
+      "block_start": "2025-12-24 13:00:00",
+      "date": "2025-12-24",
+      "end_time": "15:00:00",
+      "inverter_id": "789",
+      "mean_gap": "0.1930672845723226",
+      "severity_tier": "Alert",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-07-08 16:00:00",
+      "block_start": "2025-07-08 14:00:00",
+      "date": "2025-07-08",
+      "end_time": "16:00:00",
+      "inverter_id": "606",
+      "mean_gap": "0.15002185794958325",
+      "severity_tier": "Alert",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-08-21 16:00:00",
+      "block_start": "2025-08-21 14:00:00",
+      "date": "2025-08-21",
+      "end_time": "16:00:00",
+      "inverter_id": "707",
+      "mean_gap": "0.15001428534674766",
+      "severity_tier": "Alert",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-05-19 10:00:00",
+      "block_start": "2025-05-19 08:00:00",
+      "date": "2025-05-19",
+      "end_time": "10:00:00",
+      "inverter_id": "404",
+      "mean_gap": "0.15000117703032959",
+      "severity_tier": "Alert",
+      "start_time": "08:00:00"
+    },
+    {
+      "block_end": "2025-06-25 10:00:00",
+      "block_start": "2025-06-25 08:00:00",
+      "date": "2025-06-25",
+      "end_time": "10:00:00",
+      "inverter_id": "505",
+      "mean_gap": "0.13654759344105297",
+      "severity_tier": "Alert",
+      "start_time": "08:00:00"
+    },
+    {
+      "block_end": "2025-08-21 15:00:00",
+      "block_start": "2025-08-21 13:00:00",
+      "date": "2025-08-21",
+      "end_time": "15:00:00",
+      "inverter_id": "707",
+      "mean_gap": "0.10856486952025972",
+      "severity_tier": "Alert",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-05-19 11:00:00",
+      "block_start": "2025-05-19 09:00:00",
+      "date": "2025-05-19",
+      "end_time": "11:00:00",
+      "inverter_id": "404",
+      "mean_gap": "0.10822454461812432",
+      "severity_tier": "Alert",
+      "start_time": "09:00:00"
+    },
+    {
+      "block_end": "2025-06-25 11:00:00",
+      "block_start": "2025-06-25 09:00:00",
+      "date": "2025-06-25",
+      "end_time": "11:00:00",
+      "inverter_id": "505",
+      "mean_gap": "0.10744795072869646",
+      "severity_tier": "Alert",
+      "start_time": "09:00:00"
+    },
+    {
+      "block_end": "2025-07-08 15:00:00",
+      "block_start": "2025-07-08 13:00:00",
+      "date": "2025-07-08",
+      "end_time": "15:00:00",
+      "inverter_id": "606",
+      "mean_gap": "0.10417707544863901",
+      "severity_tier": "Alert",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-07-08 17:00:00",
+      "block_start": "2025-07-08 15:00:00",
+      "date": "2025-07-08",
+      "end_time": "17:00:00",
+      "inverter_id": "606",
+      "mean_gap": "0.10082525644507412",
+      "severity_tier": "Alert",
+      "start_time": "15:00:00"
+    },
+    {
+      "block_end": "2025-10-09 14:00:00",
+      "block_start": "2025-10-09 12:00:00",
+      "date": "2025-10-09",
+      "end_time": "14:00:00",
+      "inverter_id": "123",
+      "mean_gap": "0.1005084257016936",
+      "severity_tier": "Alert",
+      "start_time": "12:00:00"
+    },
+    {
+      "block_end": "2025-09-29 12:00:00",
+      "block_start": "2025-09-29 10:00:00",
+      "date": "2025-09-29",
       "end_time": "12:00:00",
+      "inverter_id": "808",
+      "mean_gap": "0.1002565529821996",
+      "severity_tier": "Alert",
+      "start_time": "10:00:00"
+    },
+    {
+      "block_end": "2025-03-04 16:00:00",
+      "block_start": "2025-03-04 14:00:00",
+      "date": "2025-03-04",
+      "end_time": "16:00:00",
+      "inverter_id": "350",
+      "mean_gap": "0.0999786764053534",
+      "severity_tier": "Watch",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-03-04 17:00:00",
+      "block_start": "2025-03-04 15:00:00",
+      "date": "2025-03-04",
+      "end_time": "17:00:00",
+      "inverter_id": "350",
+      "mean_gap": "0.0999786764053534",
+      "severity_tier": "Watch",
+      "start_time": "15:00:00"
+    },
+    {
+      "block_end": "2025-11-18 14:00:00",
+      "block_start": "2025-11-18 12:00:00",
+      "date": "2025-11-18",
+      "end_time": "14:00:00",
+      "inverter_id": "456",
+      "mean_gap": "0.09932765253230191",
+      "severity_tier": "Watch",
+      "start_time": "12:00:00"
+    },
+    {
+      "block_end": "2025-12-24 14:00:00",
+      "block_start": "2025-12-24 12:00:00",
+      "date": "2025-12-24",
+      "end_time": "14:00:00",
+      "inverter_id": "789",
+      "mean_gap": "0.09745177197814203",
+      "severity_tier": "Watch",
+      "start_time": "12:00:00"
+    },
+    {
+      "block_end": "2025-04-17 17:00:00",
+      "block_start": "2025-04-17 15:00:00",
+      "date": "2025-04-17",
+      "end_time": "17:00:00",
+      "inverter_id": "303",
+      "mean_gap": "0.07500122409733896",
+      "severity_tier": "Watch",
+      "start_time": "15:00:00"
+    },
+    {
+      "block_end": "2025-02-21 16:00:00",
+      "block_start": "2025-02-21 14:00:00",
+      "date": "2025-02-21",
+      "end_time": "16:00:00",
+      "inverter_id": "118",
+      "mean_gap": "0.07498403033721279",
+      "severity_tier": "Watch",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-01-22 16:00:00",
+      "block_start": "2025-01-22 14:00:00",
+      "date": "2025-01-22",
+      "end_time": "16:00:00",
+      "inverter_id": "101",
+      "mean_gap": "0.07496576941548809",
+      "severity_tier": "Watch",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-03-11 17:00:00",
+      "block_start": "2025-03-11 15:00:00",
+      "date": "2025-03-11",
+      "end_time": "17:00:00",
       "inverter_id": "202",
-      "mean_gap": "0.06219851694865586",
+      "mean_gap": "0.07495470548641843",
+      "severity_tier": "Watch",
+      "start_time": "15:00:00"
+    },
+    {
+      "block_end": "2025-04-17 16:00:00",
+      "block_start": "2025-04-17 14:00:00",
+      "date": "2025-04-17",
+      "end_time": "16:00:00",
+      "inverter_id": "303",
+      "mean_gap": "0.06201028446592564",
+      "severity_tier": "Watch",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-02-21 15:00:00",
+      "block_start": "2025-02-21 13:00:00",
+      "date": "2025-02-21",
+      "end_time": "15:00:00",
+      "inverter_id": "118",
+      "mean_gap": "0.05999365844749819",
+      "severity_tier": "Watch",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-03-11 16:00:00",
+      "block_start": "2025-03-11 14:00:00",
+      "date": "2025-03-11",
+      "end_time": "16:00:00",
+      "inverter_id": "202",
+      "mean_gap": "0.05902162655208446",
+      "severity_tier": "Watch",
+      "start_time": "14:00:00"
+    },
+    {
+      "block_end": "2025-05-19 12:00:00",
+      "block_start": "2025-05-19 10:00:00",
+      "date": "2025-05-19",
+      "end_time": "12:00:00",
+      "inverter_id": "404",
+      "mean_gap": "0.057411378377939006",
       "severity_tier": "Watch",
       "start_time": "10:00:00"
+    },
+    {
+      "block_end": "2025-01-22 15:00:00",
+      "block_start": "2025-01-22 13:00:00",
+      "date": "2025-01-22",
+      "end_time": "15:00:00",
+      "inverter_id": "101",
+      "mean_gap": "0.055687811534064435",
+      "severity_tier": "Watch",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-06-25 12:00:00",
+      "block_start": "2025-06-25 10:00:00",
+      "date": "2025-06-25",
+      "end_time": "12:00:00",
+      "inverter_id": "505",
+      "mean_gap": "0.05542521270130015",
+      "severity_tier": "Watch",
+      "start_time": "10:00:00"
+    },
+    {
+      "block_end": "2025-03-04 15:00:00",
+      "block_start": "2025-03-04 13:00:00",
+      "date": "2025-03-04",
+      "end_time": "15:00:00",
+      "inverter_id": "350",
+      "mean_gap": "0.05330791707364909",
+      "severity_tier": "Watch",
+      "start_time": "13:00:00"
+    },
+    {
+      "block_end": "2025-08-21 14:00:00",
+      "block_start": "2025-08-21 12:00:00",
+      "date": "2025-08-21",
+      "end_time": "14:00:00",
+      "inverter_id": "707",
+      "mean_gap": "0.05264806253116231",
+      "severity_tier": "Watch",
+      "start_time": "12:00:00"
     }
   ],
   "hourly_mean_pr": [
@@ -48,27 +511,27 @@
     {
       "daytime_rows": "302950",
       "hour": "8",
-      "mean_daytime_pr": "0.9526564828608071"
+      "mean_daytime_pr": "0.9526549810657995"
     },
     {
       "daytime_rows": "302950",
       "hour": "9",
-      "mean_daytime_pr": "0.9338551286104357"
+      "mean_daytime_pr": "0.933853126026287"
     },
     {
       "daytime_rows": "302950",
       "hour": "10",
-      "mean_daytime_pr": "0.91513141167038"
+      "mean_daytime_pr": "0.9151293392597855"
     },
     {
       "daytime_rows": "302950",
       "hour": "11",
-      "mean_daytime_pr": "0.8979872363581506"
+      "mean_daytime_pr": "0.8979874703791723"
     },
     {
       "daytime_rows": "302950",
       "hour": "12",
-      "mean_daytime_pr": "0.8828649375914968"
+      "mean_daytime_pr": "0.8828652887048729"
     },
     {
       "daytime_rows": "302950",
@@ -78,22 +541,22 @@
     {
       "daytime_rows": "302950",
       "hour": "14",
-      "mean_daytime_pr": "0.9048492513235737"
+      "mean_daytime_pr": "0.9048445060079967"
     },
     {
       "daytime_rows": "302950",
       "hour": "15",
-      "mean_daytime_pr": "0.9218136878235121"
+      "mean_daytime_pr": "0.9218078905674795"
     },
     {
       "daytime_rows": "302950",
       "hour": "16",
-      "mean_daytime_pr": "0.9377956399979072"
+      "mean_daytime_pr": "0.9377908733008904"
     },
     {
       "daytime_rows": "302950",
       "hour": "17",
-      "mean_daytime_pr": "0.9533219586491892"
+      "mean_daytime_pr": "0.953321672225503"
     },
     {
       "daytime_rows": "302950",
@@ -109,295 +572,295 @@
   "inverter_detail": {
     "101": [
       {
-        "date_time": "2025-03-15 00:00:00",
+        "date_time": "2025-01-22 00:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 01:00:00",
+        "date_time": "2025-01-22 01:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 02:00:00",
+        "date_time": "2025-01-22 02:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 03:00:00",
+        "date_time": "2025-01-22 03:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 04:00:00",
+        "date_time": "2025-01-22 04:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 05:00:00",
+        "date_time": "2025-01-22 05:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 06:00:00",
+        "date_time": "2025-01-22 06:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 07:00:00",
-        "performance_ratio": 0.9732886947892258
+        "date_time": "2025-01-22 07:00:00",
+        "performance_ratio": 0.9778094123996744
       },
       {
-        "date_time": "2025-03-15 08:00:00",
-        "performance_ratio": 0.9530854600503744
+        "date_time": "2025-01-22 08:00:00",
+        "performance_ratio": 0.9626949072671372
       },
       {
-        "date_time": "2025-03-15 09:00:00",
-        "performance_ratio": 0.9360644132041356
+        "date_time": "2025-01-22 09:00:00",
+        "performance_ratio": 0.9473178423255204
       },
       {
-        "date_time": "2025-03-15 10:00:00",
-        "performance_ratio": 0.9188725344329848
+        "date_time": "2025-01-22 10:00:00",
+        "performance_ratio": 0.9353854527524912
       },
       {
-        "date_time": "2025-03-15 11:00:00",
-        "performance_ratio": 0.859790773105645
+        "date_time": "2025-01-22 11:00:00",
+        "performance_ratio": 0.9277052437389546
       },
       {
-        "date_time": "2025-03-15 12:00:00",
-        "performance_ratio": 0.8276139888700876
+        "date_time": "2025-01-22 12:00:00",
+        "performance_ratio": 0.9208373768478656
       },
       {
-        "date_time": "2025-03-15 13:00:00",
-        "performance_ratio": 0.8108109428217102
+        "date_time": "2025-01-22 13:00:00",
+        "performance_ratio": 0.9173432029555744
       },
       {
-        "date_time": "2025-03-15 14:00:00",
-        "performance_ratio": 0.9023166163779164
+        "date_time": "2025-01-22 14:00:00",
+        "performance_ratio": 0.8321800483847152
       },
       {
-        "date_time": "2025-03-15 15:00:00",
-        "performance_ratio": 0.902797860429326
+        "date_time": "2025-01-22 15:00:00",
+        "performance_ratio": 0.8632915022407385
       },
       {
-        "date_time": "2025-03-15 16:00:00",
-        "performance_ratio": 0.9170498831441108
+        "date_time": "2025-01-22 16:00:00",
+        "performance_ratio": 0.8848840784787858
       },
       {
-        "date_time": "2025-03-15 17:00:00",
-        "performance_ratio": 0.9411407830567052
+        "date_time": "2025-01-22 17:00:00",
+        "performance_ratio": 0.9559813763621172
       },
       {
-        "date_time": "2025-03-15 18:00:00",
-        "performance_ratio": 0.9608838532859098
+        "date_time": "2025-01-22 18:00:00",
+        "performance_ratio": 0.9700299809583236
       },
       {
-        "date_time": "2025-03-15 19:00:00",
+        "date_time": "2025-01-22 19:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 20:00:00",
+        "date_time": "2025-01-22 20:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 21:00:00",
+        "date_time": "2025-01-22 21:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 22:00:00",
+        "date_time": "2025-01-22 22:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-03-15 23:00:00",
-        "performance_ratio": null
-      }
-    ],
-    "202": [
-      {
-        "date_time": "2025-06-20 00:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 01:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 02:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 03:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 04:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 05:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 06:00:00",
-        "performance_ratio": 0.972408998146254
-      },
-      {
-        "date_time": "2025-06-20 07:00:00",
-        "performance_ratio": 0.96350640605741
-      },
-      {
-        "date_time": "2025-06-20 08:00:00",
-        "performance_ratio": 0.9492048661234036
-      },
-      {
-        "date_time": "2025-06-20 09:00:00",
-        "performance_ratio": 0.931423355662667
-      },
-      {
-        "date_time": "2025-06-20 10:00:00",
-        "performance_ratio": 0.8731603227771801
-      },
-      {
-        "date_time": "2025-06-20 11:00:00",
-        "performance_ratio": 0.830257723267358
-      },
-      {
-        "date_time": "2025-06-20 12:00:00",
-        "performance_ratio": 0.8129168380595153
-      },
-      {
-        "date_time": "2025-06-20 13:00:00",
-        "performance_ratio": 0.8701979164564448
-      },
-      {
-        "date_time": "2025-06-20 14:00:00",
-        "performance_ratio": 0.89940514348886
-      },
-      {
-        "date_time": "2025-06-20 15:00:00",
-        "performance_ratio": 0.9109037123534895
-      },
-      {
-        "date_time": "2025-06-20 16:00:00",
-        "performance_ratio": 0.9279239936732486
-      },
-      {
-        "date_time": "2025-06-20 17:00:00",
-        "performance_ratio": 0.9490636897844978
-      },
-      {
-        "date_time": "2025-06-20 18:00:00",
-        "performance_ratio": 0.9605209805676244
-      },
-      {
-        "date_time": "2025-06-20 19:00:00",
-        "performance_ratio": 0.9694077850921764
-      },
-      {
-        "date_time": "2025-06-20 20:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 21:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 22:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-06-20 23:00:00",
+        "date_time": "2025-01-22 23:00:00",
         "performance_ratio": null
       }
     ],
-    "303": [
+    "404": [
       {
-        "date_time": "2025-09-10 00:00:00",
+        "date_time": "2025-05-19 00:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 01:00:00",
+        "date_time": "2025-05-19 01:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 02:00:00",
+        "date_time": "2025-05-19 02:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 03:00:00",
+        "date_time": "2025-05-19 03:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 04:00:00",
+        "date_time": "2025-05-19 04:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 05:00:00",
+        "date_time": "2025-05-19 05:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 06:00:00",
+        "date_time": "2025-05-19 06:00:00",
+        "performance_ratio": 0.969133516935454
+      },
+      {
+        "date_time": "2025-05-19 07:00:00",
+        "performance_ratio": 0.956297063764758
+      },
+      {
+        "date_time": "2025-05-19 08:00:00",
+        "performance_ratio": 0.813072124392199
+      },
+      {
+        "date_time": "2025-05-19 09:00:00",
+        "performance_ratio": 0.7734333802014944
+      },
+      {
+        "date_time": "2025-05-19 10:00:00",
+        "performance_ratio": 0.7442545176258124
+      },
+      {
+        "date_time": "2025-05-19 11:00:00",
+        "performance_ratio": 0.9026799254195416
+      },
+      {
+        "date_time": "2025-05-19 12:00:00",
+        "performance_ratio": 0.8605664600961553
+      },
+      {
+        "date_time": "2025-05-19 13:00:00",
+        "performance_ratio": 0.9052556257882464
+      },
+      {
+        "date_time": "2025-05-19 14:00:00",
+        "performance_ratio": 0.9087014359481138
+      },
+      {
+        "date_time": "2025-05-19 15:00:00",
+        "performance_ratio": 0.9169031434056364
+      },
+      {
+        "date_time": "2025-05-19 16:00:00",
+        "performance_ratio": 0.926806102857143
+      },
+      {
+        "date_time": "2025-05-19 17:00:00",
+        "performance_ratio": 0.9408979977966362
+      },
+      {
+        "date_time": "2025-05-19 18:00:00",
+        "performance_ratio": 0.9512222725763712
+      },
+      {
+        "date_time": "2025-05-19 19:00:00",
+        "performance_ratio": 0.9570788858271424
+      },
+      {
+        "date_time": "2025-05-19 20:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 07:00:00",
-        "performance_ratio": 0.9696513691694676
-      },
-      {
-        "date_time": "2025-09-10 08:00:00",
-        "performance_ratio": 0.9473151007916736
-      },
-      {
-        "date_time": "2025-09-10 09:00:00",
-        "performance_ratio": 0.9358883974405996
-      },
-      {
-        "date_time": "2025-09-10 10:00:00",
-        "performance_ratio": 0.9512628831391144
-      },
-      {
-        "date_time": "2025-09-10 11:00:00",
-        "performance_ratio": 0.940888148926347
-      },
-      {
-        "date_time": "2025-09-10 12:00:00",
-        "performance_ratio": 0.9012312280317276
-      },
-      {
-        "date_time": "2025-09-10 13:00:00",
-        "performance_ratio": 0.9348895448305622
-      },
-      {
-        "date_time": "2025-09-10 14:00:00",
-        "performance_ratio": 0.9335656658687448
-      },
-      {
-        "date_time": "2025-09-10 15:00:00",
-        "performance_ratio": 0.9428419563150336
-      },
-      {
-        "date_time": "2025-09-10 16:00:00",
-        "performance_ratio": 0.9472888473383114
-      },
-      {
-        "date_time": "2025-09-10 17:00:00",
-        "performance_ratio": 0.9662263066721264
-      },
-      {
-        "date_time": "2025-09-10 18:00:00",
-        "performance_ratio": 0.9780653010878952
-      },
-      {
-        "date_time": "2025-09-10 19:00:00",
+        "date_time": "2025-05-19 21:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 20:00:00",
+        "date_time": "2025-05-19 22:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 21:00:00",
+        "date_time": "2025-05-19 23:00:00",
+        "performance_ratio": null
+      }
+    ],
+    "808": [
+      {
+        "date_time": "2025-09-29 00:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 22:00:00",
+        "date_time": "2025-09-29 01:00:00",
         "performance_ratio": null
       },
       {
-        "date_time": "2025-09-10 23:00:00",
+        "date_time": "2025-09-29 02:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 03:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 04:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 05:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 06:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 07:00:00",
+        "performance_ratio": 0.9691944048184392
+      },
+      {
+        "date_time": "2025-09-29 08:00:00",
+        "performance_ratio": 0.7015925466288588
+      },
+      {
+        "date_time": "2025-09-29 09:00:00",
+        "performance_ratio": 0.6199317777788501
+      },
+      {
+        "date_time": "2025-09-29 10:00:00",
+        "performance_ratio": 0.6141417052710249
+      },
+      {
+        "date_time": "2025-09-29 11:00:00",
+        "performance_ratio": 0.880344466026439
+      },
+      {
+        "date_time": "2025-09-29 12:00:00",
+        "performance_ratio": 0.9036684494802836
+      },
+      {
+        "date_time": "2025-09-29 13:00:00",
+        "performance_ratio": 0.9303331876297082
+      },
+      {
+        "date_time": "2025-09-29 14:00:00",
+        "performance_ratio": 0.9294637145479832
+      },
+      {
+        "date_time": "2025-09-29 15:00:00",
+        "performance_ratio": 0.9252230680340644
+      },
+      {
+        "date_time": "2025-09-29 16:00:00",
+        "performance_ratio": 0.9423182145109756
+      },
+      {
+        "date_time": "2025-09-29 17:00:00",
+        "performance_ratio": 0.9582476549895852
+      },
+      {
+        "date_time": "2025-09-29 18:00:00",
+        "performance_ratio": 0.9720549978862956
+      },
+      {
+        "date_time": "2025-09-29 19:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 20:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 21:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 22:00:00",
+        "performance_ratio": null
+      },
+      {
+        "date_time": "2025-09-29 23:00:00",
         "performance_ratio": null
       }
     ]
@@ -410,7 +873,7 @@
       "Limitation": "Aggregate mean does not show individual inverter-hour variation; inputs are modeled.",
       "Source": "output/tables/summary_statistics.csv",
       "Unit": "unitless ratio",
-      "Value": "0.9292531056819616"
+      "Value": "0.9292514749567232"
     },
     {
       "Definition and formula": "1 - pooled mean valid hourly PR; distinct from per-timestamp fleet-median pr_gap.",
@@ -419,7 +882,7 @@
       "Limitation": "Not a comparison to a healthy-fleet baseline and not proof of a fault.",
       "Source": "Derived from output/tables/summary_statistics.csv",
       "Unit": "unitless ratio",
-      "Value": "0.07074689431803838"
+      "Value": "0.07074852504327678"
     },
     {
       "Definition and formula": "Sum of saved severity-tier block counts; see sql/03_flagged_3h_blocks.sql.",
@@ -428,7 +891,7 @@
       "Limitation": "Fixed-rule flags on simulated data are not confirmed failures.",
       "Source": "output/tables/flagged_blocks_by_severity.csv",
       "Unit": "blocks",
-      "Value": "1"
+      "Value": "35"
     },
     {
       "Definition and formula": "Inverters with at least one qualifying block / 830 * 100.",
@@ -437,7 +900,7 @@
       "Limitation": "Flags are based on simulated data and a fixed demonstration rule, not confirmed failures.",
       "Source": "Distinct inverter IDs in output/sql_results/03_flagged_3h_blocks.csv; fleet size from README.md.",
       "Unit": "% of fleet",
-      "Value": "0.12% (1/830)"
+      "Value": "1.57% (13/830)"
     },
     {
       "Definition and formula": "Count and share per tier; tier count / total flagged blocks * 100.",
@@ -446,7 +909,7 @@
       "Limitation": "Overlapping blocks count separately; exactly 0.20 is Alert in the saved SQL query.",
       "Source": "output/tables/flagged_blocks_by_severity.csv",
       "Unit": "blocks and % of flagged blocks",
-      "Value": "Watch: 1 (100.00%); Alert: 0 (0.00%); Critical: 0 (0.00%)"
+      "Value": "Watch: 16 (45.71%); Alert: 15 (42.86%); Critical: 4 (11.43%)"
     },
     {
       "Definition and formula": "Rows with AC_POWER >= 60 kW / sampled inverter-hour rows * 100.",
@@ -458,13 +921,31 @@
       "Value": "2.1640%"
     },
     {
-      "Definition and formula": "Detected injected windows / total injected windows * 100.",
-      "How to read it": "Checks the rolling three-hour fleet-median-gap rule against the three synthetic windows.",
+      "Definition and formula": "Detected designed Watch, Alert, and Critical windows / designed windows * 100; excludes hard cases labeled expected misses.",
+      "How to read it": "Checks the 12 designed tier-positive synthetic windows against the fixed rolling rule.",
       "KPI": "Fault detection rate",
-      "Limitation": "Only three synthetic windows; not a real-world performance estimate.",
+      "Limitation": "This controlled test is not a real-world accuracy estimate.",
       "Source": "output/tables/fault_detection_validation.csv",
       "Unit": "% of injected windows",
-      "Value": "33.33% (1/3)"
+      "Value": "100.00% (12/12)"
+    },
+    {
+      "Definition and formula": "Count of saved flagged rolling blocks whose inverter ID is absent from FAULT_WINDOWS.",
+      "How to read it": "Zero is expected because all non-faulted inverters share identical modeled weather and PR.",
+      "KPI": "False alarm blocks",
+      "Limitation": "Confirms the rule does not misfire on identical simulated peers; it says nothing about noisy real data.",
+      "Source": "output/tables/false_alarm_check.csv and output/sql_results/03_flagged_3h_blocks.csv",
+      "Unit": "blocks on non-faulted inverters",
+      "Value": "0"
+    },
+    {
+      "Definition and formula": "Detected windows / injected windows by target tier; hard windows are expected misses.",
+      "How to read it": "Separates the 12 designed tier tests from the three hard cases that demonstrate rule limits.",
+      "KPI": "Detection by target",
+      "Limitation": "Synthetic checks do not establish real-world detection accuracy.",
+      "Source": "output/tables/fault_detection_validation.csv",
+      "Unit": "detected / injected windows",
+      "Value": "Watch: 4/4; Alert: 4/4; Critical: 4/4; Hard cases (expected misses): 3/3"
     }
   ],
   "ranking": [
@@ -580,8 +1061,8 @@
     }
   ],
   "severity_counts": {
-    "Alert": 0,
-    "Critical": 0,
-    "Watch": 1
+    "Alert": 15,
+    "Critical": 4,
+    "Watch": 16
   }
 }

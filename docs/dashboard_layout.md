@@ -15,7 +15,7 @@
 +------------------------------------------------------------------+
 | Solar inverter PR monitoring                  Limits | Data links |
 +------------------------------------------------------------------+
-| Flagged blocks | Flagged inverter share | Detection rate | Mean PR|
+| Flagged blocks | Flagged inverter share | Detection rate | False alarms | Detection by target | Mean PR |
 +------------------------------------------------------------------+
 | Fleet status by severity: Watch | Alert | Critical                 |
 +------------------------------------------------------------------+
@@ -24,9 +24,10 @@
 +------------------------------------------------------------------+
 | Inverter ranking: top 10 by lowest mean PR or largest gap          |
 +------------------------------------------------------------------+
-| Investigation: fault-day PR series for validation inverters        |
+| Investigation: three representative tier fault-day panels           |
 +------------------------------------------------------------------+
-| Detection check: injected test window | Mean gap | Detected | Tier  |
+| Detection check: all injected windows | Target | Mean gap | Detected | Tier match |
+| False-alarm check: non-faulted inverter flags                         |
 +------------------------------------------------------------------+
 | What to do: Watch | Alert | Critical                               |
 +------------------------------------------------------------------+
@@ -38,13 +39,14 @@
 
 | panel | question it answers | KPI or table | source file | display type |
 | --- | --- | --- | --- | --- |
-| 1. Headline and KPI cards | What is the overall scale of flags, flagged fleet share, test detection, and mean PR? | Flagged 3-hour blocks; flagged inverter share; fault detection rate; pooled mean PR | `output/tables/kpi_summary.csv` | Four text-and-number KPI cards |
+| 1. Headline and KPI cards | What is the overall scale of flags, flagged fleet share, test detection, false alarms, and mean PR? | Flagged 3-hour blocks; flagged inverter share; fault detection rate; false alarm blocks; detection by target; pooled mean PR | `output/tables/kpi_summary.csv` | CSV-backed KPI cards |
 | 2. Fleet status by severity | How many saved blocks are Watch, Alert, or Critical? | Severity-tier block counts | `output/tables/flagged_blocks_by_severity.csv` | Three labeled counts; include tier names so meaning is not carried by color |
 | 3. When and where | Which inverter was flagged, and when did its block occur? | Inverter, date, start time, end time, mean gap, tier | `output/sql_results/03_flagged_3h_blocks.csv` provides the saved inverter, tier, and gap aggregate. The matching detected window in `output/tables/fault_detection_validation.csv` supplies date and times. | Accessible table; show up to 50 rows ordered by largest mean gap, with an explicit note that overlapping rolling blocks count separately |
 | 4. Inverter ranking | Which inverters have the lowest mean PR or largest saved gap? | Top 10 rows in the existing mean-PR ranking | `output/tables/inverter_ranking.csv` | Accessible ranked table |
-| 5. Investigation | What does hourly PR look like on each validation inverter's fault day? | Hourly PR series for validation inverters 101, 202, and 303 | `output/tables/fault_day_pr_101_202_303.csv` | Line chart with one selectable inverter series; retain a table alternative |
-| 6. Detection check | Which planted test windows did the rule detect? | Fault-window validation rows | `output/tables/fault_detection_validation.csv` | Table with detected status written as text |
-| 7. What to do | What follow-up is suggested for each demonstration tier? | Watch: remote check, log, monitor for 24 hours. Alert: attempt remote reset and schedule a site visit within 72 hours. Critical: likely hardware fault, dispatch immediately. | `README.md` and `docs/stakeholder_brief.md` | Three action rows with tier labels and text |
-| 8. Limits and links | What should readers not infer, and where can they inspect methods and definitions? | Modeled data, simulated faults, demonstration thresholds, and links to KPI definitions, segmentation, stakeholder brief, and source tables | `docs/kpi_definitions.md`, `docs/segmentation.md`, `docs/stakeholder_brief.md`, and the listed CSV sources | Plain-language note and relative links |
+| 5. Investigation | What does hourly PR look like in each designed tier? | One representative Watch, Alert, and Critical fault day | `output/tables/fault_day_pr_by_tier.csv` | Three small labeled panels and an accessible table alternative |
+| 6. Detection check | Which designed windows were detected, and were hard cases missed as expected? | All 15 fault-window validation rows, including target tier and target-match status | `output/tables/fault_detection_validation.csv` | Table with detected and target-match status written as text |
+| 7. False-alarm check | Did any non-faulted inverter get flagged? | Counts on the 815 non-faulted inverters | `output/tables/false_alarm_check.csv` | Plain-language check with explicit identical-simulation limitation |
+| 8. What to do | What follow-up is suggested for each demonstration tier? | Watch: remote check, log, monitor for 24 hours. Alert: attempt remote reset and schedule a site visit within 72 hours. Critical: likely hardware fault, dispatch immediately. | `docs/stakeholder_brief.md` | Three action rows with tier labels and text |
+| 9. Limits and links | What should readers not infer, and where can they inspect methods and definitions? | Modeled data, simulated faults, demonstration thresholds, and links to KPI definitions, segmentation, stakeholder brief, and source tables | `docs/kpi_definitions.md`, `docs/segmentation.md`, `docs/stakeholder_brief.md`, and the listed CSV sources | Plain-language note and relative links |
 
-Panel 3 uses only saved compact analysis tables. Dates and times are shown from a detected validation window matched by inverter ID; no event times are inferred from the 7-million-row processed file.
+Panel 3 uses timestamped rows from `output/sql_results/03_flagged_3h_blocks.csv`; no dates or times are borrowed from validation windows. KPI values, detection rows, and false-alarm counts flow from generated CSVs through `docs/data/dashboard_data.json`; the HTML generator does not type result values by hand. Zero false alarms are expected because non-faulted inverters share identical simulated weather and PR, and do not test noisy real data.

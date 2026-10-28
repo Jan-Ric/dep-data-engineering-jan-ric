@@ -1,13 +1,16 @@
 cohort,severity,flagged_blocks
-Non-faulted,Watch,0
-Non-faulted,Alert,0
-Non-faulted,Critical,0
-Faulted 101,Watch,0
-Faulted 101,Alert,0
-Faulted 101,Critical,0
-Faulted 202,Watch,1
-Faulted 202,Alert,0
-Faulted 202,Critical,0
-Faulted 303,Watch,0
-Faulted 303,Alert,0
-Faulted 303,Critical,0
+Watch-target faults,Watch,8
+Watch-target faults,Alert,0
+Watch-target faults,Critical,0
+Alert-target faults,Watch,3
+Alert-target faults,Alert,9
+Alert-target faults,Critical,0
+Critical-target faults,Watch,2
+Critical-target faults,Alert,6
+Critical-target faults,Critical,4
+Hard cases (expected misses),Watch,3
+Hard cases (expected misses),Alert,0
+Hard cases (expected misses),Critical,0
+Not faulted,Watch,0
+Not faulted,Alert,0
+Not faulted,Critical,0

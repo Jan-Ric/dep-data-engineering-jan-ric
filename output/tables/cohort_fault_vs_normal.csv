@@ -1,9 +1,14 @@
 fault_cohort,comparison_group,valid_pr_rows,mean_pr
-All faulted inverters,All valid PR rows,13824,0.9292341884576013
-Non-faulted,All valid PR rows,3810816,0.9292531743055081
-Faulted 101,Fault window,3,0.8687590988029058
-Faulted 101,"Non-faulted peers, same hours",2481,0.8801997763663594
-Faulted 202,Fault window,3,0.8387782947013512
-Faulted 202,"Non-faulted peers, same hours",2481,0.900976811650007
-Faulted 303,Fault window,3,0.9311274200323965
-Faulted 303,"Non-faulted peers, same hours",2481,0.9449750126750847
+Watch-target faults,All valid PR rows,18432,0.9292043615240405
+Alert-target faults,All valid PR rows,18432,0.9291577015005329
+Critical-target faults,All valid PR rows,18432,0.9290708773165641
+Hard cases (expected misses),All valid PR rows,13824,0.9292184645755287
+Not faulted,All valid PR rows,3755520,0.929253174305508
+Watch-target faults,Fault window,12,0.8538711629147687
+Watch-target faults,"Non-faulted peers, same hours",9780,0.9288475952488833
+Alert-target faults,Fault window,12,0.7742605301831493
+Alert-target faults,"Non-faulted peers, same hours",9780,0.9209067586250775
+Critical-target faults,Fault window,12,0.64809874701991
+Critical-target faults,"Non-faulted peers, same hours",9780,0.9281069220379977
+Hard cases (expected misses),Fault window,8,0.8750442504099943
+Hard cases (expected misses),"Non-faulted peers, same hours",6520,0.9350226638143168

@@ -19,6 +19,6 @@
 
 ## Detection Result
 
-The rolling rule detected inverter 202's 2025-06-20 window (mean `pr_gap` 0.06220, Watch); it did not detect inverter 101 on 2025-03-15 (0.01144) or inverter 303 on 2025-09-10 (0.01385). The weaker +4°C and +12°C injections may fall below 0.05 because the degradation term starts only above 45°C internal temperature, so the simulated PR effect can be small; here +4°C stayed below threshold and +12°C crossed it. This reflects the simulation design, not a failure of the method.
+The regenerated validation detects all 12 designed windows: Watch 4/4, Alert 4/4, and Critical 4/4, with all target tiers matching. The three hard windows are not detected as expected: two mean `pr_gap` values are below 0.05, while the third is only two hours long and fails the three-hour rule. The false-alarm check reports zero blocks on non-faulted inverters. That zero is expected because all non-faulted inverters share the same weather and simulated PR; it confirms the rule does not misfire on identical simulated peers and says nothing about noisy real data.
 
 The raw JSON files are never removed or rewritten by the transformation. Ingestion only writes the dedicated `open_meteo_raw.json` output after validating the API payload.
