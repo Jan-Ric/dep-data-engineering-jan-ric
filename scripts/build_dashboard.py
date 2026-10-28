@@ -1,6 +1,8 @@
 import html
 import json
+import re
 import shutil
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -12,8 +14,7 @@ FIGURES_DIR = PROJECT_ROOT / "output" / "figures"
 ASSETS_DIR = DOCS_DIR / "assets"
 INDEX_PATH = DOCS_DIR / "index.html"
 PAGE_LIMIT_BYTES = 1_000_000
-REPOSITORY_URL = "https://github.com/Jan-Ric/dep-data-engineering-jan-ric"
-GITHUB_DOCS_URL = REPOSITORY_URL + "/blob/main/docs/"
+GAP_THRESHOLD = 0.05
 
 
 def escape(value):
@@ -28,316 +29,277 @@ def find_kpi(kpis, name):
     return matches[0]["Value"]
 
 
-def kpi_card(label, value):
-    return "\n".join(
-        [
-            '<div class="kpi">',
-            f'  <span class="kpi-label">{escape(label)}</span>',
-            f'  <span class="kpi-value">{escape(value)}</span>',
-            "</div>",
-        ]
-    )
+def format_ratio(value):
+    return f"{float(value):.3f}"
+
+
+def tier_label(value):
+    tier = str(value)
+    css_name = tier.lower() if tier in ("Watch", "Alert", "Critical") else "other"
+    return f'<span class="tier tier-{css_name}">{escape(tier)}</span>'
 
 
 def table(headers, rows, caption):
     parts = [
-        '<div class="table-scroll">',
+        '<div class="table-scroll" tabindex="0" role="region" aria-label="' + escape(caption) + '">',
         "<table>",
-        f"<caption class=\"visually-hidden\">{escape(caption)}</caption>",
+        f'<caption class="visually-hidden">{escape(caption)}</caption>',
         "<thead><tr>",
     ]
-    parts.extend(f"<th scope=\"col\">{escape(header)}</th>" for header in headers)
+    parts.extend(f'<th scope="col">{escape(header)}</th>' for header in headers)
     parts.extend(["</tr></thead>", "<tbody>"])
     parts.extend(f"<tr>{row}</tr>" for row in rows)
     parts.extend(["</tbody>", "</table>", "</div>"])
     return "\n".join(parts)
 
 
-def tier_label(value):
-    tier = str(value)
-    css_name = tier.lower() if tier in ("Watch", "Alert", "Critical") else ""
-    if not css_name:
-        return escape(tier)
-    return f'<span class="tier tier-{css_name}">{escape(tier)}</span>'
+def cells(values):
+    return "".join(f"<td>{value}</td>" for value in values)
 
 
-def format_flagged_window(item):
-    start_time = str(item.get("start_time", ""))[:5]
-    end_time = str(item.get("end_time", ""))[:5]
-    if not start_time or not end_time:
-        return escape(item.get("date", "Time unavailable"))
-    return f"{escape(item.get('date', ''))} {escape(start_time)} to {escape(end_time)}"
+def date_time(value):
+    return escape(str(value).replace("T", " ")[:16])
 
 
 def build_page(data):
+    headline = data["headline"]
+    tier_counts = data["inverters_by_tier"]
+    fleet_size = int(headline["fleet_size"])
+    flagged_count = int(headline["flagged_inverters"])
     kpis = data["kpis"]
-    kpi_values = [
-        (
-            "Flagged 3-hour blocks",
-            find_kpi(kpis, "Flagged 3-hour block count"),
-        ),
-        (
-            "Flagged inverter share",
-            find_kpi(kpis, "Flagged inverter share"),
-        ),
-        (
-            "Fault detection rate",
-            find_kpi(kpis, "Fault detection rate"),
-        ),
+
+    cards = [
+        ("Inverters flagged", f'{flagged_count} of {fleet_size}', "At least one qualifying rolling block."),
+        ("Designed faults caught", headline["designed_faults_caught"], "Designed tier tests detected in their own windows."),
+        ("Expected misses confirmed", headline["expected_misses_confirmed"], "Hard cases remain outside the rule's intended detection."),
         (
             "False alarm blocks",
-            find_kpi(kpis, "False alarm blocks"),
-        ),
-        (
-            "Detection by target",
-            find_kpi(kpis, "Detection by target"),
-        ),
-        (
-            "Pooled mean hourly PR",
-            find_kpi(kpis, "Performance Ratio (hourly, per inverter)"),
-        ),
-        (
-            "Fleet mean PR shortfall",
-            find_kpi(kpis, "fleet_mean_pr_shortfall_from_1"),
-        ),
-        (
-            "Severity distribution",
-            find_kpi(kpis, "Severity distribution (Watch, Alert, Critical)"),
-        ),
-        (
-            "Clipping hours share",
-            find_kpi(kpis, "Clipping hours share (sample estimate)"),
+            f'{headline["false_alarm_blocks"]} across {headline["non_faulted_inverters"]}',
+            "Non-faulted inverters checked against the same simulated inputs.",
         ),
     ]
-    kpi_cards = "\n".join(kpi_card(label, value) for label, value in kpi_values)
-
-    severity_cards = []
-    severity_order = ["Watch", "Alert", "Critical"]
-    severity_total = sum(int(data["severity_counts"].get(tier, 0)) for tier in severity_order)
-    for tier in severity_order:
-        count = int(data["severity_counts"].get(tier, 0))
-        share = count / severity_total * 100 if severity_total else 0
-        severity_cards.append(
-            "\n".join(
-                [
-                    f'<div class="severity-item tier-{tier.lower()}">',
-                    f'  <span class="severity-label">{tier_label(tier)} blocks</span>',
-                    f'  <span class="severity-value">{count}</span>',
-                    f'  <span>{share:.2f}% of saved blocks</span>',
-                    "</div>",
-                ]
-            )
-        )
-    severity_cards_html = "\n".join(severity_cards)
-
-    if data["flagged_blocks"]:
-        flagged_rows = []
-        for item in data["flagged_blocks"]:
-            cells = [
-                escape(item.get("inverter_id", "")),
-                format_flagged_window(item),
-                escape(item.get("mean_gap", "")),
-                tier_label(item.get("severity_tier", "")),
-            ]
-            flagged_rows.append("".join(f"<td>{cell}</td>" for cell in cells))
-        flagged_content = table(
-            ["Inverter", "Date and time", "Mean PR gap", "Tier"],
-            flagged_rows,
-            "Flagged inverter blocks",
-        ) + '<p class="panel-intro">Overlapping rolling blocks count separately.</p>'
-    else:
-        flagged_content = (
-            '<div class="empty-state"><strong>No flagged blocks</strong>'
-            "<p>No dated block details are available in the saved dashboard data. "
-            "The available aggregate does not include event dates or hours.</p></div>"
-        )
-
-    ranking_rows = []
-    for item in data["ranking"]:
-        cells = [
-            escape(item.get("rank", "")),
-            escape(item.get("INVERTER_ID", "")),
-            escape(item.get("mean_performance_ratio", "")),
-            tier_label(item.get("max_severity", "")),
-            escape(item.get("absolute_flagged_hours", "")),
-            escape(item.get("baseline_relative_flagged_hours", "")),
-        ]
-        ranking_rows.append("".join(f"<td>{cell}</td>" for cell in cells))
-    ranking_table = table(
-        ["Rank", "Inverter", "Mean PR", "Maximum tier", "Absolute flagged hours", "Baseline-relative flagged hours"],
-        ranking_rows,
-        "Inverter ranking by mean performance ratio",
+    card_html = "\n".join(
+        '<article class="kpi"><h3>' + escape(label) + '</h3><p class="kpi-value">' + escape(value)
+        + '</p><p class="kpi-note">' + escape(note) + "</p></article>"
+        for label, value, note in cards
     )
 
-    figure_name = "fault_day_pr_by_tier.png"
-    investigation_rows = []
-    for inverter_id in data["inverter_detail"]:
-        for observation in data["inverter_detail"][inverter_id]:
+    tier_actions = {
+        "Watch": "Remote check, log, and monitor for 24 hours.",
+        "Alert": "Attempt a remote reset and schedule a site visit within 72 hours.",
+        "Critical": "Likely hardware fault; dispatch immediately.",
+    }
+    total_flagged = sum(int(tier_counts.get(tier, 0)) for tier in tier_actions)
+    bars = []
+    for tier, action in tier_actions.items():
+        count = int(tier_counts.get(tier, 0))
+        width = count / total_flagged * 100 if total_flagged else 0
+        bars.append(
+            f'<div class="tier-row"><div class="tier-row-heading">{tier_label(tier)}'
+            f'<strong>{count}</strong></div><div class="bar-track" role="img" '
+            f'aria-label="{tier}: {count} inverters"><span class="bar-fill tier-{tier.lower()}" '
+            f'style="width: {width:.2f}%"></span></div><p>{escape(action)}</p></div>'
+        )
+
+    inverter_rows = []
+    for item in data["flagged_inverters"]:
+        inverter_rows.append(cells([
+            escape(item["inverter_id"]),
+            date_time(item["first_block_start"]),
+            date_time(item["last_block_end"]),
+            escape(item["rolling_block_count"]),
+            format_ratio(item["peak_mean_gap"]),
+            tier_label(item["highest_tier"]),
+            escape(item["test_target"]),
+        ]))
+    inverter_table = table(
+        ["Inverter", "First flag", "Last flag", "Rolling blocks", "Peak gap", "Highest tier", "Test target"],
+        inverter_rows,
+        "Flagged inverter summary",
+    )
+
+    block_rows = []
+    for item in data["flagged_blocks"]:
+        block_rows.append(cells([
+            escape(item["inverter_id"]),
+            date_time(item["block_start"]),
+            date_time(item["block_end"]),
+            format_ratio(item["mean_gap"]),
+            tier_label(item["severity_tier"]),
+        ]))
+    block_table = table(
+        ["Inverter", "Block start", "Block end", "Mean gap", "Tier"],
+        block_rows,
+        "All saved rolling blocks",
+    )
+
+    hourly_rows = []
+    for inverter_id, observations in data["inverter_detail"].items():
+        for observation in observations:
             pr_value = observation.get("performance_ratio")
-            display_value = "No daytime reading" if pr_value is None else escape(pr_value)
-            investigation_rows.append(
-                "".join(
-                    [
-                        f"<td>{escape(inverter_id)}</td>",
-                        f"<td>{escape(observation.get('date_time', ''))}</td>",
-                        f"<td>{display_value}</td>",
-                    ]
-                )
-            )
-    investigation_table = table(
+            if pr_value is None:
+                continue
+            hourly_rows.append(cells([
+                escape(inverter_id),
+                date_time(observation["date_time"]),
+                format_ratio(pr_value),
+            ]))
+    hourly_table = table(
         ["Inverter", "Date and hour", "Performance ratio"],
-        investigation_rows,
-        "Hourly performance ratio on validation fault days",
+        hourly_rows,
+        "Daytime performance ratio readings for validation fault days",
     )
 
+    validation = data["detection_validation"]
     detection_rows = []
-    for item in data["detection_validation"]:
-        detected = str(item.get("detected", "")).lower() == "true"
-        cells = [
-            escape(item.get("inverter_id", "")),
-            escape(item.get("window", "")),
-            escape(item.get("target_tier", "")),
-            escape(item.get("mean_pr_gap", "")),
+    designed_detected = 0
+    hard_below_threshold = 0
+    short_faults = 0
+    hard_case_count = 0
+    for item in validation:
+        target = str(item["target_tier"])
+        detected = str(item["detected"]).lower() == "true"
+        start_text, end_text = item["window"].split(" to ")
+        start = datetime.fromisoformat(start_text)
+        end = datetime.fromisoformat(end_text)
+        if start.date() == end.date():
+            display_window = f"{start:%Y-%m-%d %H:%M} to {end:%H:%M}"
+        else:
+            display_window = f"{start:%Y-%m-%d %H:%M} to {end:%Y-%m-%d %H:%M}"
+        if target in ("Watch", "Alert", "Critical") and detected:
+            designed_detected += 1
+        if "expected miss" in target.lower() or "too short" in target.lower():
+            hard_case_count += 1
+            if "too short" in target.lower():
+                duration = (end - start).total_seconds() / 3600 + 1
+                if duration < 3:
+                    short_faults += 1
+            elif float(item["mean_pr_gap"]) < GAP_THRESHOLD:
+                hard_below_threshold += 1
+        note = escape(item.get("note", ""))
+        detection_rows.append(cells([
+            escape(item["inverter_id"]),
+        ]) + f'<td class="detection-window">{escape(display_window)}</td>' + cells([
+            escape(target),
+            format_ratio(item["mean_pr_gap"]),
             "Yes" if detected else "No",
-            tier_label(item.get("severity_tier", "")),
-            "Yes" if str(item.get("tier_matches_target", "")).lower() == "true" else "No",
-        ]
-        detection_rows.append("".join(f"<td>{cell}</td>" for cell in cells))
+            note,
+        ]))
     detection_table = table(
-        ["Inverter", "Injected test window", "Target", "Mean PR gap", "Detected", "Tier", "Target matched"],
+        ["Inverter", "Window", "Target", "Gap", "Flagged by own window", "Note"],
         detection_rows,
-        "Fault-window detection validation",
+        "Designed fault-window detection check",
+    )
+    detection_summary = (
+        f"The {designed_detected} designed faults were detected in their own windows. "
+        f"The {hard_case_count} hard cases show the rule's limits: {hard_below_threshold} gaps "
+        f"were below {GAP_THRESHOLD:.2f}, and {short_faults} fault lasted fewer than 3 hours."
     )
 
-    actions = [
-        ("Watch", "Remote checking only; log and monitor for the next 24 hours."),
-        ("Alert", "Attempt a remote reset and schedule a site visit within 72 hours."),
-        ("Critical", "Likely a hardware fault that requires immediate dispatch."),
-    ]
-    action_rows = [
-        f"<td>{tier_label(tier)}</td><td>{escape(action)}</td>"
-        for tier, action in actions
-    ]
-    action_table = table(
-        ["Tier", "Suggested O&M action"], action_rows, "Suggested follow-up by severity tier"
+    false_alarm = data["false_alarm_check"][0]
+    false_alarm_sentence = (
+        f'{false_alarm["flagged_blocks_on_non_faulted"]} false alarm blocks across '
+        f'{false_alarm["non_faulted_inverters"]} non-faulted inverters.'
     )
 
-    return "\n".join(
-        [
-            "<!doctype html>",
-            '<html lang="en">',
-            "<head>",
-            '  <meta charset="utf-8">',
-            '  <meta name="viewport" content="width=device-width, initial-scale=1">',
-            '  <meta name="description" content="Solar inverter performance ratio monitoring and fault-window validation results.">',
-            "  <title>Solar Inverter PR Monitoring</title>",
-            '  <link rel="stylesheet" href="style.css">',
-            "</head>",
-            "<body>",
-            '  <header class="page-header">',
-            '    <p class="eyebrow">Solar inverter PR monitoring</p>',
-            "    <h1>When and where are inverters showing negative performance ratio gaps?</h1>",
-            '    <p class="question">A fleet-level view for reviewing underperformance signals and deciding which records need O&amp;M follow-up.</p>',
-            "  </header>",
-            "  <main>",
-            '    <section class="panel" aria-labelledby="overview-title">',
-            '      <h2 id="overview-title">Fleet overview</h2>',
-            f'      <div class="kpi-grid">{kpi_cards}</div>',
-            "    </section>",
-            '    <section class="panel" aria-labelledby="severity-title">',
-            '      <h2 id="severity-title">Fleet status by severity</h2>',
-            '      <p class="panel-intro">Saved rolling blocks by tier; each tier is labeled as well as color-coded.</p>',
-            f'      <div class="severity-grid">{severity_cards_html}</div>',
-            "    </section>",
-            '    <section class="panel" aria-labelledby="blocks-title">',
-            '      <h2 id="blocks-title">When and where</h2>',
-            '      <p class="panel-intro">Dates and times are read from each saved rolling-block row in the SQL output.</p>',
-            f"      {flagged_content}",
-            "    </section>",
-            '    <section class="panel" aria-labelledby="ranking-title">',
-            '      <h2 id="ranking-title">Inverter ranking</h2>',
-            '      <p class="panel-intro">Lowest mean PR first, using the saved top-ten ranking.</p>',
-            f"      {ranking_table}",
-            "    </section>",
-            '    <section class="panel" aria-labelledby="investigation-title">',
-            '      <h2 id="investigation-title">Investigation: validation fault days</h2>',
-            '      <p class="panel-intro">Hourly PR series for one representative Watch, Alert, and Critical test window.</p>',
-            '      <figure class="investigation-figure">',
-            f'        <img src="assets/{escape(figure_name)}" alt="Three-panel line chart showing hourly performance ratio on representative Watch, Alert, and Critical test days.">',
-            '        <figcaption>Chart from the saved fault-day analysis; the table below provides the underlying hourly values.</figcaption>',
-            "      </figure>",
-            f"      {investigation_table}",
-            "    </section>",
-            '    <section class="panel" aria-labelledby="detection-title">',
-            '      <h2 id="detection-title">Detection check</h2>',
-            '      <p class="panel-intro">Designed tier cases and hard expected misses are checked separately; these synthetic results are not real-world accuracy.</p>',
-            f"      {detection_table}",
-            "    </section>",
-            '    <section class="panel" aria-labelledby="false-alarm-title">',
-            '      <h2 id="false-alarm-title">False-alarm check</h2>',
-            '      <p class="panel-intro">' + escape(data["false_alarm_check"][0]["note"]) + '</p>',
-            "    </section>",
-            '    <section class="panel" aria-labelledby="actions-title">',
-            '      <h2 id="actions-title">What to do</h2>',
-            f"      {action_table}",
-            "    </section>",
-            '    <section class="panel" aria-labelledby="limits-title">',
-            '      <h2 id="limits-title">Limits and documentation</h2>',
-            '      <div class="limits">',
-            '        <p>These are demonstration results, not live plant telemetry or fault diagnoses. The validation faults are simulated, the weather inputs are modeled, and the detector thresholds are demonstration settings.</p>',
-            '        <ul>',
-            f'          <li><a href="{GITHUB_DOCS_URL}kpi_definitions.md">KPI definitions</a></li>',
-            f'          <li><a href="{GITHUB_DOCS_URL}segmentation.md">Segmentation method</a></li>',
-            f'          <li><a href="{GITHUB_DOCS_URL}stakeholder_brief.md">Stakeholder brief</a></li>',
-            "        </ul>",
-            "      </div>",
-            "    </section>",
-            "  </main>",
-            "  <footer>",
-            '    <p>Solar inverter PR analysis</p>',
-            "    <ul>",
-            f'      <li><a href="{REPOSITORY_URL}">Project repository</a></li>',
-            f'      <li><a href="{GITHUB_DOCS_URL}dashboard_layout.md">Dashboard layout</a></li>',
-            f'      <li><a href="{GITHUB_DOCS_URL}kpi_definitions.md">KPI definitions</a></li>',
-            f'      <li><a href="{GITHUB_DOCS_URL}segmentation.md">Segmentation</a></li>',
-            f'      <li><a href="{GITHUB_DOCS_URL}stakeholder_brief.md">Stakeholder brief</a></li>',
-            "    </ul>",
-            "  </footer>",
-            "</body>",
-            "</html>",
-            "",
-        ]
-    )
+    action_rows = [cells([tier_label(tier), escape(action)]) for tier, action in tier_actions.items()]
+    action_table = table(["Tier", "Suggested action"], action_rows, "Suggested follow-up by tier")
+
+    severity = data["rolling_blocks_by_tier"]
+    severity_summary = "; ".join(f"{tier}: {severity[tier]}" for tier in tier_actions)
+    extra_metrics = [
+        ("Pooled mean hourly PR", format_ratio(find_kpi(kpis, "Performance Ratio (hourly, per inverter)"))),
+        ("Shortfall from PR 1.0", format_ratio(find_kpi(kpis, "fleet_mean_pr_shortfall_from_1"))),
+        ("Clipping share, sample estimate", find_kpi(kpis, "Clipping hours share (sample estimate)")),
+        ("Rolling blocks by severity", severity_summary),
+    ]
+    metric_rows = [cells([escape(label), escape(value)]) for label, value in extra_metrics]
+    metric_table = table(["Metric", "Value"], metric_rows, "Additional fleet metrics")
+
+    links = [
+        ("Project repository", "../"),
+        ("KPI definitions", "kpi_definitions.md"),
+        ("Segmentation", "segmentation.md"),
+        ("Stakeholder brief", "stakeholder_brief.md"),
+        ("Dashboard layout", "dashboard_layout.md"),
+    ]
+
+    return "\n".join([
+        "<!doctype html>",
+        '<html lang="en">',
+        "<head>",
+        '  <meta charset="utf-8">',
+        '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+        '  <meta name="description" content="Solar inverter performance ratio monitoring and fault-window validation results.">',
+        "  <title>Solar Inverter PR Monitoring</title>",
+        '  <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <div class="sticky-top"><div class="demo-banner">Simulated demonstration. Faults in this data are planted to test the detector. Results show how the rule behaves, not the condition of a real plant.</div>',
+        '  <nav class="site-nav" aria-label="Dashboard sections"><a href="#fleet-status">Fleet status</a><a href="#when-where">When and where</a><a href="#investigation">Investigation</a><a href="#detection">Detection check</a><a href="#false-alarms">False alarms</a><a href="#actions">What to do</a></nav></div>',
+        '  <header class="hero">',
+        '    <p class="eyebrow">Solar inverter PR monitoring</p>',
+        '    <h1>When and where are inverters underperforming against the fleet?</h1>',
+        f'    <p class="answer">{flagged_count} of {fleet_size} inverters were flagged: {headline["critical_inverters"]} Critical, {headline["alert_inverters"]} Alert, {headline["watch_inverters"]} Watch.</p>',
+        '    <p class="gap-explainer">A gap is how far an inverter\'s performance ratio (PR) sits below the fleet median at the same hour. The rule flags 3 hours in a row averaging 0.05 or more.</p>',
+        "  </header>",
+        '  <main id="main-content">',
+        f'    <section class="kpi-grid" aria-label="Key results">{card_html}</section>',
+        '    <section class="section" id="fleet-status" aria-labelledby="fleet-title">',
+        '      <div class="section-heading"><p class="eyebrow">Fleet</p><h2 id="fleet-title">Fleet status</h2></div>',
+        f'      <div class="tier-bars">{"".join(bars)}</div>',
+        "    </section>",
+        '    <section class="section" id="when-where" aria-labelledby="when-title">',
+        '      <div class="section-heading"><p class="eyebrow">Signals</p><h2 id="when-title">When and where</h2></div>',
+        f"      {inverter_table}",
+        f'      <details class="disclosure"><summary>All {len(data["flagged_blocks"])} rolling blocks</summary>{block_table}<p class="fine-print">Overlapping rolling blocks count separately.</p></details>',
+        "    </section>",
+        '    <section class="section" id="investigation" aria-labelledby="investigation-title">',
+        '      <div class="section-heading"><p class="eyebrow">Investigation</p><h2 id="investigation-title">What the planted fault hours look like</h2></div>',
+        f'      <figure class="investigation-figure"><img src="assets/fault_day_pr_by_tier.png" alt="Line chart comparing hourly performance ratio across Watch, Alert, and Critical planted-fault days."></figure>',
+        '      <p class="takeaway">PR drops during the planted fault hours, and the drop grows from Watch to Critical.</p>',
+        f'      <details class="disclosure"><summary>Hourly values</summary>{hourly_table}</details>',
+        "    </section>",
+        '    <section class="section" id="detection" aria-labelledby="detection-title">',
+        '      <div class="section-heading"><p class="eyebrow">Validation</p><h2 id="detection-title">Detection check</h2></div>',
+        f'      <p class="section-intro">{escape(detection_summary)}</p>',
+        f"      {detection_table}",
+        "    </section>",
+        '    <section class="section" id="false-alarms" aria-labelledby="false-title">',
+        '      <div class="section-heading"><p class="eyebrow">Validation</p><h2 id="false-title">False alarms</h2></div>',
+        f'      <p class="false-alarm-result">{escape(false_alarm_sentence)}</p>',
+        '      <p class="section-intro">Non-faulted inverters share the same weather and simulated PR, so this does not test noisy real data.</p>',
+        "    </section>",
+        '    <section class="section" id="actions" aria-labelledby="actions-title">',
+        '      <div class="section-heading"><p class="eyebrow">Response</p><h2 id="actions-title">What to do</h2></div>',
+        f"      {action_table}",
+        '      <details class="disclosure"><summary>More metrics</summary>' + metric_table + "</details>",
+        "    </section>",
+        "  </main>",
+        '  <footer><p>Solar inverter PR analysis</p><ul>',
+        *[f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in links],
+        "  </ul></footer>",
+        "</body>",
+        "</html>",
+        "",
+    ])
 
 
 def validate_page(page):
-    from html.parser import HTMLParser
-
-    class LinkCollector(HTMLParser):
-        def __init__(self):
-            super().__init__()
-            self.paths = []
-
-        def handle_starttag(self, tag, attrs):
-            for name, value in attrs:
-                if name in ("href", "src") and value is not None:
-                    self.paths.append(value)
-
-    collector = LinkCollector()
-    collector.feed(page)
-    for value in collector.paths:
+    paths = re.findall(r'\b(?:href|src)="([^"]+)"', page)
+    for value in paths:
         assert not value.startswith("/"), f"Absolute-root path is not allowed: {value}"
         parsed = urlsplit(value)
-        if parsed.scheme or parsed.netloc:
-            assert parsed.scheme == "https", f"Unexpected external URL: {value}"
-            continue
+        assert not parsed.scheme and not parsed.netloc, f"Only relative paths are allowed: {value}"
         relative_path = unquote(parsed.path)
         target = (DOCS_DIR / relative_path).resolve() if relative_path else DOCS_DIR.resolve()
-        assert target.is_relative_to(DOCS_DIR.resolve()), f"Path escapes docs/: {value}"
+        assert target.is_relative_to(PROJECT_ROOT.resolve()), f"Path escapes the project: {value}"
         assert target.exists(), f"Broken relative href/src: {value}"
+    image_tags = re.findall(r"<img\b[^>]*>", page, flags=re.IGNORECASE)
+    assert all(re.search(r'\balt="[^"]*"', tag) for tag in image_tags), "Every image needs an alt attribute"
     page_size = len(page.encode("utf-8"))
     assert page_size < PAGE_LIMIT_BYTES, f"Generated page is {page_size} bytes"
-    print(f"Validated {len(collector.paths)} href/src paths; page is {page_size} bytes.")
+    print(f"Validated {len(paths)} relative href/src paths and {len(image_tags)} image alt attributes; page is {page_size} bytes.")
 
 
 def main():

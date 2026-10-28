@@ -2,8 +2,10 @@
   "detection_validation": [
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "101",
       "mean_pr_gap": "0.07496576941548809",
+      "note": "Caught in its own window at the Watch level.",
       "severity_tier": "Watch",
       "target_tier": "Watch",
       "tier_matches_target": "True",
@@ -11,8 +13,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "118",
       "mean_pr_gap": "0.07498403033721279",
+      "note": "Caught in its own window at the Watch level.",
       "severity_tier": "Watch",
       "target_tier": "Watch",
       "tier_matches_target": "True",
@@ -20,8 +24,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "202",
       "mean_pr_gap": "0.07495470548641843",
+      "note": "Caught in its own window at the Watch level.",
       "severity_tier": "Watch",
       "target_tier": "Watch",
       "tier_matches_target": "True",
@@ -29,8 +35,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "303",
       "mean_pr_gap": "0.07500122409733896",
+      "note": "Caught in its own window at the Watch level.",
       "severity_tier": "Watch",
       "target_tier": "Watch",
       "tier_matches_target": "True",
@@ -38,8 +46,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "404",
       "mean_pr_gap": "0.15000117703032959",
+      "note": "Caught in its own window at the Alert level.",
       "severity_tier": "Alert",
       "target_tier": "Alert",
       "tier_matches_target": "True",
@@ -47,8 +57,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "505",
       "mean_pr_gap": "0.13654759344105297",
+      "note": "Caught in its own window at the Alert level.",
       "severity_tier": "Alert",
       "target_tier": "Alert",
       "tier_matches_target": "True",
@@ -56,8 +68,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "606",
       "mean_pr_gap": "0.15002185794958325",
+      "note": "Caught in its own window at the Alert level.",
       "severity_tier": "Alert",
       "target_tier": "Alert",
       "tier_matches_target": "True",
@@ -65,8 +79,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "707",
       "mean_pr_gap": "0.15001428534674766",
+      "note": "Caught in its own window at the Alert level.",
       "severity_tier": "Alert",
       "target_tier": "Alert",
       "tier_matches_target": "True",
@@ -74,8 +90,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "808",
       "mean_pr_gap": "0.28001815809264213",
+      "note": "Caught in its own window at the Critical level.",
       "severity_tier": "Critical",
       "target_tier": "Critical",
       "tier_matches_target": "True",
@@ -83,8 +101,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "123",
       "mean_pr_gap": "0.2799877656100029",
+      "note": "Caught in its own window at the Critical level.",
       "severity_tier": "Critical",
       "target_tier": "Critical",
       "tier_matches_target": "True",
@@ -92,8 +112,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "456",
       "mean_pr_gap": "0.2800356726782316",
+      "note": "Caught in its own window at the Critical level.",
       "severity_tier": "Critical",
       "target_tier": "Critical",
       "tier_matches_target": "True",
@@ -101,8 +123,10 @@
     },
     {
       "detected": "True",
+      "flagged_anywhere": true,
       "inverter_id": "789",
       "mean_pr_gap": "0.2799911036914747",
+      "note": "Caught in its own window at the Critical level.",
       "severity_tier": "Critical",
       "target_tier": "Critical",
       "tier_matches_target": "True",
@@ -110,8 +134,10 @@
     },
     {
       "detected": "False",
+      "flagged_anywhere": false,
       "inverter_id": "150",
       "mean_pr_gap": "0.024993854990795723",
+      "note": "Gap of 0.025 is below the 0.05 threshold, so no flag is expected.",
       "severity_tier": "Below Watch",
       "target_tier": "Below Watch (expected miss)",
       "tier_matches_target": "True",
@@ -119,8 +145,10 @@
     },
     {
       "detected": "False",
+      "flagged_anywhere": false,
       "inverter_id": "250",
       "mean_pr_gap": "0.03496990434871061",
+      "note": "Gap of 0.035 is below the 0.05 threshold, so no flag is expected.",
       "severity_tier": "Below Watch",
       "target_tier": "Below Watch (expected miss)",
       "tier_matches_target": "True",
@@ -128,8 +156,10 @@
     },
     {
       "detected": "False",
+      "flagged_anywhere": true,
       "inverter_id": "350",
       "mean_pr_gap": "0.1499680146080301",
+      "note": "The fault window is too short for the 3-hour rule. Its gap of 0.150 would be Alert, but neighboring normal hours dilute the 3-hour average, so the flag appears as Watch.",
       "severity_tier": "Alert",
       "target_tier": "Too short (expected miss)",
       "tier_matches_target": "True",
@@ -497,6 +527,136 @@
       "start_time": "12:00:00"
     }
   ],
+  "flagged_inverters": [
+    {
+      "first_block_start": "2025-11-18 12:00:00",
+      "highest_tier": "Critical",
+      "inverter_id": "456",
+      "last_block_end": "2025-11-18 16:00:00",
+      "peak_mean_gap": 0.2800356726782316,
+      "rolling_block_count": 3,
+      "test_target": "Critical"
+    },
+    {
+      "first_block_start": "2025-09-29 08:00:00",
+      "highest_tier": "Critical",
+      "inverter_id": "808",
+      "last_block_end": "2025-09-29 12:00:00",
+      "peak_mean_gap": 0.28001815809264213,
+      "rolling_block_count": 3,
+      "test_target": "Critical"
+    },
+    {
+      "first_block_start": "2025-12-24 12:00:00",
+      "highest_tier": "Critical",
+      "inverter_id": "789",
+      "last_block_end": "2025-12-24 16:00:00",
+      "peak_mean_gap": 0.2799911036914747,
+      "rolling_block_count": 3,
+      "test_target": "Critical"
+    },
+    {
+      "first_block_start": "2025-10-09 12:00:00",
+      "highest_tier": "Critical",
+      "inverter_id": "123",
+      "last_block_end": "2025-10-09 16:00:00",
+      "peak_mean_gap": 0.2799877656100029,
+      "rolling_block_count": 3,
+      "test_target": "Critical"
+    },
+    {
+      "first_block_start": "2025-07-08 13:00:00",
+      "highest_tier": "Alert",
+      "inverter_id": "606",
+      "last_block_end": "2025-07-08 17:00:00",
+      "peak_mean_gap": 0.15002185794958325,
+      "rolling_block_count": 3,
+      "test_target": "Alert"
+    },
+    {
+      "first_block_start": "2025-08-21 12:00:00",
+      "highest_tier": "Alert",
+      "inverter_id": "707",
+      "last_block_end": "2025-08-21 16:00:00",
+      "peak_mean_gap": 0.15001428534674766,
+      "rolling_block_count": 3,
+      "test_target": "Alert"
+    },
+    {
+      "first_block_start": "2025-05-19 08:00:00",
+      "highest_tier": "Alert",
+      "inverter_id": "404",
+      "last_block_end": "2025-05-19 12:00:00",
+      "peak_mean_gap": 0.15000117703032959,
+      "rolling_block_count": 3,
+      "test_target": "Alert"
+    },
+    {
+      "first_block_start": "2025-06-25 08:00:00",
+      "highest_tier": "Alert",
+      "inverter_id": "505",
+      "last_block_end": "2025-06-25 12:00:00",
+      "peak_mean_gap": 0.13654759344105297,
+      "rolling_block_count": 3,
+      "test_target": "Alert"
+    },
+    {
+      "first_block_start": "2025-03-04 13:00:00",
+      "highest_tier": "Watch",
+      "inverter_id": "350",
+      "last_block_end": "2025-03-04 17:00:00",
+      "peak_mean_gap": 0.0999786764053534,
+      "rolling_block_count": 3,
+      "test_target": "Too short (expected miss)"
+    },
+    {
+      "first_block_start": "2025-04-17 14:00:00",
+      "highest_tier": "Watch",
+      "inverter_id": "303",
+      "last_block_end": "2025-04-17 17:00:00",
+      "peak_mean_gap": 0.07500122409733896,
+      "rolling_block_count": 2,
+      "test_target": "Watch"
+    },
+    {
+      "first_block_start": "2025-02-21 13:00:00",
+      "highest_tier": "Watch",
+      "inverter_id": "118",
+      "last_block_end": "2025-02-21 16:00:00",
+      "peak_mean_gap": 0.07498403033721279,
+      "rolling_block_count": 2,
+      "test_target": "Watch"
+    },
+    {
+      "first_block_start": "2025-01-22 13:00:00",
+      "highest_tier": "Watch",
+      "inverter_id": "101",
+      "last_block_end": "2025-01-22 16:00:00",
+      "peak_mean_gap": 0.07496576941548809,
+      "rolling_block_count": 2,
+      "test_target": "Watch"
+    },
+    {
+      "first_block_start": "2025-03-11 14:00:00",
+      "highest_tier": "Watch",
+      "inverter_id": "202",
+      "last_block_end": "2025-03-11 17:00:00",
+      "peak_mean_gap": 0.07495470548641843,
+      "rolling_block_count": 2,
+      "test_target": "Watch"
+    }
+  ],
+  "headline": {
+    "alert_inverters": 4,
+    "critical_inverters": 4,
+    "designed_faults_caught": "12/12",
+    "expected_misses_confirmed": "3/3",
+    "false_alarm_blocks": 0,
+    "flagged_inverters": 13,
+    "fleet_size": 830,
+    "non_faulted_inverters": 815,
+    "watch_inverters": 5
+  },
   "hourly_mean_pr": [
     {
       "daytime_rows": "102920",
@@ -572,34 +732,6 @@
   "inverter_detail": {
     "101": [
       {
-        "date_time": "2025-01-22 00:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 01:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 02:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 03:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 04:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 05:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 06:00:00",
-        "performance_ratio": null
-      },
-      {
         "date_time": "2025-01-22 07:00:00",
         "performance_ratio": 0.9778094123996744
       },
@@ -646,53 +778,9 @@
       {
         "date_time": "2025-01-22 18:00:00",
         "performance_ratio": 0.9700299809583236
-      },
-      {
-        "date_time": "2025-01-22 19:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 20:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 21:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 22:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-01-22 23:00:00",
-        "performance_ratio": null
       }
     ],
     "404": [
-      {
-        "date_time": "2025-05-19 00:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 01:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 02:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 03:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 04:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 05:00:00",
-        "performance_ratio": null
-      },
       {
         "date_time": "2025-05-19 06:00:00",
         "performance_ratio": 0.969133516935454
@@ -748,53 +836,9 @@
       {
         "date_time": "2025-05-19 19:00:00",
         "performance_ratio": 0.9570788858271424
-      },
-      {
-        "date_time": "2025-05-19 20:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 21:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 22:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-05-19 23:00:00",
-        "performance_ratio": null
       }
     ],
     "808": [
-      {
-        "date_time": "2025-09-29 00:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 01:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 02:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 03:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 04:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 05:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 06:00:00",
-        "performance_ratio": null
-      },
       {
         "date_time": "2025-09-29 07:00:00",
         "performance_ratio": 0.9691944048184392
@@ -842,28 +886,13 @@
       {
         "date_time": "2025-09-29 18:00:00",
         "performance_ratio": 0.9720549978862956
-      },
-      {
-        "date_time": "2025-09-29 19:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 20:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 21:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 22:00:00",
-        "performance_ratio": null
-      },
-      {
-        "date_time": "2025-09-29 23:00:00",
-        "performance_ratio": null
       }
     ]
+  },
+  "inverters_by_tier": {
+    "Alert": 4,
+    "Critical": 4,
+    "Watch": 5
   },
   "kpis": [
     {
@@ -948,119 +977,7 @@
       "Value": "Watch: 4/4; Alert: 4/4; Critical: 4/4; Hard cases (expected misses): 3/3"
     }
   ],
-  "ranking": [
-    {
-      "INVERTER_ID": "202",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "2",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292126805",
-      "rank": "1",
-      "total_ac_energy_kwh": "134741.77"
-    },
-    {
-      "INVERTER_ID": "303",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292441589",
-      "rank": "2",
-      "total_ac_energy_kwh": "134751.6313"
-    },
-    {
-      "INVERTER_ID": "101",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292457259",
-      "rank": "3",
-      "total_ac_energy_kwh": "134750.7796"
-    },
-    {
-      "INVERTER_ID": "45",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "46",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "47",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "48",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "49",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "50",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    },
-    {
-      "INVERTER_ID": "51",
-      "absolute_flagged_hours": "2867",
-      "alert_block_count": "0",
-      "baseline_relative_flagged_hours": "0",
-      "max_block_gap": "0",
-      "max_severity": "Normal",
-      "mean_performance_ratio": "0.9292531743",
-      "rank": "4",
-      "total_ac_energy_kwh": "134753.0828"
-    }
-  ],
-  "severity_counts": {
+  "rolling_blocks_by_tier": {
     "Alert": 15,
     "Critical": 4,
     "Watch": 16

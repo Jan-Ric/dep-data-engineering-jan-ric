@@ -8,320 +8,237 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="page-header">
+  <div class="sticky-top"><div class="demo-banner">Simulated demonstration. Faults in this data are planted to test the detector. Results show how the rule behaves, not the condition of a real plant.</div>
+  <nav class="site-nav" aria-label="Dashboard sections"><a href="#fleet-status">Fleet status</a><a href="#when-where">When and where</a><a href="#investigation">Investigation</a><a href="#detection">Detection check</a><a href="#false-alarms">False alarms</a><a href="#actions">What to do</a></nav></div>
+  <header class="hero">
     <p class="eyebrow">Solar inverter PR monitoring</p>
-    <h1>When and where are inverters showing negative performance ratio gaps?</h1>
-    <p class="question">A fleet-level view for reviewing underperformance signals and deciding which records need O&amp;M follow-up.</p>
+    <h1>When and where are inverters underperforming against the fleet?</h1>
+    <p class="answer">13 of 830 inverters were flagged: 4 Critical, 4 Alert, 5 Watch.</p>
+    <p class="gap-explainer">A gap is how far an inverter's performance ratio (PR) sits below the fleet median at the same hour. The rule flags 3 hours in a row averaging 0.05 or more.</p>
   </header>
-  <main>
-    <section class="panel" aria-labelledby="overview-title">
-      <h2 id="overview-title">Fleet overview</h2>
-      <div class="kpi-grid"><div class="kpi">
-  <span class="kpi-label">Flagged 3-hour blocks</span>
-  <span class="kpi-value">35</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Flagged inverter share</span>
-  <span class="kpi-value">1.57% (13/830)</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Fault detection rate</span>
-  <span class="kpi-value">100.00% (12/12)</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">False alarm blocks</span>
-  <span class="kpi-value">0</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Detection by target</span>
-  <span class="kpi-value">Watch: 4/4; Alert: 4/4; Critical: 4/4; Hard cases (expected misses): 3/3</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Pooled mean hourly PR</span>
-  <span class="kpi-value">0.9292514749567232</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Fleet mean PR shortfall</span>
-  <span class="kpi-value">0.07074852504327678</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Severity distribution</span>
-  <span class="kpi-value">Watch: 16 (45.71%); Alert: 15 (42.86%); Critical: 4 (11.43%)</span>
-</div>
-<div class="kpi">
-  <span class="kpi-label">Clipping hours share</span>
-  <span class="kpi-value">2.1640%</span>
-</div></div>
+  <main id="main-content">
+    <section class="kpi-grid" aria-label="Key results"><article class="kpi"><h3>Inverters flagged</h3><p class="kpi-value">13 of 830</p><p class="kpi-note">At least one qualifying rolling block.</p></article>
+<article class="kpi"><h3>Designed faults caught</h3><p class="kpi-value">12/12</p><p class="kpi-note">Designed tier tests detected in their own windows.</p></article>
+<article class="kpi"><h3>Expected misses confirmed</h3><p class="kpi-value">3/3</p><p class="kpi-note">Hard cases remain outside the rule&#x27;s intended detection.</p></article>
+<article class="kpi"><h3>False alarm blocks</h3><p class="kpi-value">0 across 815</p><p class="kpi-note">Non-faulted inverters checked against the same simulated inputs.</p></article></section>
+    <section class="section" id="fleet-status" aria-labelledby="fleet-title">
+      <div class="section-heading"><p class="eyebrow">Fleet</p><h2 id="fleet-title">Fleet status</h2></div>
+      <div class="tier-bars"><div class="tier-row"><div class="tier-row-heading"><span class="tier tier-watch">Watch</span><strong>5</strong></div><div class="bar-track" role="img" aria-label="Watch: 5 inverters"><span class="bar-fill tier-watch" style="width: 38.46%"></span></div><p>Remote check, log, and monitor for 24 hours.</p></div><div class="tier-row"><div class="tier-row-heading"><span class="tier tier-alert">Alert</span><strong>4</strong></div><div class="bar-track" role="img" aria-label="Alert: 4 inverters"><span class="bar-fill tier-alert" style="width: 30.77%"></span></div><p>Attempt a remote reset and schedule a site visit within 72 hours.</p></div><div class="tier-row"><div class="tier-row-heading"><span class="tier tier-critical">Critical</span><strong>4</strong></div><div class="bar-track" role="img" aria-label="Critical: 4 inverters"><span class="bar-fill tier-critical" style="width: 30.77%"></span></div><p>Likely hardware fault; dispatch immediately.</p></div></div>
     </section>
-    <section class="panel" aria-labelledby="severity-title">
-      <h2 id="severity-title">Fleet status by severity</h2>
-      <p class="panel-intro">Saved rolling blocks by tier; each tier is labeled as well as color-coded.</p>
-      <div class="severity-grid"><div class="severity-item tier-watch">
-  <span class="severity-label"><span class="tier tier-watch">Watch</span> blocks</span>
-  <span class="severity-value">16</span>
-  <span>45.71% of saved blocks</span>
-</div>
-<div class="severity-item tier-alert">
-  <span class="severity-label"><span class="tier tier-alert">Alert</span> blocks</span>
-  <span class="severity-value">15</span>
-  <span>42.86% of saved blocks</span>
-</div>
-<div class="severity-item tier-critical">
-  <span class="severity-label"><span class="tier tier-critical">Critical</span> blocks</span>
-  <span class="severity-value">4</span>
-  <span>11.43% of saved blocks</span>
-</div></div>
-    </section>
-    <section class="panel" aria-labelledby="blocks-title">
-      <h2 id="blocks-title">When and where</h2>
-      <p class="panel-intro">Dates and times are read from each saved rolling-block row in the SQL output.</p>
-      <div class="table-scroll">
+    <section class="section" id="when-where" aria-labelledby="when-title">
+      <div class="section-heading"><p class="eyebrow">Signals</p><h2 id="when-title">When and where</h2></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Flagged inverter summary">
 <table>
-<caption class="visually-hidden">Flagged inverter blocks</caption>
+<caption class="visually-hidden">Flagged inverter summary</caption>
 <thead><tr>
 <th scope="col">Inverter</th>
-<th scope="col">Date and time</th>
-<th scope="col">Mean PR gap</th>
+<th scope="col">First flag</th>
+<th scope="col">Last flag</th>
+<th scope="col">Rolling blocks</th>
+<th scope="col">Peak gap</th>
+<th scope="col">Highest tier</th>
+<th scope="col">Test target</th>
+</tr></thead>
+<tbody>
+<tr><td>456</td><td>2025-11-18 12:00</td><td>2025-11-18 16:00</td><td>3</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td><td>Critical</td></tr>
+<tr><td>808</td><td>2025-09-29 08:00</td><td>2025-09-29 12:00</td><td>3</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td><td>Critical</td></tr>
+<tr><td>789</td><td>2025-12-24 12:00</td><td>2025-12-24 16:00</td><td>3</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td><td>Critical</td></tr>
+<tr><td>123</td><td>2025-10-09 12:00</td><td>2025-10-09 16:00</td><td>3</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td><td>Critical</td></tr>
+<tr><td>606</td><td>2025-07-08 13:00</td><td>2025-07-08 17:00</td><td>3</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td><td>Alert</td></tr>
+<tr><td>707</td><td>2025-08-21 12:00</td><td>2025-08-21 16:00</td><td>3</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td><td>Alert</td></tr>
+<tr><td>404</td><td>2025-05-19 08:00</td><td>2025-05-19 12:00</td><td>3</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td><td>Alert</td></tr>
+<tr><td>505</td><td>2025-06-25 08:00</td><td>2025-06-25 12:00</td><td>3</td><td>0.137</td><td><span class="tier tier-alert">Alert</span></td><td>Alert</td></tr>
+<tr><td>350</td><td>2025-03-04 13:00</td><td>2025-03-04 17:00</td><td>3</td><td>0.100</td><td><span class="tier tier-watch">Watch</span></td><td>Too short (expected miss)</td></tr>
+<tr><td>303</td><td>2025-04-17 14:00</td><td>2025-04-17 17:00</td><td>2</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td><td>Watch</td></tr>
+<tr><td>118</td><td>2025-02-21 13:00</td><td>2025-02-21 16:00</td><td>2</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td><td>Watch</td></tr>
+<tr><td>101</td><td>2025-01-22 13:00</td><td>2025-01-22 16:00</td><td>2</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td><td>Watch</td></tr>
+<tr><td>202</td><td>2025-03-11 14:00</td><td>2025-03-11 17:00</td><td>2</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td><td>Watch</td></tr>
+</tbody>
+</table>
+</div>
+      <details class="disclosure"><summary>All 35 rolling blocks</summary><div class="table-scroll" tabindex="0" role="region" aria-label="All saved rolling blocks">
+<table>
+<caption class="visually-hidden">All saved rolling blocks</caption>
+<thead><tr>
+<th scope="col">Inverter</th>
+<th scope="col">Block start</th>
+<th scope="col">Block end</th>
+<th scope="col">Mean gap</th>
 <th scope="col">Tier</th>
 </tr></thead>
 <tbody>
-<tr><td>456</td><td>2025-11-18 14:00 to 16:00</td><td>0.2800356726782316</td><td><span class="tier tier-critical">Critical</span></td></tr>
-<tr><td>808</td><td>2025-09-29 08:00 to 10:00</td><td>0.28001815809264213</td><td><span class="tier tier-critical">Critical</span></td></tr>
-<tr><td>789</td><td>2025-12-24 14:00 to 16:00</td><td>0.2799911036914747</td><td><span class="tier tier-critical">Critical</span></td></tr>
-<tr><td>123</td><td>2025-10-09 14:00 to 16:00</td><td>0.2799877656100029</td><td><span class="tier tier-critical">Critical</span></td></tr>
-<tr><td>808</td><td>2025-09-29 09:00 to 11:00</td><td>0.1992381673657501</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>123</td><td>2025-10-09 13:00 to 15:00</td><td>0.19679779119235233</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>456</td><td>2025-11-18 13:00 to 15:00</td><td>0.19422708280394382</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>789</td><td>2025-12-24 13:00 to 15:00</td><td>0.1930672845723226</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>606</td><td>2025-07-08 14:00 to 16:00</td><td>0.15002185794958325</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>707</td><td>2025-08-21 14:00 to 16:00</td><td>0.15001428534674766</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>404</td><td>2025-05-19 08:00 to 10:00</td><td>0.15000117703032959</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>505</td><td>2025-06-25 08:00 to 10:00</td><td>0.13654759344105297</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>707</td><td>2025-08-21 13:00 to 15:00</td><td>0.10856486952025972</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>404</td><td>2025-05-19 09:00 to 11:00</td><td>0.10822454461812432</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>505</td><td>2025-06-25 09:00 to 11:00</td><td>0.10744795072869646</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>606</td><td>2025-07-08 13:00 to 15:00</td><td>0.10417707544863901</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>606</td><td>2025-07-08 15:00 to 17:00</td><td>0.10082525644507412</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>123</td><td>2025-10-09 12:00 to 14:00</td><td>0.1005084257016936</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>808</td><td>2025-09-29 10:00 to 12:00</td><td>0.1002565529821996</td><td><span class="tier tier-alert">Alert</span></td></tr>
-<tr><td>350</td><td>2025-03-04 14:00 to 16:00</td><td>0.0999786764053534</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>350</td><td>2025-03-04 15:00 to 17:00</td><td>0.0999786764053534</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>456</td><td>2025-11-18 12:00 to 14:00</td><td>0.09932765253230191</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>789</td><td>2025-12-24 12:00 to 14:00</td><td>0.09745177197814203</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>303</td><td>2025-04-17 15:00 to 17:00</td><td>0.07500122409733896</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>118</td><td>2025-02-21 14:00 to 16:00</td><td>0.07498403033721279</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>101</td><td>2025-01-22 14:00 to 16:00</td><td>0.07496576941548809</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>202</td><td>2025-03-11 15:00 to 17:00</td><td>0.07495470548641843</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>303</td><td>2025-04-17 14:00 to 16:00</td><td>0.06201028446592564</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>118</td><td>2025-02-21 13:00 to 15:00</td><td>0.05999365844749819</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>202</td><td>2025-03-11 14:00 to 16:00</td><td>0.05902162655208446</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>404</td><td>2025-05-19 10:00 to 12:00</td><td>0.057411378377939006</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>101</td><td>2025-01-22 13:00 to 15:00</td><td>0.055687811534064435</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>505</td><td>2025-06-25 10:00 to 12:00</td><td>0.05542521270130015</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>350</td><td>2025-03-04 13:00 to 15:00</td><td>0.05330791707364909</td><td><span class="tier tier-watch">Watch</span></td></tr>
-<tr><td>707</td><td>2025-08-21 12:00 to 14:00</td><td>0.05264806253116231</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>456</td><td>2025-11-18 14:00</td><td>2025-11-18 16:00</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>808</td><td>2025-09-29 08:00</td><td>2025-09-29 10:00</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>789</td><td>2025-12-24 14:00</td><td>2025-12-24 16:00</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>123</td><td>2025-10-09 14:00</td><td>2025-10-09 16:00</td><td>0.280</td><td><span class="tier tier-critical">Critical</span></td></tr>
+<tr><td>808</td><td>2025-09-29 09:00</td><td>2025-09-29 11:00</td><td>0.199</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>123</td><td>2025-10-09 13:00</td><td>2025-10-09 15:00</td><td>0.197</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>456</td><td>2025-11-18 13:00</td><td>2025-11-18 15:00</td><td>0.194</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>789</td><td>2025-12-24 13:00</td><td>2025-12-24 15:00</td><td>0.193</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 14:00</td><td>2025-07-08 16:00</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>707</td><td>2025-08-21 14:00</td><td>2025-08-21 16:00</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>404</td><td>2025-05-19 08:00</td><td>2025-05-19 10:00</td><td>0.150</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>505</td><td>2025-06-25 08:00</td><td>2025-06-25 10:00</td><td>0.137</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>707</td><td>2025-08-21 13:00</td><td>2025-08-21 15:00</td><td>0.109</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>404</td><td>2025-05-19 09:00</td><td>2025-05-19 11:00</td><td>0.108</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>505</td><td>2025-06-25 09:00</td><td>2025-06-25 11:00</td><td>0.107</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 13:00</td><td>2025-07-08 15:00</td><td>0.104</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>606</td><td>2025-07-08 15:00</td><td>2025-07-08 17:00</td><td>0.101</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>123</td><td>2025-10-09 12:00</td><td>2025-10-09 14:00</td><td>0.101</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>808</td><td>2025-09-29 10:00</td><td>2025-09-29 12:00</td><td>0.100</td><td><span class="tier tier-alert">Alert</span></td></tr>
+<tr><td>350</td><td>2025-03-04 14:00</td><td>2025-03-04 16:00</td><td>0.100</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>350</td><td>2025-03-04 15:00</td><td>2025-03-04 17:00</td><td>0.100</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>456</td><td>2025-11-18 12:00</td><td>2025-11-18 14:00</td><td>0.099</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>789</td><td>2025-12-24 12:00</td><td>2025-12-24 14:00</td><td>0.097</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>303</td><td>2025-04-17 15:00</td><td>2025-04-17 17:00</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>118</td><td>2025-02-21 14:00</td><td>2025-02-21 16:00</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>101</td><td>2025-01-22 14:00</td><td>2025-01-22 16:00</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>202</td><td>2025-03-11 15:00</td><td>2025-03-11 17:00</td><td>0.075</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>303</td><td>2025-04-17 14:00</td><td>2025-04-17 16:00</td><td>0.062</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>118</td><td>2025-02-21 13:00</td><td>2025-02-21 15:00</td><td>0.060</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>202</td><td>2025-03-11 14:00</td><td>2025-03-11 16:00</td><td>0.059</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>404</td><td>2025-05-19 10:00</td><td>2025-05-19 12:00</td><td>0.057</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>101</td><td>2025-01-22 13:00</td><td>2025-01-22 15:00</td><td>0.056</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>505</td><td>2025-06-25 10:00</td><td>2025-06-25 12:00</td><td>0.055</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>350</td><td>2025-03-04 13:00</td><td>2025-03-04 15:00</td><td>0.053</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>707</td><td>2025-08-21 12:00</td><td>2025-08-21 14:00</td><td>0.053</td><td><span class="tier tier-watch">Watch</span></td></tr>
 </tbody>
 </table>
-</div><p class="panel-intro">Overlapping rolling blocks count separately.</p>
+</div><p class="fine-print">Overlapping rolling blocks count separately.</p></details>
     </section>
-    <section class="panel" aria-labelledby="ranking-title">
-      <h2 id="ranking-title">Inverter ranking</h2>
-      <p class="panel-intro">Lowest mean PR first, using the saved top-ten ranking.</p>
-      <div class="table-scroll">
+    <section class="section" id="investigation" aria-labelledby="investigation-title">
+      <div class="section-heading"><p class="eyebrow">Investigation</p><h2 id="investigation-title">What the planted fault hours look like</h2></div>
+      <figure class="investigation-figure"><img src="assets/fault_day_pr_by_tier.png" alt="Line chart comparing hourly performance ratio across Watch, Alert, and Critical planted-fault days."></figure>
+      <p class="takeaway">PR drops during the planted fault hours, and the drop grows from Watch to Critical.</p>
+      <details class="disclosure"><summary>Hourly values</summary><div class="table-scroll" tabindex="0" role="region" aria-label="Daytime performance ratio readings for validation fault days">
 <table>
-<caption class="visually-hidden">Inverter ranking by mean performance ratio</caption>
-<thead><tr>
-<th scope="col">Rank</th>
-<th scope="col">Inverter</th>
-<th scope="col">Mean PR</th>
-<th scope="col">Maximum tier</th>
-<th scope="col">Absolute flagged hours</th>
-<th scope="col">Baseline-relative flagged hours</th>
-</tr></thead>
-<tbody>
-<tr><td>1</td><td>202</td><td>0.9292126805</td><td>Normal</td><td>2867</td><td>2</td></tr>
-<tr><td>2</td><td>303</td><td>0.9292441589</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>3</td><td>101</td><td>0.9292457259</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>45</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>46</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>47</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>48</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>49</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>50</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-<tr><td>4</td><td>51</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
-</tbody>
-</table>
-</div>
-    </section>
-    <section class="panel" aria-labelledby="investigation-title">
-      <h2 id="investigation-title">Investigation: validation fault days</h2>
-      <p class="panel-intro">Hourly PR series for one representative Watch, Alert, and Critical test window.</p>
-      <figure class="investigation-figure">
-        <img src="assets/fault_day_pr_by_tier.png" alt="Three-panel line chart showing hourly performance ratio on representative Watch, Alert, and Critical test days.">
-        <figcaption>Chart from the saved fault-day analysis; the table below provides the underlying hourly values.</figcaption>
-      </figure>
-      <div class="table-scroll">
-<table>
-<caption class="visually-hidden">Hourly performance ratio on validation fault days</caption>
+<caption class="visually-hidden">Daytime performance ratio readings for validation fault days</caption>
 <thead><tr>
 <th scope="col">Inverter</th>
 <th scope="col">Date and hour</th>
 <th scope="col">Performance ratio</th>
 </tr></thead>
 <tbody>
-<tr><td>101</td><td>2025-01-22 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 06:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 07:00:00</td><td>0.9778094123996744</td></tr>
-<tr><td>101</td><td>2025-01-22 08:00:00</td><td>0.9626949072671372</td></tr>
-<tr><td>101</td><td>2025-01-22 09:00:00</td><td>0.9473178423255204</td></tr>
-<tr><td>101</td><td>2025-01-22 10:00:00</td><td>0.9353854527524912</td></tr>
-<tr><td>101</td><td>2025-01-22 11:00:00</td><td>0.9277052437389546</td></tr>
-<tr><td>101</td><td>2025-01-22 12:00:00</td><td>0.9208373768478656</td></tr>
-<tr><td>101</td><td>2025-01-22 13:00:00</td><td>0.9173432029555744</td></tr>
-<tr><td>101</td><td>2025-01-22 14:00:00</td><td>0.8321800483847152</td></tr>
-<tr><td>101</td><td>2025-01-22 15:00:00</td><td>0.8632915022407385</td></tr>
-<tr><td>101</td><td>2025-01-22 16:00:00</td><td>0.8848840784787858</td></tr>
-<tr><td>101</td><td>2025-01-22 17:00:00</td><td>0.9559813763621172</td></tr>
-<tr><td>101</td><td>2025-01-22 18:00:00</td><td>0.9700299809583236</td></tr>
-<tr><td>101</td><td>2025-01-22 19:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>101</td><td>2025-01-22 23:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 06:00:00</td><td>0.969133516935454</td></tr>
-<tr><td>404</td><td>2025-05-19 07:00:00</td><td>0.956297063764758</td></tr>
-<tr><td>404</td><td>2025-05-19 08:00:00</td><td>0.813072124392199</td></tr>
-<tr><td>404</td><td>2025-05-19 09:00:00</td><td>0.7734333802014944</td></tr>
-<tr><td>404</td><td>2025-05-19 10:00:00</td><td>0.7442545176258124</td></tr>
-<tr><td>404</td><td>2025-05-19 11:00:00</td><td>0.9026799254195416</td></tr>
-<tr><td>404</td><td>2025-05-19 12:00:00</td><td>0.8605664600961553</td></tr>
-<tr><td>404</td><td>2025-05-19 13:00:00</td><td>0.9052556257882464</td></tr>
-<tr><td>404</td><td>2025-05-19 14:00:00</td><td>0.9087014359481138</td></tr>
-<tr><td>404</td><td>2025-05-19 15:00:00</td><td>0.9169031434056364</td></tr>
-<tr><td>404</td><td>2025-05-19 16:00:00</td><td>0.926806102857143</td></tr>
-<tr><td>404</td><td>2025-05-19 17:00:00</td><td>0.9408979977966362</td></tr>
-<tr><td>404</td><td>2025-05-19 18:00:00</td><td>0.9512222725763712</td></tr>
-<tr><td>404</td><td>2025-05-19 19:00:00</td><td>0.9570788858271424</td></tr>
-<tr><td>404</td><td>2025-05-19 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>404</td><td>2025-05-19 23:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 00:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 01:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 02:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 03:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 04:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 05:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 06:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 07:00:00</td><td>0.9691944048184392</td></tr>
-<tr><td>808</td><td>2025-09-29 08:00:00</td><td>0.7015925466288588</td></tr>
-<tr><td>808</td><td>2025-09-29 09:00:00</td><td>0.6199317777788501</td></tr>
-<tr><td>808</td><td>2025-09-29 10:00:00</td><td>0.6141417052710249</td></tr>
-<tr><td>808</td><td>2025-09-29 11:00:00</td><td>0.880344466026439</td></tr>
-<tr><td>808</td><td>2025-09-29 12:00:00</td><td>0.9036684494802836</td></tr>
-<tr><td>808</td><td>2025-09-29 13:00:00</td><td>0.9303331876297082</td></tr>
-<tr><td>808</td><td>2025-09-29 14:00:00</td><td>0.9294637145479832</td></tr>
-<tr><td>808</td><td>2025-09-29 15:00:00</td><td>0.9252230680340644</td></tr>
-<tr><td>808</td><td>2025-09-29 16:00:00</td><td>0.9423182145109756</td></tr>
-<tr><td>808</td><td>2025-09-29 17:00:00</td><td>0.9582476549895852</td></tr>
-<tr><td>808</td><td>2025-09-29 18:00:00</td><td>0.9720549978862956</td></tr>
-<tr><td>808</td><td>2025-09-29 19:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 20:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 21:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 22:00:00</td><td>No daytime reading</td></tr>
-<tr><td>808</td><td>2025-09-29 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-01-22 07:00</td><td>0.978</td></tr>
+<tr><td>101</td><td>2025-01-22 08:00</td><td>0.963</td></tr>
+<tr><td>101</td><td>2025-01-22 09:00</td><td>0.947</td></tr>
+<tr><td>101</td><td>2025-01-22 10:00</td><td>0.935</td></tr>
+<tr><td>101</td><td>2025-01-22 11:00</td><td>0.928</td></tr>
+<tr><td>101</td><td>2025-01-22 12:00</td><td>0.921</td></tr>
+<tr><td>101</td><td>2025-01-22 13:00</td><td>0.917</td></tr>
+<tr><td>101</td><td>2025-01-22 14:00</td><td>0.832</td></tr>
+<tr><td>101</td><td>2025-01-22 15:00</td><td>0.863</td></tr>
+<tr><td>101</td><td>2025-01-22 16:00</td><td>0.885</td></tr>
+<tr><td>101</td><td>2025-01-22 17:00</td><td>0.956</td></tr>
+<tr><td>101</td><td>2025-01-22 18:00</td><td>0.970</td></tr>
+<tr><td>404</td><td>2025-05-19 06:00</td><td>0.969</td></tr>
+<tr><td>404</td><td>2025-05-19 07:00</td><td>0.956</td></tr>
+<tr><td>404</td><td>2025-05-19 08:00</td><td>0.813</td></tr>
+<tr><td>404</td><td>2025-05-19 09:00</td><td>0.773</td></tr>
+<tr><td>404</td><td>2025-05-19 10:00</td><td>0.744</td></tr>
+<tr><td>404</td><td>2025-05-19 11:00</td><td>0.903</td></tr>
+<tr><td>404</td><td>2025-05-19 12:00</td><td>0.861</td></tr>
+<tr><td>404</td><td>2025-05-19 13:00</td><td>0.905</td></tr>
+<tr><td>404</td><td>2025-05-19 14:00</td><td>0.909</td></tr>
+<tr><td>404</td><td>2025-05-19 15:00</td><td>0.917</td></tr>
+<tr><td>404</td><td>2025-05-19 16:00</td><td>0.927</td></tr>
+<tr><td>404</td><td>2025-05-19 17:00</td><td>0.941</td></tr>
+<tr><td>404</td><td>2025-05-19 18:00</td><td>0.951</td></tr>
+<tr><td>404</td><td>2025-05-19 19:00</td><td>0.957</td></tr>
+<tr><td>808</td><td>2025-09-29 07:00</td><td>0.969</td></tr>
+<tr><td>808</td><td>2025-09-29 08:00</td><td>0.702</td></tr>
+<tr><td>808</td><td>2025-09-29 09:00</td><td>0.620</td></tr>
+<tr><td>808</td><td>2025-09-29 10:00</td><td>0.614</td></tr>
+<tr><td>808</td><td>2025-09-29 11:00</td><td>0.880</td></tr>
+<tr><td>808</td><td>2025-09-29 12:00</td><td>0.904</td></tr>
+<tr><td>808</td><td>2025-09-29 13:00</td><td>0.930</td></tr>
+<tr><td>808</td><td>2025-09-29 14:00</td><td>0.929</td></tr>
+<tr><td>808</td><td>2025-09-29 15:00</td><td>0.925</td></tr>
+<tr><td>808</td><td>2025-09-29 16:00</td><td>0.942</td></tr>
+<tr><td>808</td><td>2025-09-29 17:00</td><td>0.958</td></tr>
+<tr><td>808</td><td>2025-09-29 18:00</td><td>0.972</td></tr>
 </tbody>
 </table>
-</div>
+</div></details>
     </section>
-    <section class="panel" aria-labelledby="detection-title">
-      <h2 id="detection-title">Detection check</h2>
-      <p class="panel-intro">Designed tier cases and hard expected misses are checked separately; these synthetic results are not real-world accuracy.</p>
-      <div class="table-scroll">
+    <section class="section" id="detection" aria-labelledby="detection-title">
+      <div class="section-heading"><p class="eyebrow">Validation</p><h2 id="detection-title">Detection check</h2></div>
+      <p class="section-intro">The 12 designed faults were detected in their own windows. The 3 hard cases show the rule&#x27;s limits: 2 gaps were below 0.05, and 1 fault lasted fewer than 3 hours.</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Designed fault-window detection check">
 <table>
-<caption class="visually-hidden">Fault-window detection validation</caption>
+<caption class="visually-hidden">Designed fault-window detection check</caption>
 <thead><tr>
 <th scope="col">Inverter</th>
-<th scope="col">Injected test window</th>
+<th scope="col">Window</th>
 <th scope="col">Target</th>
-<th scope="col">Mean PR gap</th>
-<th scope="col">Detected</th>
-<th scope="col">Tier</th>
-<th scope="col">Target matched</th>
+<th scope="col">Gap</th>
+<th scope="col">Flagged by own window</th>
+<th scope="col">Note</th>
 </tr></thead>
 <tbody>
-<tr><td>101</td><td>2025-01-22 14:00:00 to 2025-01-22 16:00:00</td><td>Watch</td><td>0.07496576941548809</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
-<tr><td>118</td><td>2025-02-21 14:00:00 to 2025-02-21 16:00:00</td><td>Watch</td><td>0.07498403033721279</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
-<tr><td>202</td><td>2025-03-11 15:00:00 to 2025-03-11 17:00:00</td><td>Watch</td><td>0.07495470548641843</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
-<tr><td>303</td><td>2025-04-17 15:00:00 to 2025-04-17 17:00:00</td><td>Watch</td><td>0.07500122409733896</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td><td>Yes</td></tr>
-<tr><td>404</td><td>2025-05-19 08:00:00 to 2025-05-19 10:00:00</td><td>Alert</td><td>0.15000117703032959</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
-<tr><td>505</td><td>2025-06-25 08:00:00 to 2025-06-25 10:00:00</td><td>Alert</td><td>0.13654759344105297</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
-<tr><td>606</td><td>2025-07-08 14:00:00 to 2025-07-08 16:00:00</td><td>Alert</td><td>0.15002185794958325</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
-<tr><td>707</td><td>2025-08-21 14:00:00 to 2025-08-21 16:00:00</td><td>Alert</td><td>0.15001428534674766</td><td>Yes</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
-<tr><td>808</td><td>2025-09-29 08:00:00 to 2025-09-29 10:00:00</td><td>Critical</td><td>0.28001815809264213</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
-<tr><td>123</td><td>2025-10-09 14:00:00 to 2025-10-09 16:00:00</td><td>Critical</td><td>0.2799877656100029</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
-<tr><td>456</td><td>2025-11-18 14:00:00 to 2025-11-18 16:00:00</td><td>Critical</td><td>0.2800356726782316</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
-<tr><td>789</td><td>2025-12-24 14:00:00 to 2025-12-24 16:00:00</td><td>Critical</td><td>0.2799911036914747</td><td>Yes</td><td><span class="tier tier-critical">Critical</span></td><td>Yes</td></tr>
-<tr><td>150</td><td>2025-01-01 09:00:00 to 2025-01-01 11:00:00</td><td>Below Watch (expected miss)</td><td>0.024993854990795723</td><td>No</td><td>Below Watch</td><td>Yes</td></tr>
-<tr><td>250</td><td>2025-02-04 14:00:00 to 2025-02-04 16:00:00</td><td>Below Watch (expected miss)</td><td>0.03496990434871061</td><td>No</td><td>Below Watch</td><td>Yes</td></tr>
-<tr><td>350</td><td>2025-03-04 15:00:00 to 2025-03-04 16:00:00</td><td>Too short (expected miss)</td><td>0.1499680146080301</td><td>No</td><td><span class="tier tier-alert">Alert</span></td><td>Yes</td></tr>
+<tr><td>101</td><td class="detection-window">2025-01-22 14:00 to 16:00</td><td>Watch</td><td>0.075</td><td>Yes</td><td>Caught in its own window at the Watch level.</td></tr>
+<tr><td>118</td><td class="detection-window">2025-02-21 14:00 to 16:00</td><td>Watch</td><td>0.075</td><td>Yes</td><td>Caught in its own window at the Watch level.</td></tr>
+<tr><td>202</td><td class="detection-window">2025-03-11 15:00 to 17:00</td><td>Watch</td><td>0.075</td><td>Yes</td><td>Caught in its own window at the Watch level.</td></tr>
+<tr><td>303</td><td class="detection-window">2025-04-17 15:00 to 17:00</td><td>Watch</td><td>0.075</td><td>Yes</td><td>Caught in its own window at the Watch level.</td></tr>
+<tr><td>404</td><td class="detection-window">2025-05-19 08:00 to 10:00</td><td>Alert</td><td>0.150</td><td>Yes</td><td>Caught in its own window at the Alert level.</td></tr>
+<tr><td>505</td><td class="detection-window">2025-06-25 08:00 to 10:00</td><td>Alert</td><td>0.137</td><td>Yes</td><td>Caught in its own window at the Alert level.</td></tr>
+<tr><td>606</td><td class="detection-window">2025-07-08 14:00 to 16:00</td><td>Alert</td><td>0.150</td><td>Yes</td><td>Caught in its own window at the Alert level.</td></tr>
+<tr><td>707</td><td class="detection-window">2025-08-21 14:00 to 16:00</td><td>Alert</td><td>0.150</td><td>Yes</td><td>Caught in its own window at the Alert level.</td></tr>
+<tr><td>808</td><td class="detection-window">2025-09-29 08:00 to 10:00</td><td>Critical</td><td>0.280</td><td>Yes</td><td>Caught in its own window at the Critical level.</td></tr>
+<tr><td>123</td><td class="detection-window">2025-10-09 14:00 to 16:00</td><td>Critical</td><td>0.280</td><td>Yes</td><td>Caught in its own window at the Critical level.</td></tr>
+<tr><td>456</td><td class="detection-window">2025-11-18 14:00 to 16:00</td><td>Critical</td><td>0.280</td><td>Yes</td><td>Caught in its own window at the Critical level.</td></tr>
+<tr><td>789</td><td class="detection-window">2025-12-24 14:00 to 16:00</td><td>Critical</td><td>0.280</td><td>Yes</td><td>Caught in its own window at the Critical level.</td></tr>
+<tr><td>150</td><td class="detection-window">2025-01-01 09:00 to 11:00</td><td>Below Watch (expected miss)</td><td>0.025</td><td>No</td><td>Gap of 0.025 is below the 0.05 threshold, so no flag is expected.</td></tr>
+<tr><td>250</td><td class="detection-window">2025-02-04 14:00 to 16:00</td><td>Below Watch (expected miss)</td><td>0.035</td><td>No</td><td>Gap of 0.035 is below the 0.05 threshold, so no flag is expected.</td></tr>
+<tr><td>350</td><td class="detection-window">2025-03-04 15:00 to 16:00</td><td>Too short (expected miss)</td><td>0.150</td><td>No</td><td>The fault window is too short for the 3-hour rule. Its gap of 0.150 would be Alert, but neighboring normal hours dilute the 3-hour average, so the flag appears as Watch.</td></tr>
 </tbody>
 </table>
 </div>
     </section>
-    <section class="panel" aria-labelledby="false-alarm-title">
-      <h2 id="false-alarm-title">False-alarm check</h2>
-      <p class="panel-intro">Zero false alarms are expected here because non-faulted inverters share the same weather and simulated PR; this checks identical peers only, not noisy real data.</p>
+    <section class="section" id="false-alarms" aria-labelledby="false-title">
+      <div class="section-heading"><p class="eyebrow">Validation</p><h2 id="false-title">False alarms</h2></div>
+      <p class="false-alarm-result">0 false alarm blocks across 815 non-faulted inverters.</p>
+      <p class="section-intro">Non-faulted inverters share the same weather and simulated PR, so this does not test noisy real data.</p>
     </section>
-    <section class="panel" aria-labelledby="actions-title">
-      <h2 id="actions-title">What to do</h2>
-      <div class="table-scroll">
+    <section class="section" id="actions" aria-labelledby="actions-title">
+      <div class="section-heading"><p class="eyebrow">Response</p><h2 id="actions-title">What to do</h2></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Suggested follow-up by tier">
 <table>
-<caption class="visually-hidden">Suggested follow-up by severity tier</caption>
+<caption class="visually-hidden">Suggested follow-up by tier</caption>
 <thead><tr>
 <th scope="col">Tier</th>
-<th scope="col">Suggested O&amp;M action</th>
+<th scope="col">Suggested action</th>
 </tr></thead>
 <tbody>
-<tr><td><span class="tier tier-watch">Watch</span></td><td>Remote checking only; log and monitor for the next 24 hours.</td></tr>
+<tr><td><span class="tier tier-watch">Watch</span></td><td>Remote check, log, and monitor for 24 hours.</td></tr>
 <tr><td><span class="tier tier-alert">Alert</span></td><td>Attempt a remote reset and schedule a site visit within 72 hours.</td></tr>
-<tr><td><span class="tier tier-critical">Critical</span></td><td>Likely a hardware fault that requires immediate dispatch.</td></tr>
+<tr><td><span class="tier tier-critical">Critical</span></td><td>Likely hardware fault; dispatch immediately.</td></tr>
 </tbody>
 </table>
 </div>
-    </section>
-    <section class="panel" aria-labelledby="limits-title">
-      <h2 id="limits-title">Limits and documentation</h2>
-      <div class="limits">
-        <p>These are demonstration results, not live plant telemetry or fault diagnoses. The validation faults are simulated, the weather inputs are modeled, and the detector thresholds are demonstration settings.</p>
-        <ul>
-          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/kpi_definitions.md">KPI definitions</a></li>
-          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/segmentation.md">Segmentation method</a></li>
-          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/stakeholder_brief.md">Stakeholder brief</a></li>
-        </ul>
-      </div>
+      <details class="disclosure"><summary>More metrics</summary><div class="table-scroll" tabindex="0" role="region" aria-label="Additional fleet metrics">
+<table>
+<caption class="visually-hidden">Additional fleet metrics</caption>
+<thead><tr>
+<th scope="col">Metric</th>
+<th scope="col">Value</th>
+</tr></thead>
+<tbody>
+<tr><td>Pooled mean hourly PR</td><td>0.929</td></tr>
+<tr><td>Shortfall from PR 1.0</td><td>0.071</td></tr>
+<tr><td>Clipping share, sample estimate</td><td>2.1640%</td></tr>
+<tr><td>Rolling blocks by severity</td><td>Watch: 16; Alert: 15; Critical: 4</td></tr>
+</tbody>
+</table>
+</div></details>
     </section>
   </main>
-  <footer>
-    <p>Solar inverter PR analysis</p>
-    <ul>
-      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric">Project repository</a></li>
-      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/dashboard_layout.md">Dashboard layout</a></li>
-      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/kpi_definitions.md">KPI definitions</a></li>
-      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/segmentation.md">Segmentation</a></li>
-      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/stakeholder_brief.md">Stakeholder brief</a></li>
-    </ul>
-  </footer>
+  <footer><p>Solar inverter PR analysis</p><ul>
+<li><a href="../">Project repository</a></li>
+<li><a href="kpi_definitions.md">KPI definitions</a></li>
+<li><a href="segmentation.md">Segmentation</a></li>
+<li><a href="stakeholder_brief.md">Stakeholder brief</a></li>
+<li><a href="dashboard_layout.md">Dashboard layout</a></li>
+  </ul></footer>
 </body>
 </html>
