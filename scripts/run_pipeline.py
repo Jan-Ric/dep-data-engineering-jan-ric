@@ -3,6 +3,8 @@ import sys
 import time
 
 import build_insight_tables
+import build_dashboard
+import build_dashboard_data
 import ingest
 import insights
 import kpis
@@ -34,6 +36,8 @@ STEPS = [
     ("kpis", kpis.main),
     ("segmentation", segmentation.main),
     ("insights", insights.main),
+    ("build_dashboard_data", build_dashboard_data.main),
+    ("build_dashboard", build_dashboard.main),
 ]
 
 
