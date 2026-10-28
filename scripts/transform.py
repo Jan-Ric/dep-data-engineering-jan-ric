@@ -30,23 +30,89 @@ MIN_PERFORMANCE_RATIO = 0.0  # unitless
 MAX_PERFORMANCE_RATIO = 1.5  # unitless
 
 FAULT_WINDOWS = [
+    # Watch, predicted mean pr_gap 0.07497
     {
         "inverter_id": 101,
-        "start": "2025-03-15 10:00:00",
-        "end": "2025-03-15 12:00:00",
-        "delta_t_fault_c": 4.0,
+        "start": "2025-01-22 14:00:00",
+        "end": "2025-01-22 16:00:00",
+        "delta_t_fault_c": 16.14,
     },
+    # Watch, predicted mean pr_gap 0.07498
+    {
+        "inverter_id": 118,
+        "start": "2025-02-21 14:00:00",
+        "end": "2025-02-21 16:00:00",
+        "delta_t_fault_c": 16.21,
+    },
+    # Watch, predicted mean pr_gap 0.07496
     {
         "inverter_id": 202,
-        "start": "2025-06-20 10:00:00",
-        "end": "2025-06-20 12:00:00",
-        "delta_t_fault_c": 8.0,
+        "start": "2025-03-11 15:00:00",
+        "end": "2025-03-11 17:00:00",
+        "delta_t_fault_c": 13.53,
     },
+    # Watch, predicted mean pr_gap 0.07500
     {
         "inverter_id": 303,
-        "start": "2025-09-10 10:00:00",
-        "end": "2025-09-10 12:00:00",
-        "delta_t_fault_c": 12.0,
+        "start": "2025-04-17 15:00:00",
+        "end": "2025-04-17 17:00:00",
+        "delta_t_fault_c": 12.77,
+    },
+    # Alert, predicted mean pr_gap 0.15000
+    {
+        "inverter_id": 404,
+        "start": "2025-05-19 08:00:00",
+        "end": "2025-05-19 10:00:00",
+        "delta_t_fault_c": 22.29,
+    },
+    # Alert, predicted mean pr_gap 0.15001
+    {
+        "inverter_id": 505,
+        "start": "2025-06-25 08:00:00",
+        "end": "2025-06-25 10:00:00",
+        "delta_t_fault_c": 18.81,
+    },
+    # Alert, predicted mean pr_gap 0.15002
+    {
+        "inverter_id": 606,
+        "start": "2025-07-08 14:00:00",
+        "end": "2025-07-08 16:00:00",
+        "delta_t_fault_c": 24.85,
+    },
+    # Alert, predicted mean pr_gap 0.15001
+    {
+        "inverter_id": 707,
+        "start": "2025-08-21 14:00:00",
+        "end": "2025-08-21 16:00:00",
+        "delta_t_fault_c": 20.89,
+    },
+    # Critical, predicted mean pr_gap 0.28002
+    {
+        "inverter_id": 808,
+        "start": "2025-09-29 08:00:00",
+        "end": "2025-09-29 10:00:00",
+        "delta_t_fault_c": 35.98,
+    },
+    # Critical, predicted mean pr_gap 0.27999
+    {
+        "inverter_id": 123,
+        "start": "2025-10-09 14:00:00",
+        "end": "2025-10-09 16:00:00",
+        "delta_t_fault_c": 36.52,
+    },
+    # Critical, predicted mean pr_gap 0.28004
+    {
+        "inverter_id": 456,
+        "start": "2025-11-18 14:00:00",
+        "end": "2025-11-18 16:00:00",
+        "delta_t_fault_c": 37.28,
+    },
+    # Critical, predicted mean pr_gap 0.27999
+    {
+        "inverter_id": 789,
+        "start": "2025-12-24 14:00:00",
+        "end": "2025-12-24 16:00:00",
+        "delta_t_fault_c": 36.53,
     },
 ]
 
