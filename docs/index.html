@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Solar inverter performance ratio monitoring and fault-window validation results.">
+  <title>Solar Inverter PR Monitoring</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="page-header">
+    <p class="eyebrow">Solar inverter PR monitoring</p>
+    <h1>When and where are inverters showing negative performance ratio gaps?</h1>
+    <p class="question">A fleet-level view for reviewing underperformance signals and deciding which records need O&amp;M follow-up.</p>
+  </header>
+  <main>
+    <section class="panel" aria-labelledby="overview-title">
+      <h2 id="overview-title">Fleet overview</h2>
+      <div class="kpi-grid"><div class="kpi">
+  <span class="kpi-label">Flagged 3-hour blocks</span>
+  <span class="kpi-value">1</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Flagged inverter share</span>
+  <span class="kpi-value">0.12% (1/830)</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Fault detection rate</span>
+  <span class="kpi-value">33.33% (1/3)</span>
+</div>
+<div class="kpi">
+  <span class="kpi-label">Pooled mean hourly PR</span>
+  <span class="kpi-value">0.9292531056819616</span>
+</div></div>
+    </section>
+    <section class="panel" aria-labelledby="severity-title">
+      <h2 id="severity-title">Fleet status by severity</h2>
+      <p class="panel-intro">Saved rolling blocks by tier; each tier is labeled as well as color-coded.</p>
+      <div class="severity-grid"><div class="severity-item tier-watch">
+  <span class="severity-label"><span class="tier tier-watch">Watch</span> blocks</span>
+  <span class="severity-value">1</span>
+  <span>100.00% of saved blocks</span>
+</div>
+<div class="severity-item tier-alert">
+  <span class="severity-label"><span class="tier tier-alert">Alert</span> blocks</span>
+  <span class="severity-value">0</span>
+  <span>0.00% of saved blocks</span>
+</div>
+<div class="severity-item tier-critical">
+  <span class="severity-label"><span class="tier tier-critical">Critical</span> blocks</span>
+  <span class="severity-value">0</span>
+  <span>0.00% of saved blocks</span>
+</div></div>
+    </section>
+    <section class="panel" aria-labelledby="blocks-title">
+      <h2 id="blocks-title">When and where</h2>
+      <p class="panel-intro">The saved SQL result contains per-inverter aggregates; dates and times are matched from detected validation windows.</p>
+      <div class="table-scroll">
+<table>
+<caption class="visually-hidden">Flagged inverter blocks</caption>
+<thead><tr>
+<th scope="col">Inverter</th>
+<th scope="col">Date and time</th>
+<th scope="col">Mean PR gap</th>
+<th scope="col">Tier</th>
+</tr></thead>
+<tbody>
+<tr><td>202</td><td>2025-06-20 10:00 to 12:00</td><td>0.06219851694865586</td><td><span class="tier tier-watch">Watch</span></td></tr>
+</tbody>
+</table>
+</div><p class="panel-intro">Overlapping rolling blocks count separately.</p>
+    </section>
+    <section class="panel" aria-labelledby="ranking-title">
+      <h2 id="ranking-title">Inverter ranking</h2>
+      <p class="panel-intro">Lowest mean PR first, using the saved top-ten ranking.</p>
+      <div class="table-scroll">
+<table>
+<caption class="visually-hidden">Inverter ranking by mean performance ratio</caption>
+<thead><tr>
+<th scope="col">Rank</th>
+<th scope="col">Inverter</th>
+<th scope="col">Mean PR</th>
+<th scope="col">Maximum tier</th>
+<th scope="col">Absolute flagged hours</th>
+<th scope="col">Baseline-relative flagged hours</th>
+</tr></thead>
+<tbody>
+<tr><td>1</td><td>202</td><td>0.9292126805</td><td>Normal</td><td>2867</td><td>2</td></tr>
+<tr><td>2</td><td>303</td><td>0.9292441589</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>3</td><td>101</td><td>0.9292457259</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>45</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>46</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>47</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>48</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>49</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>50</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+<tr><td>4</td><td>51</td><td>0.9292531743</td><td>Normal</td><td>2867</td><td>0</td></tr>
+</tbody>
+</table>
+</div>
+    </section>
+    <section class="panel" aria-labelledby="investigation-title">
+      <h2 id="investigation-title">Investigation: validation fault days</h2>
+      <p class="panel-intro">Hourly PR series for validation inverters 101, 202, and 303.</p>
+      <figure class="investigation-figure">
+        <img src="assets/fault_day_pr_101_202_303.png" alt="Line chart comparing hourly performance ratio on the validation fault days for inverters 101, 202, and 303.">
+        <figcaption>Chart from the saved fault-day analysis; the table below provides the underlying hourly values.</figcaption>
+      </figure>
+      <div class="table-scroll">
+<table>
+<caption class="visually-hidden">Hourly performance ratio on validation fault days</caption>
+<thead><tr>
+<th scope="col">Inverter</th>
+<th scope="col">Date and hour</th>
+<th scope="col">Performance ratio</th>
+</tr></thead>
+<tbody>
+<tr><td>101</td><td>2025-03-15 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 06:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 07:00:00</td><td>0.9732886947892258</td></tr>
+<tr><td>101</td><td>2025-03-15 08:00:00</td><td>0.9530854600503744</td></tr>
+<tr><td>101</td><td>2025-03-15 09:00:00</td><td>0.9360644132041356</td></tr>
+<tr><td>101</td><td>2025-03-15 10:00:00</td><td>0.9188725344329848</td></tr>
+<tr><td>101</td><td>2025-03-15 11:00:00</td><td>0.859790773105645</td></tr>
+<tr><td>101</td><td>2025-03-15 12:00:00</td><td>0.8276139888700876</td></tr>
+<tr><td>101</td><td>2025-03-15 13:00:00</td><td>0.8108109428217102</td></tr>
+<tr><td>101</td><td>2025-03-15 14:00:00</td><td>0.9023166163779164</td></tr>
+<tr><td>101</td><td>2025-03-15 15:00:00</td><td>0.902797860429326</td></tr>
+<tr><td>101</td><td>2025-03-15 16:00:00</td><td>0.9170498831441108</td></tr>
+<tr><td>101</td><td>2025-03-15 17:00:00</td><td>0.9411407830567052</td></tr>
+<tr><td>101</td><td>2025-03-15 18:00:00</td><td>0.9608838532859098</td></tr>
+<tr><td>101</td><td>2025-03-15 19:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>101</td><td>2025-03-15 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 06:00:00</td><td>0.972408998146254</td></tr>
+<tr><td>202</td><td>2025-06-20 07:00:00</td><td>0.96350640605741</td></tr>
+<tr><td>202</td><td>2025-06-20 08:00:00</td><td>0.9492048661234036</td></tr>
+<tr><td>202</td><td>2025-06-20 09:00:00</td><td>0.931423355662667</td></tr>
+<tr><td>202</td><td>2025-06-20 10:00:00</td><td>0.8731603227771801</td></tr>
+<tr><td>202</td><td>2025-06-20 11:00:00</td><td>0.830257723267358</td></tr>
+<tr><td>202</td><td>2025-06-20 12:00:00</td><td>0.8129168380595153</td></tr>
+<tr><td>202</td><td>2025-06-20 13:00:00</td><td>0.8701979164564448</td></tr>
+<tr><td>202</td><td>2025-06-20 14:00:00</td><td>0.89940514348886</td></tr>
+<tr><td>202</td><td>2025-06-20 15:00:00</td><td>0.9109037123534895</td></tr>
+<tr><td>202</td><td>2025-06-20 16:00:00</td><td>0.9279239936732486</td></tr>
+<tr><td>202</td><td>2025-06-20 17:00:00</td><td>0.9490636897844978</td></tr>
+<tr><td>202</td><td>2025-06-20 18:00:00</td><td>0.9605209805676244</td></tr>
+<tr><td>202</td><td>2025-06-20 19:00:00</td><td>0.9694077850921764</td></tr>
+<tr><td>202</td><td>2025-06-20 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>202</td><td>2025-06-20 23:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 00:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 01:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 02:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 03:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 04:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 05:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 06:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 07:00:00</td><td>0.9696513691694676</td></tr>
+<tr><td>303</td><td>2025-09-10 08:00:00</td><td>0.9473151007916736</td></tr>
+<tr><td>303</td><td>2025-09-10 09:00:00</td><td>0.9358883974405996</td></tr>
+<tr><td>303</td><td>2025-09-10 10:00:00</td><td>0.9512628831391144</td></tr>
+<tr><td>303</td><td>2025-09-10 11:00:00</td><td>0.940888148926347</td></tr>
+<tr><td>303</td><td>2025-09-10 12:00:00</td><td>0.9012312280317276</td></tr>
+<tr><td>303</td><td>2025-09-10 13:00:00</td><td>0.9348895448305622</td></tr>
+<tr><td>303</td><td>2025-09-10 14:00:00</td><td>0.9335656658687448</td></tr>
+<tr><td>303</td><td>2025-09-10 15:00:00</td><td>0.9428419563150336</td></tr>
+<tr><td>303</td><td>2025-09-10 16:00:00</td><td>0.9472888473383114</td></tr>
+<tr><td>303</td><td>2025-09-10 17:00:00</td><td>0.9662263066721264</td></tr>
+<tr><td>303</td><td>2025-09-10 18:00:00</td><td>0.9780653010878952</td></tr>
+<tr><td>303</td><td>2025-09-10 19:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 20:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 21:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 22:00:00</td><td>No daytime reading</td></tr>
+<tr><td>303</td><td>2025-09-10 23:00:00</td><td>No daytime reading</td></tr>
+</tbody>
+</table>
+</div>
+    </section>
+    <section class="panel" aria-labelledby="detection-title">
+      <h2 id="detection-title">Detection check</h2>
+      <p class="panel-intro">Detected status is written as Yes or No for each planted validation window.</p>
+      <div class="table-scroll">
+<table>
+<caption class="visually-hidden">Fault-window detection validation</caption>
+<thead><tr>
+<th scope="col">Inverter</th>
+<th scope="col">Injected test window</th>
+<th scope="col">Mean PR gap</th>
+<th scope="col">Detected</th>
+<th scope="col">Tier</th>
+</tr></thead>
+<tbody>
+<tr><td>101</td><td>2025-03-15 10:00:00 to 2025-03-15 12:00:00</td><td>0.011440677563453497</td><td>No</td><td>Below Watch</td></tr>
+<tr><td>202</td><td>2025-06-20 10:00:00 to 2025-06-20 12:00:00</td><td>0.06219851694865586</td><td>Yes</td><td><span class="tier tier-watch">Watch</span></td></tr>
+<tr><td>303</td><td>2025-09-10 10:00:00 to 2025-09-10 12:00:00</td><td>0.013847592642688311</td><td>No</td><td>Below Watch</td></tr>
+</tbody>
+</table>
+</div>
+    </section>
+    <section class="panel" aria-labelledby="actions-title">
+      <h2 id="actions-title">What to do</h2>
+      <div class="table-scroll">
+<table>
+<caption class="visually-hidden">Suggested follow-up by severity tier</caption>
+<thead><tr>
+<th scope="col">Tier</th>
+<th scope="col">Suggested O&amp;M action</th>
+</tr></thead>
+<tbody>
+<tr><td><span class="tier tier-watch">Watch</span></td><td>Remote checking only; log and monitor for the next 24 hours.</td></tr>
+<tr><td><span class="tier tier-alert">Alert</span></td><td>Attempt a remote reset and schedule a site visit within 72 hours.</td></tr>
+<tr><td><span class="tier tier-critical">Critical</span></td><td>Likely a hardware fault that requires immediate dispatch.</td></tr>
+</tbody>
+</table>
+</div>
+    </section>
+    <section class="panel" aria-labelledby="limits-title">
+      <h2 id="limits-title">Limits and documentation</h2>
+      <div class="limits">
+        <p>These are demonstration results, not live plant telemetry or fault diagnoses. The validation faults are simulated, the weather inputs are modeled, and the detector thresholds are demonstration settings.</p>
+        <ul>
+          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/kpi_definitions.md">KPI definitions</a></li>
+          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/segmentation.md">Segmentation method</a></li>
+          <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/stakeholder_brief.md">Stakeholder brief</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Solar inverter PR analysis</p>
+    <ul>
+      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric">Project repository</a></li>
+      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/dashboard_layout.md">Dashboard layout</a></li>
+      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/kpi_definitions.md">KPI definitions</a></li>
+      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/segmentation.md">Segmentation</a></li>
+      <li><a href="https://github.com/Jan-Ric/dep-data-engineering-jan-ric/blob/main/docs/stakeholder_brief.md">Stakeholder brief</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

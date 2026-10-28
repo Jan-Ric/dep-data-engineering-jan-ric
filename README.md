@@ -12,6 +12,14 @@
 
 Stakeholder brief (plain-language summary for O&M): [docs/stakeholder_brief.md](docs/stakeholder_brief.md)
 
+## Key Findings
+
+- The rule flags an inverter when it trails the fleet median by 0.05 PR or more for 3 daytime hours in a row.
+- Result: 1 inverter flagged out of 830, and 1 of 3 planted test faults detected.
+- Small faults can be missed, because the simulated loss only starts above 45°C internal temperature.
+
+Read the one-page summary: [docs/stakeholder_brief.md](docs/stakeholder_brief.md)
+
 ### **I want to answer (Phase 1):**
 
 **"When and where are those inverters that have negative performance ratio gaps in a solar power plant?"**

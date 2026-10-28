@@ -1,36 +1,44 @@
-# Stakeholder Brief: Inverter PR Review
+# Stakeholder Brief: Which Inverters Need Attention?
 
-## Question
+For O&M engineers and the plant supervisor. Based on modeled 2025 data for Calatagan Solar Farm (830 inverters).
 
-When do inverter records show sustained shortfalls, and how should O&M respond?
+## Bottom line
 
-## What we did
+Our rule flagged 1 inverter out of 830 and caught 1 of 3 planted test faults. It gives crews a short list to check, not a wall of alarms, but it can miss small faults.
 
-We summarized modeled hourly inverter data using performance ratio (PR), which compares AC output with expected output from sunlight and installed capacity. At each daytime timestamp, `pr_gap` is the median valid PR across all inverters minus that inverter's PR. The detector checks rolling sets of three consecutive hours; each must have irradiance above 200 W/m² and valid PR, and their mean `pr_gap` must be at least 0.05.
+## Why it matters
+
+Inverters last 5 to 10 years, while panels last 25 to 30, and inverters are hard to repair. Crews need to know when and where to look. A rule that flags everything gets ignored: an earlier version compared each inverter with a perfect score of 1.0 and flagged about 2 million blocks. Comparing each inverter with the other inverters at the same hour cut that to 1.
+
+## How the rule works
+
+Performance ratio (PR) compares actual AC output with what sunlight and installed capacity should produce. For each daytime hour, we subtract an inverter's PR from the fleet median PR. If that gap averages 0.05 or more over three hours in a row, and sunlight stays above 200 W/m² in each hour, the inverter is flagged.
 
 ## What we found
 
-- Mean valid PR was **0.9293**. The separate KPI `fleet_mean_pr_shortfall_from_1` was **0.0707 (7.07 percentage points)** below 1.0; it is not the detector's `pr_gap` or a healthy-fleet comparison.
-- There was **1 flagged rolling block**, for inverter 202: **Watch 1 (100%)**, Alert 0, Critical 0. **1 of 830 inverters (0.12%)** had a qualifying block. Overlapping windows count separately.
-- **2.1640%** of sampled inverter-hour rows reached the modeled 60 kW AC cap. This expected model cap is not, by itself, evidence of a fault.
-- The detector found **1 of 3 simulated windows (33.33%)**: inverter 202 on June 20, 2025. It did not detect inverter 101 on March 15 or inverter 303 on September 10.
+- **Fleet level:** average PR was 0.929, about 7 points below 1.0. This is a fleet-wide level, not a fault signal.
+- **Flagged:** 1 block, inverter 202, Watch level. That is 0.12% of the fleet.
+- **Test faults:** 1 of 3 detected. Inverter 202 (June 20) had a gap of 0.062 and was caught. Inverters 101 (gap 0.011) and 303 (gap 0.014) were missed.
+- **Power cap:** 2.16% of sampled hours hit the 60 kW limit. This is expected behavior, not a fault.
 
 ![Flagged blocks by severity and fault cohort](../output/figures/flagged_blocks_by_severity_cohort.png)
 
-## Detection result
+**Why two were missed:** in our model, efficiency only drops once internal temperature passes 45°C, so a fault on a cooler hour barely changes output. This comes from how the test was built, and it also shows that small faults can stay hidden.
 
-Window mean gaps were **0.01144** for inverter 101 (not detected), **0.06220** for inverter 202 (detected, Watch), and **0.01385** for inverter 303 (not detected). Severity is Watch from 0.05 to below 0.10, Alert from 0.10 through 0.20, and Critical above 0.20.
+## What to do with a flag
 
-The weaker +4°C and +12°C injections may fall below 0.05 because simulated degradation starts only above 45°C internal temperature, so its PR effect can be small. Here +4°C stayed below threshold while +12°C crossed it. This reflects the simulation design, not a failure of the method.
+| Level    | Gap          | Suggested action                                               |
+| -------- | ------------ | -------------------------------------------------------------- |
+| Watch    | 0.05 to 0.10 | Check remotely, log it, monitor for 24 hours                   |
+| Alert    | 0.10 to 0.20 | Try a remote reset, then schedule a site visit within 72 hours |
+| Critical | above 0.20   | Likely hardware fault, dispatch immediately                    |
 
-## What to do
-
-Treat tiers as review priorities, not diagnoses. Verify flags against equipment telemetry and operating context before maintenance action. These demonstration thresholds are not validated maintenance limits.
+These thresholds are demonstration values, not validated maintenance limits. Confirm a flag against equipment data before acting.
 
 ## Limits
 
-Weather and inverter output are modeled, faults are injected, and no real inverter telemetry is included. This three-window check cannot confirm equipment condition or estimate real-world detection performance.
+Weather and output are modeled, faults are planted, and there is no real inverter data. Three test windows cannot show real-world detection rates.
 
 ## Next steps
 
-Future work could test the rule with verified operational labels and assess whether validated energy shortfalls relate to revenue. Remaining-life estimates and revenue analysis are outside this descriptive study.
+Test the rule on real telemetry with confirmed faults, try larger and more varied test faults, then estimate remaining inverter life and revenue impact.
