@@ -8,7 +8,7 @@ The first three windows were too weak to test all detector and dashboard severit
 
 Candidate hours were simulated from `data/processed/open_meteo_cleaned.csv` using the exact transformation equations: the Faiman module-temperature calculation, derived DC capacity and floating module count, temperature-adjusted DC power, nominal inverter efficiency, Formula F efficiency adjustment, the 60 kW AC clip, and PR from AC divided by irradiance and inverter DC capacity. Predicted `pr_gap` is the mean baseline PR minus faulted PR across each complete window. The listed internal temperatures are baseline values, one per hour.
 
-The 12 three-hour windows cover 12 months and 12 distinct inverter IDs. IDs 101, 202, and 303 remain represented. Each hour has irradiance from about 300 to 700 W/m2; all modeled baseline and faulted AC outputs are below 60 kW, so clipping does not hide the modeled loss. No windows overlap on an inverter. Targets were chosen within each tier, not at a severity boundary, with at least 0.01 margin to the nearest boundary.
+The first 12 three-hour windows cover all 12 months and use 12 distinct inverter IDs. The three added hard windows use new inverter IDs 150, 250, and 350 in January, February, and March. Every hour in all 15 windows has 300 to 700 W/m2 irradiance. All modeled baseline and faulted AC outputs are below 60 kW, so clipping does not hide the modeled loss. No windows overlap on an inverter. The tier labels on the original 12 windows identify their intended detector severity; the added labels identify two below-threshold expected misses and one too-short expected miss.
 
 | Inverter | Date | Hours | Irradiance per hour (W/m2) | Baseline internal temperature per hour (C) | Trial delta_t (C) | Predicted mean pr_gap | Target tier |
 |---:|---|---|---|---|---:|---:|---|
@@ -24,7 +24,12 @@ The 12 three-hour windows cover 12 months and 12 distinct inverter IDs. IDs 101,
 | 123 | 2025-10-09 | 14:00-16:00 | 616.5, 531.0, 352.4 | 41.36, 39.76, 34.95 | 36.52 | 0.27999 | Critical |
 | 456 | 2025-11-18 | 14:00-16:00 | 594.4, 563.2, 350.6 | 40.02, 38.36, 35.03 | 37.28 | 0.28004 | Critical |
 | 789 | 2025-12-24 | 14:00-16:00 | 608.7, 524.8, 364.4 | 40.19, 39.49, 36.29 | 36.53 | 0.27999 | Critical |
+| 150 | 2025-01-01 | 09:00-11:00 | 310.8, 531.3, 632.2 | 33.60, 36.81, 38.04 | 11.53 | 0.02499 | Below Watch (expected miss) |
+| 250 | 2025-02-04 | 14:00-16:00 | 478.1, 453.5, 353.0 | 37.82, 36.47, 34.21 | 12.57 | 0.03497 | Below Watch (expected miss) |
+| 350 | 2025-03-04 | 15:00-16:00 | 693.6, 547.5 | 40.30, 37.98 | 22.06 | 0.14997 | Too short (expected miss) |
+
+The hard windows show where the detector stops: a three-hour mean PR gap below 0.05 is not flagged, and a large gap lasting only two hours does not meet the three-consecutive-hour rule. The predicted gaps for inverters 150 and 250 are below Watch; inverter 350 exceeds the gap threshold but is intentionally shorter than the required duration.
 
 ## Limits
 
-These faults are planted by a fixed rule in a modeled dataset. This test checks whether the unchanged detector can see the planted cases and whether the dashboard can display Watch, Alert, and Critical examples. It says nothing about real inverters, real fault prevalence, or field diagnostic accuracy. The internal-temperature value is a modeled proxy, not measured inverter telemetry.
+These faults are planted by a fixed rule in a modeled dataset. This test checks whether the unchanged detector can see the planted cases and where it stops; it says nothing about real inverters, real fault prevalence, or field diagnostic accuracy. The internal-temperature value is a modeled proxy, not measured inverter telemetry. The large delta_t values used in the Critical simulations produce modeled faulted internal temperatures above the datasheet's +60 C operating limit; these are simulation stress values, not realistic temperatures.

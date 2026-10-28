@@ -30,3 +30,9 @@ Old data/processed/processed_inv_metrics.csv: 674086f246ea9032fcea4520fe3997304b
 New data/processed/processed_inv_metrics.csv: 2a2dccb93619fdff78234d45007aa3b4bc9d0a751c9140a422c32e97fccb0203
 Old data/processed/open_meteo_computation.csv: 7459ec2be9e90b2b530788273729c3edd8013eda8ace9216b70eb885665aa73d
 New data/processed/open_meteo_computation.csv: 63ffbb3efb44ea80a144b3672848d38025dfdf04c1b6931aa9b8a85532799353
+
+Baseline changed on purpose because 3 hard fault windows were added to the 12-window list (15 total); Formula F, thresholds, and detector logic are unchanged. The two transform runs produced identical hashes.
+Previous 12-window data/processed/processed_inv_metrics.csv: 2a2dccb93619fdff78234d45007aa3b4bc9d0a751c9140a422c32e97fccb0203
+New 15-window data/processed/processed_inv_metrics.csv: 72d968111ac0bd182d67538d25bf456ab343aa885af99921e0af7f8f0999270c
+Previous 12-window data/processed/open_meteo_computation.csv: 63ffbb3efb44ea80a144b3672848d38025dfdf04c1b6931aa9b8a85532799353
+New 15-window data/processed/open_meteo_computation.csv: 1ae4ce591a96db31b0b1afe27dea1b20979f4d10c17345d23d1a4e5baa633fcd

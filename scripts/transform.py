@@ -36,6 +36,7 @@ FAULT_WINDOWS = [
         "start": "2025-01-22 14:00:00",
         "end": "2025-01-22 16:00:00",
         "delta_t_fault_c": 16.14,
+        "target_tier": "Watch",
     },
     # Watch, predicted mean pr_gap 0.07498
     {
@@ -43,6 +44,7 @@ FAULT_WINDOWS = [
         "start": "2025-02-21 14:00:00",
         "end": "2025-02-21 16:00:00",
         "delta_t_fault_c": 16.21,
+        "target_tier": "Watch",
     },
     # Watch, predicted mean pr_gap 0.07496
     {
@@ -50,6 +52,7 @@ FAULT_WINDOWS = [
         "start": "2025-03-11 15:00:00",
         "end": "2025-03-11 17:00:00",
         "delta_t_fault_c": 13.53,
+        "target_tier": "Watch",
     },
     # Watch, predicted mean pr_gap 0.07500
     {
@@ -57,6 +60,7 @@ FAULT_WINDOWS = [
         "start": "2025-04-17 15:00:00",
         "end": "2025-04-17 17:00:00",
         "delta_t_fault_c": 12.77,
+        "target_tier": "Watch",
     },
     # Alert, predicted mean pr_gap 0.15000
     {
@@ -64,6 +68,7 @@ FAULT_WINDOWS = [
         "start": "2025-05-19 08:00:00",
         "end": "2025-05-19 10:00:00",
         "delta_t_fault_c": 22.29,
+        "target_tier": "Alert",
     },
     # Alert, predicted mean pr_gap 0.15001
     {
@@ -71,6 +76,7 @@ FAULT_WINDOWS = [
         "start": "2025-06-25 08:00:00",
         "end": "2025-06-25 10:00:00",
         "delta_t_fault_c": 18.81,
+        "target_tier": "Alert",
     },
     # Alert, predicted mean pr_gap 0.15002
     {
@@ -78,6 +84,7 @@ FAULT_WINDOWS = [
         "start": "2025-07-08 14:00:00",
         "end": "2025-07-08 16:00:00",
         "delta_t_fault_c": 24.85,
+        "target_tier": "Alert",
     },
     # Alert, predicted mean pr_gap 0.15001
     {
@@ -85,6 +92,7 @@ FAULT_WINDOWS = [
         "start": "2025-08-21 14:00:00",
         "end": "2025-08-21 16:00:00",
         "delta_t_fault_c": 20.89,
+        "target_tier": "Alert",
     },
     # Critical, predicted mean pr_gap 0.28002
     {
@@ -92,6 +100,7 @@ FAULT_WINDOWS = [
         "start": "2025-09-29 08:00:00",
         "end": "2025-09-29 10:00:00",
         "delta_t_fault_c": 35.98,
+        "target_tier": "Critical",
     },
     # Critical, predicted mean pr_gap 0.27999
     {
@@ -99,6 +108,7 @@ FAULT_WINDOWS = [
         "start": "2025-10-09 14:00:00",
         "end": "2025-10-09 16:00:00",
         "delta_t_fault_c": 36.52,
+        "target_tier": "Critical",
     },
     # Critical, predicted mean pr_gap 0.28004
     {
@@ -106,6 +116,7 @@ FAULT_WINDOWS = [
         "start": "2025-11-18 14:00:00",
         "end": "2025-11-18 16:00:00",
         "delta_t_fault_c": 37.28,
+        "target_tier": "Critical",
     },
     # Critical, predicted mean pr_gap 0.27999
     {
@@ -113,6 +124,31 @@ FAULT_WINDOWS = [
         "start": "2025-12-24 14:00:00",
         "end": "2025-12-24 16:00:00",
         "delta_t_fault_c": 36.53,
+        "target_tier": "Critical",
+    },
+    # Below Watch, predicted mean pr_gap 0.02499 (expected miss)
+    {
+        "inverter_id": 150,
+        "start": "2025-01-01 09:00:00",
+        "end": "2025-01-01 11:00:00",
+        "delta_t_fault_c": 11.53,
+        "target_tier": "Below Watch (expected miss)",
+    },
+    # Below Watch, predicted mean pr_gap 0.03497 (expected miss)
+    {
+        "inverter_id": 250,
+        "start": "2025-02-04 14:00:00",
+        "end": "2025-02-04 16:00:00",
+        "delta_t_fault_c": 12.57,
+        "target_tier": "Below Watch (expected miss)",
+    },
+    # Two hours only, predicted mean pr_gap 0.14997 (expected miss)
+    {
+        "inverter_id": 350,
+        "start": "2025-03-04 15:00:00",
+        "end": "2025-03-04 16:00:00",
+        "delta_t_fault_c": 22.06,
+        "target_tier": "Too short (expected miss)",
     },
 ]
 
